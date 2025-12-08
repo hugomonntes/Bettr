@@ -1,7 +1,7 @@
 # TODO
 **Plan de Empresa** (Falta pasar a pdf)
-**Plan de Sostenibilidad**
+**Plan de Sostenibilidad** (Falta pasar a pdf)
 **Análisis de Requisitos**
-**Plan de Prevención**
-**Diseño de Arquitectura**
-**Prototipado de Interfaces y Planificación (Diagrama de Gantt)**
+**Plan de Prevención** (Falta pasar a pdf)
+**Diseño de Arquitectura** 
+**Prototipado de Interfaces y Planificación (Diagrama de Gantt)** (Falta pasar a pdf)
