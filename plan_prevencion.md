@@ -16,7 +16,7 @@ Este plan recoge las medidas necesarias para prevenir riesgos laborales y de cib
 - Dolor lumbar o cervical.
 - Fatiga visual por pantallas.
 - Lesiones por movimientos repetitivos.
-
+a
 **Medidas preventivas:**
 - Usar una silla ergonómica o colocar cojines de apoyo lumbar.
 - Mantener la pantalla a la altura de los ojos.
