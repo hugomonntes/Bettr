@@ -158,10 +158,3 @@ a
 Este plan protege tu salud física y mental como trabajador remoto, y reduce los riesgos de ciberseguridad que son críticos en una empresa 100% digital formada por una sola persona. Aplicar estas medidas asegura continuidad del negocio, integridad de datos y un entorno de trabajo seguro.
 
 ---
-
-## 📎 Archivos recomendados
-- Guarda este documento como `plan_prevencion.md`.
-- Crea una versión PDF para entregar si hace falta.
-- Mantén un registro de incidentes en `incidentes.md` con fechas y acciones realizadas.
-
----
