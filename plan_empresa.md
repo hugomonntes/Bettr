@@ -27,30 +27,13 @@ Convertirse en la red social de referencia para quienes desean adquirir hábitos
 - Motivación  
 - Transparencia  
 - Progreso diario  
-
  
-
-## 🧩 3. Propuesta de Valor
-Bettr ofrece una combinación única de:
-- **Habits + Social Experience**  
-  Los hábitos no se hacen en soledad, se construyen mejor con apoyo de otros.
-- **Evidencia rápida**  
-  Todo hábito se valida con una foto diaria.
-- **Gamificación**  
-  Rachas, niveles y recompensas por cumplir objetivos.
-- **Comunidades temáticas**  
-  Running, nutrición, estudio, productividad, lectura y más.
-
- 
-
 ## 👥 4. Público Objetivo
 - Personas que quieren adquirir o mejorar hábitos
 - Jóvenes y adultos interesados en salud, productividad o deporte
 - Estudiantes que buscan constancia
 
 Rango ideal: **16 a 40 años**
-
- 
 
 ## 💼 5. Modelo de Negocio
 Bettr seguirá un modelo **Freemium**:
