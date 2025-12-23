@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Bettr</title>
+    <title>Bettr</title>Bettr
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/global.css">
@@ -15,12 +15,12 @@
     <div class="user">
         <img src="assets/images/user.jpg" alt="Usuario">
         <div>
-            <strong>Hugo Montes</strong>
-            <span>@hugomontes</span>
+             <!-- Inyectar nombre de usuario + imagen de perfil -->
         </div>
     </div>
 
     <nav class="menu">
+        <!-- Me falta añadirle los icons -->
         <a class="active" href="#">Inicio</a>
         <a href="#">Hábitos</a>
         <a href="#">Social</a>
@@ -40,6 +40,7 @@
     <header class="topbar">
         <h1>BETTR</h1>
 
+        <!-- Inyectar de base de datos peticion si cumplio X día para ponerle la class done -->
         <div class="week">
             <span>S</span><span>S</span><span>M</span>
             <span class="done">T</span>

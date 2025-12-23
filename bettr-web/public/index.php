@@ -3,24 +3,19 @@
 <article class="post">
 
     <div class="post-header">
-        <img src="assets/images/user.jpg" alt="User">
-        <div>
-            <strong>Diego Costa</strong>
-            <span>Entrenamiento Fútbol · hace 1h</span>
-        </div>
-        <span class="points">45</span>
+         <!-- Inyectar cada post por peticion a la base de datos -->
     </div>
 
     <div class="post-image">
-        <img src="assets/images/post.jpg" alt="Post">
+         <!-- Inyectar cada imagen del post por peticion a la base de datos -->
     </div>
 
     <div class="post-actions">
-        ❤️ 234 &nbsp;&nbsp; 💬 18
+         <!-- Inyectar reacciones, me gustas, coemntarios, por peticion a la base de datos -->
     </div>
 
     <p class="post-text">
-        Que mala es la gente, juego solo tío
+        <!-- Inyectar descripcion del post -->
     </p>
 
 </article>
