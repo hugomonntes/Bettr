@@ -1,0 +1,145 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #000;
+    color: #fff;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: #000;
+    border-right: 1px solid #222;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    color: #f5c400;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.user {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.menu a {
+    display: block;
+    padding: 12px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.menu a.active,
+.menu a:hover {
+    background: #f5c400;
+    color: #000;
+}
+
+.upload-btn {
+    margin-top: auto;
+    padding: 12px;
+    background: #f5c400;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.bottom {
+    margin-top: 20px;
+}
+
+.app {
+    margin-left: 260px;
+}
+
+.topbar {
+    padding: 20px;
+    border-bottom: 1px solid #222;
+    text-align: center;
+}
+
+.week span {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 50%;
+    border: 1px solid #444;
+    margin: 0 4px;
+}
+
+.week .done {
+    background: #f5c400;
+    color: #000;
+    border: none;
+}
+
+.content {
+    padding: 30px;
+    max-width: 600px;
+    margin: auto;
+}
+
+/* POST */
+.post {
+    margin-bottom: 40px;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.post-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.post-header span {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.points {
+    margin-left: auto;
+    background: #f5c400;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.post-image img {
+    width: 100%;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.post-actions {
+    margin: 10px 0;
+    color: #aaa;
+}
+
+.post-text {
+    font-size: 15px;
+}
