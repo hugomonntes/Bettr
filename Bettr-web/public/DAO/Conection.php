@@ -6,13 +6,13 @@ class Conection{
     private $user;
     private $password;
 
-    function init($dbName, $host, $user, $password){
-        $dsn = "mysql:host=$host;dbname=$dbName;charset=utf8";
+    public function init($dbName, $host, $user, $password){
+        $dsn = "mysql:host=$host;port=3306;dbname=$dbName;charset=utf8mb4";
         try {
             $this->conection = new PDO($dsn, $user, $password);
             print("Conexión establecida"); 
         } catch (PDOException $sql) {
-            print("Error de conexión");
+            print("Error de conexión " . $sql->getMessage());
         }
     }
 

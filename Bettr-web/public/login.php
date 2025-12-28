@@ -1,4 +1,5 @@
 <?php
+    require_once __DIR__ . '/DAO/Conection.php';
     $conection = new Conection();
     $conection->init("freedb_BettrDB", "sql.freedb.tech", "freedb_hmontes", "pMEn7Hq3e9nYb$$");
 ?>
@@ -7,7 +8,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iniciar Sesión - HabitTrack</title>
+  <title>Iniciar Sesión - Bettr</title>
   <style>
     * {
       margin: 0;
