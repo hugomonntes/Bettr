@@ -10,8 +10,9 @@ class Conection{
         $dsn = "mysql:host=$host;dbname=$dbName;charset=utf8";
         try {
             $this->conection = new PDO($dsn, $user, $password);
+            print("Conexión establecida"); 
         } catch (PDOException $sql) {
-            print("Error en la conexión con la base de datos"); 
+            print("Error de conexión");
         }
     }
 

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login - BETTR APP</title>
+    <title>Registro - BETTR APP</title>
     <style>
         body {
             background-color: #111;
@@ -20,7 +20,7 @@
             background-color: #1a1a1a;
             padding: 40px;
             border-radius: 10px;
-            width: 500px;
+            width: 300px;
         }
 
         h1 {
@@ -29,14 +29,12 @@
             font-size: 24px;
         }
 
-        input[type="email"], input[type="password"] {
+        input[type="text"], input[type="email"], input[type="password"] {
             padding: 10px;
             margin: 10px 0;
             width: 100%;
             border: none;
             border-radius: 5px;
-            background-color: #111;
-            color: #fff;
         }
 
         button {
@@ -66,13 +64,14 @@
 </head>
 <body>
     <div class="form-container">
-        <h1>Iniciar sesión</h1>
+        <h1>Registro</h1>
         <form>
+            <input type="text" placeholder="Nombre completo" required><br>
             <input type="email" placeholder="Correo electrónico" required><br>
             <input type="password" placeholder="Contraseña" required><br>
-            <button type="submit">Entrar</button>
+            <button type="submit">Registrarse</button>
         </form>
-        <a href="registro.html">¿No tienes cuenta? Regístrate</a>
+        <a href="login.html">¿Ya tienes cuenta? Inicia sesión</a>
     </div>
 </body>
 </html>

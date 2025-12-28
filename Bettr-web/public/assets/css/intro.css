@@ -1,0 +1,116 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fondo con imagen degradada */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #111;
+  height: 100vh;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Capa oscura encima del fondo */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.75);
+}
+
+/* Contenedor principal */
+.hero-container {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Nombre app */
+.app-name {
+  font-size: 0.9em;
+  color: #ccc;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+/* Título principal */
+h1 {
+  font-size: 2.8em;
+  color: #ffcc00;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+/* Descripción */
+.description {
+  font-size: 1.1em;
+  color: #eee;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+/* Botones */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Botón principal amarillo */
+.btn-primary {
+  background-color: #ffcc00;
+  color: #111;
+  padding: 18px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2em;
+  transition: background 0.3s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-primary span {
+  margin-left: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #e6b800;
+}
+
+/* Botón secundario transparente */
+.btn-secondary {
+  color: #ffcc00;
+  font-size: 1em;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-secondary:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Ajuste para pantallas grandes */
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3.5em;
+  }
+  .description {
+    font-size: 1.2em;
+  }
+  .btn-primary {
+    padding: 20px;
+    font-size: 1.3em;
+  }
+}
