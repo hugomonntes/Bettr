@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../public/dao/Connection.php';
-require_once __DIR__ . '/../../public/dao/UsersDAO.php';
+require_once __DIR__ . '/../../public/DAO/Conection.php';
+require_once __DIR__ . '/../../public/DAO/UsersDAO.php';
 $conection = new Conection();
 $conection->init("freedb_BettrDB", "sql.freedb.tech", "freedb_hmontes", "pMEn7Hq3e9nYb$$");
 $usersDAO = new UsersDAO($conection->getConection());
