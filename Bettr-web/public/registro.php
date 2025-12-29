@@ -190,7 +190,7 @@
     <h1>Crear Cuenta</h1>
     <p class="subtitle">Únete a Bettr y comienza tu viaje</p>
 
-    <form method="post" action="validate_register.php">
+    <form method="post" action="../app/validation/validate_register.php">
       <div class="form-group">
         <label for="name">Nombre Completo</label>
         <input type="text" id="name" name="name" placeholder="Juan Pérez" required>
