@@ -12,6 +12,27 @@ class UsersDAO {
         $stmt = $this->conn->prepare("INSERT INTO usuario (username, email, password_hash) VALUES (?, ?, ?)");
         return $stmt->execute([$name, $email, $hashedPassword]);
     }
+
+    public function nameExists($name){
+        $query = "SELECT id FROM usuario WHERE name = '" . $name . "'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch() !== false;
+    }
+
+    public function usernameExists($username){
+        $query = "SELECT id FROM usuario  WHERE username = '" . $username . "'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch() !== false;
+    }
+
+    public function emailExists($email){
+        $query = "SELECT id FROM usuario WHERE email = '" . $email . "'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch() !== false;
+    }
 }
 
 ?>

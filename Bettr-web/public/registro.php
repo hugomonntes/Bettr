@@ -1,3 +1,8 @@
+<?php
+    require_once __DIR__ . '/DAO/Conection.php';
+    $conection = new Conection();
+    $conection->init("freedb_BettrDB", "sql.freedb.tech", "freedb_hmontes", "pMEn7Hq3e9nYb$$");
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -185,7 +190,7 @@
     <h1>Crear Cuenta</h1>
     <p class="subtitle">Únete a Bettr y comienza tu viaje</p>
 
-    <form>
+    <form method="post" action="validate_register.php">
       <div class="form-group">
         <label for="name">Nombre Completo</label>
         <input type="text" id="name" name="name" placeholder="Juan Pérez" required>

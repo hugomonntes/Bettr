@@ -1,8 +1,4 @@
-<?php
-    require_once __DIR__ . '/DAO/Conection.php';
-    $conection = new Conection();
-    $conection->init("freedb_BettrDB", "sql.freedb.tech", "freedb_hmontes", "pMEn7Hq3e9nYb$$");
-?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
