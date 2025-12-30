@@ -11,5 +11,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $emailExists = $usersDAO->emailExists($_POST['email']);
     if(!$nameExists && !$usernameExists && !$emailExists){
         $usersDAO -> createUser($_POST['name'], $_POST['username'], $_POST['email'], $_POST['password']);
+    } else { // Hacer un cambio de lógica para mostrar todos los errores
+        $errors = [];
+        if($nameExists){
+            $errors[] = "<br>El nombre ya está en uso.";
+        }
+        if($usernameExists){
+            $errors[] = "<br>El nombre de usuario ya está en uso.";
+        }
+        if($emailExists){
+            $errors[] = "<br>El correo electrónico ya está en uso.";
+        }
+        print(implode("<br>", $errors));
     }
 }
