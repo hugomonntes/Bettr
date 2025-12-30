@@ -9,5 +9,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nameExists = $usersDAO->nameExists($_POST['name']);
     $usernameExists = $usersDAO->usernameExists($_POST['username']);
     $emailExists = $usersDAO->emailExists($_POST['email']);
-    $usersDAO -> createUser($_POST['name'], $_POST['email'], $_POST['password']);
+    if(!$nameExists && !$usernameExists && !$emailExists){
+        $usersDAO -> createUser($_POST['name'], $_POST['username'], $_POST['email'], $_POST['password']);
+    }
 }

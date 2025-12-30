@@ -1,5 +1,5 @@
 <?php
-
+// require_once __DIR__ . '/../models/User.php';
 class UsersDAO {
     private $conn;
 
@@ -7,28 +7,28 @@ class UsersDAO {
         $this->conn = $conn;
     }
 
-    public function createUser($name, $email, $password) {
+    public function createUser($name, $username, $email, $password) {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->conn->prepare("INSERT INTO usuario (username, email, password_hash) VALUES (?, ?, ?)");
-        return $stmt->execute([$name, $email, $hashedPassword]);
+        $stmt = $this->conn->prepare("INSERT INTO usuarios (name, username, email, password_hash) VALUES (?, ?, ?, ?)");
+        return $stmt->execute([$name, $username, $email, $hashedPassword]);
     }
 
     public function nameExists($name){
-        $query = "SELECT id FROM usuario WHERE name = '" . $name . "'";
+        $query = "SELECT id_usuario FROM usuarios WHERE name = '" . $name . "'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch() !== false;
     }
 
     public function usernameExists($username){
-        $query = "SELECT id FROM usuario  WHERE username = '" . $username . "'";
+        $query = "SELECT id_usuario FROM usuarios  WHERE username = '" . $username . "'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch() !== false;
     }
 
     public function emailExists($email){
-        $query = "SELECT id FROM usuario WHERE email = '" . $email . "'";
+        $query = "SELECT id_usuario FROM usuarios WHERE email = '" . $email . "'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetch() !== false;
