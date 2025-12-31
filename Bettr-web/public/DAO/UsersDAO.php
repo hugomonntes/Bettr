@@ -33,6 +33,14 @@ class UsersDAO {
         $stmt->execute();
         return $stmt->fetch() !== false;
     }
+
+    public function getPasswordByUsername($username){
+        $query = "SELECT password_hash FROM usuarios WHERE username = '" . $username . "'";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        return $result ? $result['password_hash'] : null;
+    }
 }
 
 ?>
