@@ -12,5 +12,4 @@
             echo "Usuario o contraseña incorrectos";
         }
     }
-        
 ?>

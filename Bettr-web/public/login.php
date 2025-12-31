@@ -186,7 +186,7 @@
     <h1>Iniciar Sesión</h1>
     <p class="subtitle">Bienvenido de nuevo a Bettr</p>
 
-    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <form method="POST" action="../app/validation/validate_login.php">
       <div class="form-group">
         <label for="email">Correo Electrónico</label>
         <input type="email" id="email" name="email" placeholder="tu@email.com" required>
