@@ -34,8 +34,8 @@ class UsersDAO {
         return $stmt->fetch() !== false;
     }
 
-    public function getPasswordByUsername($username){
-        $query = "SELECT password_hash FROM usuarios WHERE username = '" . $username . "'";
+    public function getPasswordByEmail($email){
+        $query = "SELECT password_hash FROM usuarios WHERE email = '" . $email . "'";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch();
