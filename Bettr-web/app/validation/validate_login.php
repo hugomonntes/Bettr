@@ -5,7 +5,7 @@
     $conection->init("freedb_BettrDB", "sql.freedb.tech", "freedb_hmontes", "pMEn7Hq3e9nYb$$");
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usersDAO = new UsersDAO($conection->getConection());
-        $usersDAO->usernameExists($_POST['email']); // Verifica si el usuario existe TODO CAMBIAR A EMAIL
+        $usersDAO->emailExists($_POST['email']); // Verifica si el usuario existe TODO CAMBIAR A EMAIL
         if ($usersDAO && password_verify($_POST['password'], $usersDAO->getPasswordByEmail($_POST['email']))) {
             header("Location: ../public/index.php");
         } else {
