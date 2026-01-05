@@ -25,3 +25,5 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         print(implode("<br>", $errors));
     }
 }
+
+//TODO comprobar longitud de contraseña y demás validaciones
