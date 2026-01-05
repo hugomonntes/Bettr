@@ -188,12 +188,12 @@
     <form method="post" action="../app/validation/validate_register.php">
       <div class="form-group">
         <label for="name">Nombre Completo</label>
-        <input type="text" id="name" name="name" placeholder="Juan Pérez" required>
+        <input type="text" id="name" name="name" placeholder="Hugo Montes" required>
       </div>
 
       <div class="form-group">
         <label for="username">Nombre de Usuario</label>
-        <input type="text" id="username" name="username" placeholder="@juanperez" required>
+        <input type="text" id="username" name="username" placeholder="@hmontes" required>
       </div>
 
       <div class="form-group">
