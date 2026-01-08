@@ -1,7 +1,7 @@
 <?php
     require_once __DIR__ . '/../../public/DAO/Conection.php';
     require_once __DIR__ . '/../../public/DAO/UsersDAO.php';
-    ob_start();
+    ob_start(); // TODO eliminar, solo pruebas no pasar a produccion
     $conection = new Conection();
     $conection->init("freedb_BettrDB", "sql.freedb.tech", "freedb_hmontes", "pMEn7Hq3e9nYb$$");
     if($_SERVER['REQUEST_METHOD'] === 'POST') {
