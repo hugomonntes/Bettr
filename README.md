@@ -13,4 +13,8 @@ Crear la validación tanto del Registro como del Login, es decir que si un usuar
 
 ## 3ª SEMANA DE DESARROLLO ( 10 ENE - 19 ENE 2026 )
 
-Crear el Registro de la aplicación movil tanto 
+Crear el Registro y Login de la aplicación movil tanto el frontend (aún provisional sin acabar) y el backend creado con la lógica y la conexión con la base de datos, además de crear las clases y el sistema de archivos necesario (Modelo DAO).
+
+## 4ª SEMANA DE DESARROLLO ( 19 ENE -  ACTUALIDAD )
+
+Crear frontend de los layouts de la aplicación movil sin funcionalidad actualmente pero con el diseño ya casi realizado de algunas de las views.
