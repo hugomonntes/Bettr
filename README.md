@@ -18,3 +18,5 @@ Crear el Registro y Login de la aplicación movil tanto el frontend (aún provis
 ## 4ª SEMANA DE DESARROLLO ( 19 ENE -  ACTUALIDAD )
 
 Crear frontend de los layouts de la aplicación movil sin funcionalidad actualmente pero con el diseño ya casi realizado de algunas de las views.
+
+Crear diseños layouts de la app movil, intro, login, registro y funcionalidad en los intents para pasar de un layout a otro.
