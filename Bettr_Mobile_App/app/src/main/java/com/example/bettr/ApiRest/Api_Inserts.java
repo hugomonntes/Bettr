@@ -1,5 +1,7 @@
 package com.example.bettr.ApiRest;
 
+import android.media.Image;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +30,21 @@ public class Api_Inserts {
 		}).start();
 	}
 
-	public void insertHabito(){
-
+	public void insertHabito(String nombreUsuario, String descripcion, Image post){
+		new Thread(() -> {
+			try {
+				URL url = new URL("http://192.130.0.4:8080/api_rest/rest/habits/add"); // TODO API aun por crear
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-Type", "application/json");
+				connection.setDoOutput(true);
+				JSONObject json = new JSONObject();
+				json.put("nombre", nombreUsuario);
+				json.put("descripcion", descripcion);
+				json.put("imagen", post); // TODO CREAR COLUMNA BASE DE DATOS
+			} catch (IOException | JSONException e) {
+				throw new RuntimeException(e);
+			}
+		}).start();
 	}
 }
