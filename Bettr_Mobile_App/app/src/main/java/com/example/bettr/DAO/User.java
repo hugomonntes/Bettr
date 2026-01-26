@@ -1,4 +1,4 @@
-package com.example.bettr.Dao;
+package com.example.bettr.DAO;
 
 import android.media.Image;
 

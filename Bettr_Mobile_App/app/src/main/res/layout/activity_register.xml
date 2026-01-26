@@ -43,13 +43,13 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Join Better today"
-        android:textSize="14sp"
+        android:layout_marginTop="6dp"
+        android:text="Join Bettr today"
         android:textColor="#D1D5DB"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="6dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilName"
