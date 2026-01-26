@@ -12,7 +12,7 @@ public class Api_Inserts {
 	public void insertUsuario (String name, String username, String email, String password){
 		new Thread(() -> {
 			try {
-				URL url = new URL("http://192.130.0.4:8080/tema5maven/rest/Bettr"); // TODO API aun por crear
+				URL url = new URL("http://192.130.0.4:8080/api_rest/rest/users/add"); // TODO API aun por crear
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type", "application/json");
