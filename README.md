@@ -21,3 +21,5 @@ Crear frontend de los layouts de la aplicación movil sin funcionalidad actualme
 
 Crear diseños layouts de la app movil, intro, login, registro y funcionalidad en los intents para pasar de un layout a otro.
 Comienzo desarrollo layout principal, donde se visualizarán todos los posts (hábitos diarios de cada usuario en mi caso) y las streaks que son las rachas de dias completados de cada usuario.
+
+Realizar API REST para todas las plataformas, gestionando métodos y clases para mantenerlo organizado sin mezclar código.
