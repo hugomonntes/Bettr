@@ -27,4 +27,8 @@ public class Api_Inserts {
 			}
 		}).start();
 	}
+
+	public void insertHabito(){
+
+	}
 }
