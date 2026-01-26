@@ -6,14 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/users")
 public class UsersManager {
-    String url = "http://sql.freedb.tech:3306/freedb_hmontes/freedb_BettrDB";
+    String url = "http://sql.freedb.tech:3306/freedb_BettrDB";
     String user = "freedb_hmontes";
     String password = "pMEn7Hq3e9nYb$$";
 
@@ -33,9 +35,27 @@ public class UsersManager {
                     pstmt.executeUpdate();
                 }
             }
-            return Response.status(Response.Status.CREATED).build();
+            return Response.ok().build();
         } catch (ClassNotFoundException | SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
+    }
+
+    @GET
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
+                String query = "SELECT * FROM usuarios";
+                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                    pstmt.executeQuery();
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+        return Response.ok().build();
     }
 }
