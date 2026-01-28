@@ -13,18 +13,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-class Users {
-    private String name;
-    private String username;
-    private String email;
-    private String password;
-
-    public String getName() { return name; }
-    public String getUsername() { return username; }
-    public String getEmail() { return email; }
-    public String getPassword() { return password; }
-}
-
 @Path("/users")
 public class UsersManager {
     String url = "http://sql.freedb.tech:3306/freedb_BettrDB";
