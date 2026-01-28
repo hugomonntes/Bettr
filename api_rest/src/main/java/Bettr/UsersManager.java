@@ -3,7 +3,10 @@ package Bettr;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -15,7 +18,7 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/users")
 public class UsersManager {
-    String url = "http://mariadb.freedb.tech:3306/freedb_BettrDB"; // FIXME cambié el tipo de conexión de mysql a mariadb
+    String url = "jdbc:mysql://sql.freedb.tech:3306/freedb_BettrDB";
     String user = "freedb_hmontes";
     String password = "pMEn7Hq3e9nYb$$";
 
@@ -24,7 +27,7 @@ public class UsersManager {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(Users user) {
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 String query = "INSERT INTO usuarios (name, username, email, password_hash) VALUES (?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -45,17 +48,26 @@ public class UsersManager {
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers() {
+        ArrayList<Users> usersList = new ArrayList<>();
         try {
-            Class.forName("org.mariadb.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
+                Statement stmt = conn.createStatement();
                 String query = "SELECT * FROM usuarios";
-                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                    pstmt.executeQuery();
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) { 
+                    String name = rs.getString("name");
+                    String username = rs.getString("username");
+                    String email = rs.getString("email");
+                    String password_hash = rs.getString("password_hash");
+                    Users user = new Users(name, username, email, password_hash);
+                    usersList.add(user);
                 }
+                
             }
         } catch (ClassNotFoundException | SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
-        return Response.ok().build();
+        return Response.ok(usersList).build();
     }
 }
