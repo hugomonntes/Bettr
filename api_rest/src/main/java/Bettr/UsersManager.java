@@ -25,16 +25,17 @@ public class UsersManager {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(Users user) {
+    public Response addUser(Users user) { // TODO hashear password
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 String query = "INSERT INTO usuarios (name, username, email, password_hash) VALUES (?, ?, ?, ?)";
+                
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, user.getName());
                     pstmt.setString(2, user.getUsername());
                     pstmt.setString(3, user.getEmail());
-                    pstmt.setString(4, user.getPassword());
+                    pstmt.setString(4, user.getPassword_hash());
                     pstmt.executeUpdate();
                 }
             }
@@ -55,7 +56,7 @@ public class UsersManager {
                 Statement stmt = conn.createStatement();
                 String query = "SELECT * FROM usuarios";
                 ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) { 
+                while (rs.next()) {
                     String name = rs.getString("name");
                     String username = rs.getString("username");
                     String email = rs.getString("email");
@@ -63,7 +64,7 @@ public class UsersManager {
                     Users user = new Users(name, username, email, password_hash);
                     usersList.add(user);
                 }
-                
+
             }
         } catch (ClassNotFoundException | SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

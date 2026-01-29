@@ -2,6 +2,8 @@ package Bettr;
 
 import java.io.Serializable;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class Users implements Serializable{
     String name;
     String username;
@@ -11,19 +13,19 @@ public class Users implements Serializable{
     public Users() {
     }
 
-    public Users(String name, String username, String email, String password) {
+    public Users(String name, String username, String email, String password_hash) {
         this.name = name;
         this.username = username;
         this.email = email;
-        this.password_hash = password;
+        this.password_hash = password_hash;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password_hash = password;
+    public void setPassword_hash(String password_hash) {
+        this.password_hash = password_hash;
     }
 
     public void setName(String name) {
@@ -46,7 +48,8 @@ public class Users implements Serializable{
         return email;
     }
 
-    public String getPassword() {
-        return password_hash;
+    public String getPassword_hash() {
+        BCrypt bCrypt = new BCrypt();
+        return bCrypt.hashpw(password_hash, bCrypt.gensalt());
     }
 }
