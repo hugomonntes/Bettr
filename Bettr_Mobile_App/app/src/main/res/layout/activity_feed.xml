@@ -1,30 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/logobettr"
-    tools:context=".Feed">
+    android:background="#0E0E0E">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+    <!-- Barra Superior -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivProfileTop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:drawable/btn_default"
+            android:contentDescription="Perfil"
+            android:src="@android:drawable/ic_menu_gallery"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivChat"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="Chat"
+            android:src="@android:drawable/stat_notify_chat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/yellow" />
+
+        <ImageView
+            android:id="@+id/ivNotifications"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Notificaciones"
+            android:src="@android:drawable/ic_popup_reminder"
+            app:layout_constraintBottom_toBottomOf="@+id/ivChat"
+            app:layout_constraintEnd_toStartOf="@+id/ivChat"
+            app:layout_constraintTop_toTopOf="@+id/ivChat"
+            app:tint="@color/yellow" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Barra de Racha (Streak) -->
+    <LinearLayout
+        android:id="@+id/streakBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#0E0E0E"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar">
+
+        <include layout="@layout/item_streak_day" />
+        <include layout="@layout/item_streak_day" />
+        <include layout="@layout/item_streak_day" />
+        <include layout="@layout/item_streak_day" />
+        <include layout="@layout/item_streak_day" />
+        <include layout="@layout/item_streak_day" />
+        <include layout="@layout/item_streak_day" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#222"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/streakBar" />
+
+    <!-- Lista de Posts -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFeed"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:listitem="@layout/item_post" />
+
+    <!-- Navegación Inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:background="#000000"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+    <!-- Botón Central de Cámara -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="Cámara"
+        android:src="@android:drawable/ic_menu_camera"
+        app:backgroundTint="@color/yellow"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="409dp"
-        android:layout_height="665dp"
-        android:layout_marginBottom="1dp"
-        android:background="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,8 +12,7 @@ import com.example.bettr.R;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class AdapterIndex extends RecyclerView.Adapter<AdapterIndex.MyViewHolder>{ // TODO crear la clase Usuario,la forma de inyectar usuarios, clase post,
-	// TODO crear celda para los post, igual crear celda para la barra de dias de streak, completar hábitos.
+public class AdapterIndex extends RecyclerView.Adapter<AdapterIndex.MyViewHolder>{ 
 	ArrayList<Objects> usuarios = new ArrayList<>();
 
 	public AdapterIndex(ArrayList<Objects> usuarios){
@@ -23,10 +22,8 @@ public class AdapterIndex extends RecyclerView.Adapter<AdapterIndex.MyViewHolder
 	@NonNull
 	@Override
 	public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		View elemento= LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_index, // TODO Crear celda
-				parent, false);
-		MyViewHolder mvh = new MyViewHolder(elemento);
-		return mvh ;
+		View elemento = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
+		return new MyViewHolder(elemento);
 	}
 
 	@Override
@@ -39,7 +36,7 @@ public class AdapterIndex extends RecyclerView.Adapter<AdapterIndex.MyViewHolder
 		return usuarios.size();
 	}
 
-	public class MyViewHolder extends RecyclerView.ViewHolder {
+	public static class MyViewHolder extends RecyclerView.ViewHolder {
 		public MyViewHolder(View viewElemento) {
 			super(viewElemento);
 		}
