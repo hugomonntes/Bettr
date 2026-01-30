@@ -1,8 +1,10 @@
 package com.example.bettr;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -42,6 +44,13 @@ public class Register extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(v -> registerUser());
+
+        TextView tvLogin = findViewById(R.id.tvLogin);
+        tvLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(Register.this, Login.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void registerUser() {
