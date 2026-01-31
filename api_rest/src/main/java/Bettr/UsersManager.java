@@ -116,14 +116,19 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/get/{username}")
+    @Path("/get/{username}/{password_hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("username") String username) {
+    public Response getUser(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement stm = connection.createStatement();
-            String query = String.format("SELECT password_hash FROM usuarios WHERE username = '%s'", username);
+            String query = String.format("SELECT * FROM usuarios WHERE username = '%s' AND password_hash = '%s'", username, password_hash);
             ResultSet rs = stm.executeQuery(query);
-            return Response.ok(rs).build();
+            return Response.ok(String.format("Usuario encontrado: %s", username)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
