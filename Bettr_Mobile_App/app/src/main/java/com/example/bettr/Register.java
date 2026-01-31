@@ -14,8 +14,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bettr.ApiRest.Api_Inserts;
-import com.example.bettr.Dao.Connection;
-import com.example.bettr.Dao.UserDao;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -42,7 +40,7 @@ public class Register extends AppCompatActivity {
 
         etName = findViewById(R.id.etName);
         etUsername = findViewById(R.id.etUsername);
-        etEmail = findViewById(R.id.etEmail);
+        etEmail = findViewById(R.id.etUserName);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnRegister = findViewById(R.id.btnRegister);

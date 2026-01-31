@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity {
             return insets;
         });
 
-        etEmail = findViewById(R.id.etEmail);
+        etEmail = findViewById(R.id.etUserName);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String username = etEmail.getText().toString().trim(); // Nota: Usamos el campo email como username para la API
+        String username = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
 
         if (username.isEmpty() || password.isEmpty()) {
