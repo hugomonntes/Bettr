@@ -27,3 +27,5 @@ Realizar API REST para todas las plataformas, gestionando métodos y clases para
 ## 5ª SEMANA DE DESARROLLO ( 27 ENE -  ACTUALIDAD )
 
 Crear Layouts aplicación movil añadirle animaciones, elementos y funcionalidad mediante la Api, crear las funciones necesarias para realizar el login y el registro además de la funcionalidad de poder editar cualquier campo de tu perfil (nombre, username, email...).
+
+Añadir funciones a la API para la devolucion de un usuario mediante su username y password, además de comenzar con la creación del feed de la aplicación móvil.

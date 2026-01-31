@@ -30,7 +30,7 @@ public class Api_Inserts {
 				json.put("name", name);
 				json.put("username", username);
 				json.put("email", email);
-				json.put("password", password);
+				json.put("password_hash", password);
 
 				try (OutputStream os = connection.getOutputStream()) {
 					byte[] input = json.toString().getBytes(StandardCharsets.UTF_8);

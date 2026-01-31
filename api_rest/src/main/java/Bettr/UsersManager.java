@@ -114,4 +114,18 @@ public class UsersManager {
         }
         return Response.ok(usersList).build();
     }
+
+    @GET
+    @Path("/get/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUser(@PathParam("username") String username) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            Statement stm = connection.createStatement();
+            String query = String.format("SELECT password_hash FROM usuarios WHERE username = '%s'", username);
+            ResultSet rs = stm.executeQuery(query);
+            return Response.ok(rs).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 }
