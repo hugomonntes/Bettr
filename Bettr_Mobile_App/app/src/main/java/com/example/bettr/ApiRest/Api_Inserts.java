@@ -24,7 +24,6 @@ public class Api_Inserts {
 				connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type", "application/json");
-				connection.setRequestProperty("Accept", "application/json");
 				connection.setDoOutput(true);
 
 				JSONObject json = new JSONObject();
@@ -70,8 +69,7 @@ public class Api_Inserts {
 				JSONObject json = new JSONObject();
 				json.put("nombre", nombreUsuario);
 				json.put("descripcion", descripcion);
-				// TODO: La imagen requiere un tratamiento especial (Base64 o multipart)
-				// json.put("imagen", post); 
+				// json.put("imagen", post);
 
 				try (OutputStream os = connection.getOutputStream()) {
 					byte[] input = json.toString().getBytes(StandardCharsets.UTF_8);
