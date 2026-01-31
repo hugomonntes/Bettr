@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.bettr.ApiRest.Api_Inserts;
 import com.example.bettr.Dao.Connection;
 import com.example.bettr.Dao.UserDao;
 
@@ -23,12 +24,15 @@ public class Register extends AppCompatActivity {
 
     private EditText etName, etUsername, etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
+    private Api_Inserts apiInserts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+
+        apiInserts = new Api_Inserts();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -77,29 +81,7 @@ public class Register extends AppCompatActivity {
 
         String passwordHash = hashPassword(password);
 
-        try {
-            Connection connection = new Connection(
-                    "jdbc:mysql://sql.freedb.tech:3306/freedb_BettrDB",
-                    "freedb_hmontes",
-                    "pMEn7Hq3e9nYb$$"
-            );
-            connection.init();
-
-            UserDao userDao = new UserDao();
-
-            boolean success = userDao.insert(name, username, email, passwordHash);
-
-            if (success) {
-                Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "Error creating account", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Database connection error", Toast.LENGTH_SHORT).show();
-        }
+        apiInserts.insertUsuario(name, username, email, passwordHash);
     }
 
     private String hashPassword(String password) {
