@@ -1,9 +1,16 @@
 package com.example.bettr.ApiRest;
 
 import android.util.Log;
+import com.example.bettr.Publicaciones.Publicaciones;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Api_Gets {
     private static final String BASE_URL = "http://10.0.2.2:8080/api_rest/rest";
@@ -13,35 +20,64 @@ public class Api_Gets {
         void onResult(boolean success);
     }
 
+    public interface PostsCallback {
+        void onResult(ArrayList<Publicaciones> posts);
+    }
+
     public void getUser(String username, String password, ApiCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
                 URL url = new URL(BASE_URL + "/users/get/" + username + "/" + password + "/");
-                Log.d(TAG, "Attempting login at: " + url.toString());
-                
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
-                connection.setConnectTimeout(5000);
-                connection.setReadTimeout(5000);
-
                 int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Login Response Code: " + responseCode);
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    callback.onResult(true);
-                } else {
-                    callback.onResult(false);
-                }
-
+                callback.onResult(responseCode == HttpURLConnection.HTTP_OK);
             } catch (IOException e) {
-                Log.e(TAG, "Error en la petición API: " + e.getMessage());
                 callback.onResult(false);
             } finally {
-                if (connection != null) {
-                    connection.disconnect();
+                if (connection != null) connection.disconnect();
+            }
+        }).start();
+    }
+
+    public void getPublicaciones(PostsCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            ArrayList<Publicaciones> lista = new ArrayList<>();
+            try {
+                URL url = new URL(BASE_URL + "/posts/getAll");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) response.append(line);
+                    in.close();
+
+                    JSONArray jsonArray = new JSONArray(response.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        lista.add(new Publicaciones(
+                                obj.getString("nombreUsuario"),
+                                obj.optString("imageUrl", ""),
+                                obj.getString("descripcion"),
+                                obj.optString("info", "Entrenamiento"),
+                                obj.optInt("likes", 0),
+                                obj.optInt("streak", 0)
+                        ));
+                    }
                 }
+                callback.onResult(lista);
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error: " + e.getMessage());
+                callback.onResult(lista); // Devuelve lista vacía en error
+            } finally {
+                if (connection != null) connection.disconnect();
             }
         }).start();
     }

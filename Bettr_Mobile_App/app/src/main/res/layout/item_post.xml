@@ -25,7 +25,7 @@
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/logobettr"
-            app:shapeAppearanceOverlay="@style/Base.CardView"
+            app:shapeAppearanceOverlay="@style/CircleImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,6 +75,7 @@
                 android:paddingVertical="4dp">
 
                 <TextView
+                    android:id="@+id/tvStreak"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🔥 45"
@@ -117,12 +118,14 @@
             app:layout_constraintTop_toBottomOf="@+id/cvPostImage">
 
             <ImageView
+                android:id="@+id/ivLike"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@android:drawable/btn_star_big_off"
                 app:tint="@color/white" />
 
             <TextView
+                android:id="@+id/tvLikes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -131,6 +134,7 @@
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/ivComment"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginStart="24dp"
@@ -138,6 +142,7 @@
                 app:tint="@color/white" />
 
             <TextView
+                android:id="@+id/tvComments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
@@ -151,6 +156,7 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:id="@+id/ivShare"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@android:drawable/ic_menu_share"
