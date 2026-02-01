@@ -1,6 +1,7 @@
 package com.example.bettr;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -52,7 +53,7 @@ public class Feed extends AppCompatActivity {
                     adapter = new AdapterFeed(listaPublicaciones);
                     rvFeed.setAdapter(adapter);
                 } else {
-                    Toast.makeText(Feed.this, "No se pudieron cargar las publicaciones", Toast.LENGTH_SHORT).show();
+                    Log.i("Error al cargar", "No se pudieron cargar las publicaciones");;
                     // Datos de prueba por si la API falla o está vacía
                     setupData();
                 }
@@ -61,8 +62,9 @@ public class Feed extends AppCompatActivity {
     }
 
     private void setupData() {
-        listaPublicaciones.add(new Publicaciones("Diego Costa", "", "Soy el mejor. #Bettr", "Entrenamiento Futbol • 1h", 234, 45));
-        listaPublicaciones.add(new Publicaciones("Maria Garcia", "", "Primer día de yoga completado. ¡Me siento genial!", "Yoga • 2h", 120, 12));
+        listaPublicaciones.add(new Publicaciones("Diego Costa", "", "Soy el mejor.", "Entrenamiento Futbol • 1h", 234, 45));
+        listaPublicaciones.add(new Publicaciones("Carlos Alberto", "", "Programando", "Programación • 2h", 120, 12));
+        listaPublicaciones.add(new Publicaciones("Iago Doval 99", "", "Bajando de nivel", "Padel • 1h", 99, 22));
         adapter = new AdapterFeed(listaPublicaciones);
         rvFeed.setAdapter(adapter);
     }
