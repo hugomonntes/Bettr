@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.Bettr" parent="Base.Theme.Bettr" />
+
+    <style name="CircleImage">
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>
