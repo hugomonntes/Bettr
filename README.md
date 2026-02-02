@@ -29,3 +29,5 @@ Realizar API REST para todas las plataformas, gestionando métodos y clases para
 Crear Layouts aplicación movil añadirle animaciones, elementos y funcionalidad mediante la Api, crear las funciones necesarias para realizar el login y el registro además de la funcionalidad de poder editar cualquier campo de tu perfil (nombre, username, email...).
 
 Añadir funciones a la API para la devolucion de un usuario mediante su username y password, además de comenzar con la creación del feed de la aplicación móvil.
+
+Crear desarrollo de las diferentes vistas de la aplicaión así como la navegación por ellas mediante la barra de navegación, creadas por partes mediante fragmentos de código unificados en la view final por si quiero reutilizarlos en otras views algunos componentes.
