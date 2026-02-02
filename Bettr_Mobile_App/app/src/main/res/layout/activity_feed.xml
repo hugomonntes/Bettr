@@ -2,133 +2,35 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#121212">
 
-    <!-- Barra Superior -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivProfileTop"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logobettr"
-            app:shapeAppearanceOverlay="@style/CircleImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bettr"
-            android:textColor="#FACC15"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivChat"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:contentDescription="Chat"
-            android:src="@android:drawable/stat_notify_chat"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
-
-        <ImageView
-            android:id="@+id/ivNotifications"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="Notificaciones"
-            android:src="@android:drawable/ic_popup_reminder"
-            app:layout_constraintBottom_toBottomOf="@+id/ivChat"
-            app:layout_constraintEnd_toStartOf="@+id/ivChat"
-            app:layout_constraintTop_toTopOf="@+id/ivChat"
-            app:tint="@color/white" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Barra de Racha (Streak) -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cvStreak"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="4dp"
-        app:cardBackgroundColor="#1A1A1A"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="#2A2E33"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topBar">
-
-        <LinearLayout
-            android:id="@+id/streakBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingVertical="12dp"
-            android:paddingHorizontal="4dp">
-
-            <include layout="@layout/item_streak_day" />
-            <include layout="@layout/item_streak_day" />
-            <include layout="@layout/item_streak_day" />
-            <include layout="@layout/item_streak_day" />
-            <include layout="@layout/item_streak_day" />
-            <include layout="@layout/item_streak_day" />
-            <include layout="@layout/item_streak_day" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Lista de Posts -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvFeed"
+    <!-- Contenedor de Fragments -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cvStreak"
-        tools:listitem="@layout/item_post" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Barra de navegación redondeada ajustada -->
+    <!-- Barra de navegación flotante -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvBottomNav"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
         app:cardBackgroundColor="#222222"
-        app:cardCornerRadius="40dp"
+        app:cardCornerRadius="32dp"
         app:cardElevation="12dp"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeWidth="0dp">
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNav"
@@ -137,7 +39,7 @@
             android:background="@android:color/transparent"
             app:elevation="0dp"
             app:itemActiveIndicatorStyle="@null"
-            app:itemIconSize="26dp"
+            app:itemIconSize="28dp"
             app:itemIconTint="@color/white"
             app:itemRippleColor="@null"
             app:labelVisibilityMode="unlabeled"

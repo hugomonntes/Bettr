@@ -57,7 +57,7 @@ public class Login extends AppCompatActivity {
         String password = etPassword.getText().toString();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please write on all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -71,7 +71,7 @@ public class Login extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(Login.this, "Invalid credentials or server error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Invalid user or password or server error", Toast.LENGTH_SHORT).show();
                 }
             });
         });

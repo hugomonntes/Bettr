@@ -68,12 +68,12 @@ public class Register extends AppCompatActivity {
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Passwords do not the same", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() < 6) {
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Password very short", Toast.LENGTH_SHORT).show();
             return;
         }
 
