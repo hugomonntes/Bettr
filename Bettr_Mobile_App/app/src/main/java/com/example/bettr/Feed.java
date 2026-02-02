@@ -73,11 +73,17 @@ public class Feed extends AppCompatActivity {
         ivSocial.setColorFilter(colorInactive);
         ivProfile.setColorFilter(colorInactive);
 
-        if (selectedId == R.id.btn_nav_home) ivHome.setColorFilter(colorActive);
-        else if (selectedId == R.id.btn_nav_habits) ivHabits.setColorFilter(colorActive);
-        else if (selectedId == R.id.btn_nav_camera) ivCamera.setColorFilter(colorActive);
-        else if (selectedId == R.id.btn_nav_social) ivSocial.setColorFilter(colorActive);
-        else if (selectedId == R.id.btn_nav_profile) ivProfile.setColorFilter(colorActive);
+        if (selectedId == R.id.btn_nav_home) {
+            ivHome.setColorFilter(colorActive);
+        } else if (selectedId == R.id.btn_nav_habits) {
+            ivHabits.setColorFilter(colorActive);
+        } else if (selectedId == R.id.btn_nav_camera) {
+            ivCamera.setColorFilter(colorActive);
+        } else if (selectedId == R.id.btn_nav_social) {
+            ivSocial.setColorFilter(colorActive);
+        } else if (selectedId == R.id.btn_nav_profile) {
+            ivProfile.setColorFilter(colorActive);
+        }
     }
 
     private void loadFragment(Fragment fragment) {
