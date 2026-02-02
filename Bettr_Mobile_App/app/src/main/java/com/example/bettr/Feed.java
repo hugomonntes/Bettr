@@ -1,6 +1,10 @@
 package com.example.bettr;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +18,13 @@ import com.example.bettr.Fragments.FeedFragment;
 import com.example.bettr.Fragments.HabitsFragment;
 import com.example.bettr.Fragments.ProfileFragment;
 import com.example.bettr.Fragments.SocialFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Feed extends AppCompatActivity {
+
+    private FrameLayout btnHome, btnHabits, btnCamera, btnSocial, btnProfile;
+    private ImageView ivHome, ivHabits, ivCamera, ivSocial, ivProfile;
+    private int colorActive = Color.parseColor("#FACC15");
+    private int colorInactive = Color.parseColor("#9CA3AF");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,35 +38,51 @@ public class Feed extends AppCompatActivity {
             return insets;
         });
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
-        bottomNav.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.nav_home) {
-                selectedFragment = new FeedFragment();
-            } else if (itemId == R.id.nav_habits) {
-                selectedFragment = new HabitsFragment();
-            } else if (itemId == R.id.nav_camera) {
-                selectedFragment = new CameraFragment();
-            } else if (itemId == R.id.nav_social) {
-                selectedFragment = new SocialFragment();
-            } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new ProfileFragment();
-            }
-
-            if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, selectedFragment)
-                        .commit();
-            }
-            return true;
-        });
-
+        initNav();
+        
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new FeedFragment())
-                    .commit();
+            updateNavUI(R.id.btn_nav_home);
+            loadFragment(new FeedFragment());
         }
+    }
+
+    private void initNav() {
+        btnHome = findViewById(R.id.btn_nav_home);
+        btnHabits = findViewById(R.id.btn_nav_habits);
+        btnCamera = findViewById(R.id.btn_nav_camera);
+        btnSocial = findViewById(R.id.btn_nav_social);
+        btnProfile = findViewById(R.id.btn_nav_profile);
+
+        ivHome = findViewById(R.id.iv_home_icon);
+        ivHabits = findViewById(R.id.iv_habits_icon);
+        ivCamera = findViewById(R.id.iv_camera_icon);
+        ivSocial = findViewById(R.id.iv_social_icon);
+        ivProfile = findViewById(R.id.iv_profile_icon);
+
+        btnHome.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_home); loadFragment(new FeedFragment()); });
+        btnHabits.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_habits); loadFragment(new HabitsFragment()); });
+        btnCamera.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_camera); loadFragment(new CameraFragment()); });
+        btnSocial.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_social); loadFragment(new SocialFragment()); });
+        btnProfile.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_profile); loadFragment(new ProfileFragment()); });
+    }
+
+    private void updateNavUI(int selectedId) {
+        ivHome.setColorFilter(colorInactive);
+        ivHabits.setColorFilter(colorInactive);
+        ivCamera.setColorFilter(colorInactive);
+        ivSocial.setColorFilter(colorInactive);
+        ivProfile.setColorFilter(colorInactive);
+
+        if (selectedId == R.id.btn_nav_home) ivHome.setColorFilter(colorActive);
+        else if (selectedId == R.id.btn_nav_habits) ivHabits.setColorFilter(colorActive);
+        else if (selectedId == R.id.btn_nav_camera) ivCamera.setColorFilter(colorActive);
+        else if (selectedId == R.id.btn_nav_social) ivSocial.setColorFilter(colorActive);
+        else if (selectedId == R.id.btn_nav_profile) ivProfile.setColorFilter(colorActive);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 }
