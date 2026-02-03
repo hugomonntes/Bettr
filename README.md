@@ -15,7 +15,7 @@ Crear la validación tanto del Registro como del Login, es decir que si un usuar
 
 Crear el Registro y Login de la aplicación movil tanto el frontend (aún provisional sin acabar) y el backend creado con la lógica y la conexión con la base de datos, además de crear las clases y el sistema de archivos necesario (Modelo DAO).
 
-## 4ª SEMANA DE DESARROLLO ( 19 ENE -  26 ENE )
+## 4ª SEMANA DE DESARROLLO ( 19 ENE -  26 ENE 2026)
 
 Crear frontend de los layouts de la aplicación movil sin funcionalidad actualmente pero con el diseño ya casi realizado de algunas de las views.
 
@@ -24,7 +24,7 @@ Comienzo desarrollo layout principal, donde se visualizarán todos los posts (h�
 
 Realizar API REST para todas las plataformas, gestionando métodos y clases para mantenerlo organizado sin mezclar código.
 
-## 5ª SEMANA DE DESARROLLO ( 27 ENE -  ACTUALIDAD )
+## 5ª SEMANA DE DESARROLLO ( 27 ENE -  ACTUALIDAD 2026)
 
 Crear Layouts aplicación movil añadirle animaciones, elementos y funcionalidad mediante la Api, crear las funciones necesarias para realizar el login y el registro además de la funcionalidad de poder editar cualquier campo de tu perfil (nombre, username, email...).
 
