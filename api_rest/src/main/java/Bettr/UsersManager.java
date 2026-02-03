@@ -38,7 +38,7 @@ public class UsersManager {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
-                String query = "INSERT INTO usuarios (name, username, email, password_hash) VALUES (?, ?, ?, ?)";
+                String query = "INSERT INTO users (name, username, email, password_hash) VALUES (?, ?, ?, ?)";
 
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, user.getName());
@@ -61,7 +61,7 @@ public class UsersManager {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
-                String query = "UPDATE usuarios SET name=? WHERE username=?";
+                String query = "UPDATE users SET name=? WHERE username=?";
 
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, user.getName());
@@ -82,7 +82,7 @@ public class UsersManager {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
-                String query = "UPDATE usuarios SET username=? WHERE username=?";
+                String query = "UPDATE users SET username=? WHERE username=?";
 
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setString(1, username);
@@ -134,7 +134,7 @@ public class UsersManager {
         }
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement stm = connection.createStatement();
-            String query = String.format("SELECT * FROM usuarios WHERE username = '%s' AND password_hash = '%s'", username, password_hash);
+            String query = String.format("SELECT * FROM users WHERE username = '%s' AND password_hash = '%s'", username, password_hash);
             ResultSet rs = stm.executeQuery(query);
             return Response.ok(String.format("Usuario encontrado: %s", username)).build();
         } catch (Exception e) {
