@@ -1,15 +1,14 @@
-# Usamos Tomcat con JDK 17
+# Paso 1: Compilar el código (así no tienes que subir el .war)
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Paso 2: Ejecutar en Tomcat
 FROM tomcat:10.1-jdk17
-
-# Borramos las aplicaciones por defecto de Tomcat para evitar conflictos
 RUN rm -rf /usr/local/tomcat/webapps/*
+# Copia el war generado (asegúrate de que termine en .war)
+COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Copiamos el archivo .war desde la raíz de tu repo al directorio de Tomcat
-# Lo renombramos a ROOT.war para que tu API responda en la URL principal (/)
-COPY api_rest.war /usr/local/tomcat/webapps/ROOT.war
-
-# Exponemos el puerto 8080 que es el que usa Tomcat por defecto
 EXPOSE 8080
-
-# Comando para iniciar Tomcat
 CMD ["catalina.sh", "run"]
