@@ -19,7 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Register extends AppCompatActivity {
-
+    // TODO al hacer el registro notificar de cuenta creada y enviar al login.
     private EditText etName, etUsername, etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
     private Api_Inserts apiInserts;
