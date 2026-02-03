@@ -140,7 +140,7 @@ public class UsersManager {
     public Response postImage(int imageData) {
         try (Connection connection = DriverManager.getConnection(url, user, password)){
             Statement stm = connection.createStatement();
-            stm.executeUpdate("INSERT INTO habitos");
+            stm.executeUpdate("INSERT INTO habitos VALUES ..."); // TODO Modificar consulta segun la tabla de habitos
         } catch (Exception e) {
         }
         return Response.ok().build();
