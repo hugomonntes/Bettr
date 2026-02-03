@@ -100,7 +100,7 @@ public class UsersManager {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 Statement stmt = conn.createStatement();
-                String query = "SELECT * FROM usuarios";
+                String query = "SELECT * FROM users";
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
                     String name = rs.getString("name");
