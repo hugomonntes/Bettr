@@ -20,11 +20,16 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/users")
 public class UsersManager {
-    Dotenv dotenv = Dotenv.load();
+    // Dotenv dotenv = Dotenv.load(); // TODO no encuentra el archivo .env
 
-    String url = dotenv.get("DB_URL");
-    String user = dotenv.get("DB_USER");
-    String password = dotenv.get("DB_PASSWORD");
+    // String url = dotenv.get("DB_URL");
+    //  String user = dotenv.get("DB_USER");
+    // String password = dotenv.get("DB_PASSWORD");
+
+    // Base de datos alojada en Supabase tengo dos host mas por si falla el principal
+    String url = "jdbc:postgresql://aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require";
+    String user="postgres.mqborjmvfvlemhewhscw";
+    String password="jsrMYBg6aAz-V9d4FfGwxw";
 
     @POST
     @Path("/add")
