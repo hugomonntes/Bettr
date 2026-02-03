@@ -133,4 +133,16 @@ public class UsersManager {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    @POST
+    @Path("/postImage")
+    @Consumes("image/png")
+    public Response postImage(int imageData) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)){
+            Statement stm = connection.createStatement();
+            stm.executeUpdate("INSERT INTO habitos");
+        } catch (Exception e) {
+        }
+        return Response.ok().build();
+    }
 }
