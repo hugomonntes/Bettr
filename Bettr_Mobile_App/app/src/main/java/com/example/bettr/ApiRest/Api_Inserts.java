@@ -13,10 +13,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class Api_Inserts {
-	private static final String TAG = "Api_Inserts"; // Escabilidad por si uso otro server
+	private static final String TAG = "Api_Inserts"; 
 	private static final String BASE_URL = "http://10.0.2.2:8080/api_rest/rest"; 
 
-	public void insertUsuario (String name, String username, String email, String password){
+	public interface ApiInsertCallback {
+		void onResult(boolean success);
+	}
+
+	public void insertUsuario (String name, String username, String email, String password, ApiInsertCallback callback){
 		new Thread(() -> {
 			HttpURLConnection connection = null;
 			try {
@@ -41,13 +45,16 @@ public class Api_Inserts {
 				Log.d(TAG, "Insert Usuario Response Code: " + responseCode);
 				
 				if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-					Log.d(TAG, "Usuario insertado correctamente via API");
+					Log.d(TAG, "Usuario insertado correctamente");
+					if (callback != null) callback.onResult(true);
 				} else {
 					Log.e(TAG, "Error al insertar usuario. Code: " + responseCode);
+					if (callback != null) callback.onResult(false);
 				}
 
 			} catch (IOException | JSONException e) {
 				Log.e(TAG, "Error en la petición API: " + e.getMessage());
+				if (callback != null) callback.onResult(false);
 			} finally {
 				if (connection != null) {
 					connection.disconnect();
@@ -69,7 +76,6 @@ public class Api_Inserts {
 				JSONObject json = new JSONObject();
 				json.put("nombre", nombreUsuario);
 				json.put("descripcion", descripcion);
-				// json.put("imagen", post);
 
 				try (OutputStream os = connection.getOutputStream()) {
 					byte[] input = json.toString().getBytes(StandardCharsets.UTF_8);

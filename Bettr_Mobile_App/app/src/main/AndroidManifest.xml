@@ -37,6 +37,9 @@
         <activity
             android:name=".Register"
             android:exported="false" />
+        <activity
+            android:name=".CompleteProfile"
+            android:exported="false" />
     </application>
 
 </manifest>

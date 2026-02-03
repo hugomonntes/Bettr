@@ -19,7 +19,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Register extends AppCompatActivity {
-    // TODO al hacer el registro notificar de cuenta creada y enviar al login.
     private EditText etName, etUsername, etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
     private Api_Inserts apiInserts;
@@ -68,18 +67,29 @@ public class Register extends AppCompatActivity {
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not the same", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() < 6) {
-            Toast.makeText(this, "Password very short", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Password is too short (min 6 chars)", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String passwordHash = hashPassword(password);
 
-        apiInserts.insertUsuario(name, username, email, passwordHash);
+        apiInserts.insertUsuario(name, username, email, passwordHash, success -> {
+            runOnUiThread(() -> {
+                if (success) {
+                    Toast.makeText(Register.this, "Registro completado", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Register.this, CompleteProfile.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(Register.this, "Error al crear la cuenta. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     private String hashPassword(String password) {
