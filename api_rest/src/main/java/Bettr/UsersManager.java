@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -19,16 +20,18 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/users")
 public class UsersManager {
-    String url = "jdbc:mysql://sql.freedb.tech:3306/freedb_BettrDB";
-    String user = "freedb_hmontes";
-    String password = "pMEn7Hq3e9nYb$$";
+    Dotenv dotenv = Dotenv.load();
+
+    String url = dotenv.get("DB_URL");
+    String user = dotenv.get("DB_USER");
+    String password = dotenv.get("DB_PASSWORD");
 
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(Users user) { // TODO fecha nacimiento y fecha creacion de la cuenta y en la base de datos.
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 String query = "INSERT INTO usuarios (name, username, email, password_hash) VALUES (?, ?, ?, ?)";
 
@@ -51,7 +54,7 @@ public class UsersManager {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editName(Users user) { // FIXME no tener dos users con el mismo username
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 String query = "UPDATE usuarios SET name=? WHERE username=?";
 
@@ -72,7 +75,7 @@ public class UsersManager {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editUserName(Users user, @PathParam("username") String username) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 String query = "UPDATE usuarios SET username=? WHERE username=?";
 
@@ -94,7 +97,7 @@ public class UsersManager {
     public Response getUsers() {
         ArrayList<Users> usersList = new ArrayList<>();
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 Statement stmt = conn.createStatement();
                 String query = "SELECT * FROM usuarios";
@@ -120,7 +123,7 @@ public class UsersManager {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
