@@ -170,11 +170,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:lineSpacingExtra="2dp"
             android:paddingHorizontal="20dp"
-            android:text="Diego Costa Entrenando duro hoy para mejorar mi marca personal. #Bettr"
+            android:text="Que bueno soy, los demas son unos matados perroflas"
             android:textColor="#E5E7EB"
             android:textSize="14sp"
-            android:lineSpacingExtra="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llActions" />
