@@ -64,14 +64,16 @@ public class Login extends AppCompatActivity {
 		String passwordHash = hashPassword(password);
 
 		apiGets.getUser(username, passwordHash, success -> {
-			if (success) {
-				Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(Login.this, Feed.class);
-				startActivity(intent);
-				finish();
-			} else {
-				Toast.makeText(Login.this, "user,password or server error", Toast.LENGTH_SHORT).show();
-			}
+			runOnUiThread(() -> {
+				if (success) {
+					Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(Login.this, Feed.class);
+					startActivity(intent);
+					finish();
+				} else {
+					Toast.makeText(Login.this, "user,password or server error", Toast.LENGTH_SHORT).show();
+				}
+			});
 		});
 	}
 
