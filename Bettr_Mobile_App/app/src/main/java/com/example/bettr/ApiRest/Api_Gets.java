@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Api_Gets {
-    private static final String BASE_URL = "http://192.130.0.4:8080/api_rest/rest";
+    private static final String BASE_URL = "https://bettr-idlo.onrender.com/api_rest/rest";
     private static final String TAG = "Api_Gets";
 
     public interface ApiCallback {
