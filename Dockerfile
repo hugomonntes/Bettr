@@ -1,4 +1,4 @@
-FROM tomcat:9-jdk17
+FROM tomcat:10.0.27-jdk17
 
 # Limpiar apps por defecto
 RUN rm -rf /usr/local/tomcat/webapps/*
