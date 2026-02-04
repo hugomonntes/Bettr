@@ -60,9 +60,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless">
+                android:visibility="visible">
+
                 <ImageView
                     android:id="@+id/iv_habits_icon"
                     android:layout_width="30dp"
