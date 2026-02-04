@@ -59,8 +59,9 @@ public class FeedFragment extends Fragment {
 
     private void setupDummyData() {
         listaPublicaciones.clear();
-        listaPublicaciones.add(new Publicaciones("Diego Costa", "", "Entrenando duro hoy para mejorar mi marca personal. #Bettr", "Entrenamiento Futbol • 1h", 234, 45));
-        listaPublicaciones.add(new Publicaciones("Maria Garcia", "", "Primer día de yoga completado. ¡Me siento genial!", "Yoga • 2h", 120, 12));
+        listaPublicaciones.add(new Publicaciones("Diego Costa", "", "Todos unos matados, putos perroflas", "Entrenamiento Futbol • 2h", 234, 45));
+        listaPublicaciones.add(new Publicaciones("Carlos Italiani", "", "Embaraja", "Cartas • 22h", 120, 12));
+        listaPublicaciones.add(new Publicaciones("Iago Doval", "", "Costa espabila", "Clase • 5min", 1120, 12));
         adapter = new AdapterFeed(listaPublicaciones);
         rvFeed.setAdapter(adapter);
     }
