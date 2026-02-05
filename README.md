@@ -34,4 +34,4 @@ Crear desarrollo de las diferentes vistas de la aplicaión así como la navegaci
 
 Implementación de un servidor gratuito para la API REST (Render), mejorando el acceso a la aplicación desde cualquier plataforma o dispositivo sin depender de un servidor local arrancado en la misma red que el dispositivo desde el que se quiere acceder a la app.
 
-## 6ª SEMANA DE DESARROLLO ( 6 ENE -  ACTUALIDAD 2026)
+## 6ª SEMANA DE DESARROLLO ( 6 FEB -  ACTUALIDAD 2026)
