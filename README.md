@@ -32,4 +32,4 @@ Añadir funciones a la API para la devolucion de un usuario mediante su username
 
 Crear desarrollo de las diferentes vistas de la aplicaión así como la navegación por ellas mediante la barra de navegación, creadas por partes mediante fragmentos de código unificados en la view final por si quiero reutilizarlos en otras views algunos componentes.
 
-Implementación de un servidor para la API REST, mejorando el acceso a la aplicación desde cualquier plataforma o dispositivo sin depender de un servidor local arrancado en la misma red que el dispositivo desde el que se quiere acceder a la app.
+Implementación de un servidor gratuito para la API REST (Render), mejorando el acceso a la aplicación desde cualquier plataforma o dispositivo sin depender de un servidor local arrancado en la misma red que el dispositivo desde el que se quiere acceder a la app.
