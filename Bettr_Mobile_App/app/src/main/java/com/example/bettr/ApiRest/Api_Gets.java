@@ -42,6 +42,24 @@ public class Api_Gets {
         }).start();
     }
 
+    public void getUserByUsername(String username, ApiCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/getId/" + username);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+                int responseCode = connection.getResponseCode();
+                callback.onResult(responseCode == HttpURLConnection.HTTP_OK);
+            } catch (IOException e) {
+                callback.onResult(false);
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+        }).start();
+    }
+
     public void getPublicaciones(PostsCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;

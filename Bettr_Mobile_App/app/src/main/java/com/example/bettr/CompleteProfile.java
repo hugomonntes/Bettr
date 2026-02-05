@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.bettr.ApiRest.Api_Gets;
 import com.example.bettr.ApiRest.Api_Inserts;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -35,8 +36,18 @@ public class CompleteProfile extends AppCompatActivity {
         etBio = findViewById(R.id.etBio);
         etUserName = findViewById(R.id.etUserName); // TODO hacer funcion api devolver id user por su username
 
+        int id = 0;
+        Api_Gets apiGets = null;
+        apiGets.getUserByUsername(etUserName.getText().toString(), success -> {
+            runOnUiThread(()->{
+                if (success) {
+                    // id
+                }
+            });
+        });
+
         Api_Inserts apiInserts = null;
-        apiInserts.insertDescription(1,etBio.getText().toString(),success -> { // TODO me falta meter id
+        apiInserts.insertDescription(id,etBio.getText().toString(),success -> { // TODO me falta meter id
             runOnUiThread(() -> {
                 if (success) {
                     Toast.makeText(CompleteProfile.this, "Perfil Completado", Toast.LENGTH_SHORT).show();
