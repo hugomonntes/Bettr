@@ -132,7 +132,10 @@ public class UsersManager {
                 Statement stmt = conn.createStatement();
                 String query = String.format("SELECT * FROM users WHERE username = '%s'", username);
                 ResultSet rs = stmt.executeQuery(query);
-                int id = rs.getInt("id");
+                int id = 0;
+                if (rs.next()) {
+                    id = rs.getInt("id");
+                }
                 return Response.ok(id).build();
             }
         } catch (ClassNotFoundException | SQLException e) {
