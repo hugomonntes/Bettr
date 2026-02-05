@@ -130,7 +130,7 @@ public class UsersManager {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
                 Statement stmt = conn.createStatement();
-                String query = String.format("SELECT id FROM users WHERE username = '%s'", username);
+                String query = String.format("SELECT * FROM users WHERE username = '%s'", username);
                 ResultSet rs = stmt.executeQuery(query);
                 int id = rs.getInt("id");
                 return Response.ok(id).build();
