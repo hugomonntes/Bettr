@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Api_Inserts {
 	private static final String TAG = "Api_Inserts"; 
-	private static final String BASE_URL = "http://10.0.2.2:8080/api_rest/rest"; 
+	private static final String BASE_URL = "https://bettr-idlo.onrender.com/rest";
 
 	public interface ApiInsertCallback {
 		void onResult(boolean success);
@@ -46,21 +46,72 @@ public class Api_Inserts {
 				
 				if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
 					Log.d(TAG, "Usuario insertado correctamente");
-					if (callback != null) callback.onResult(true);
+					if (callback != null){
+						callback.onResult(true);
+					}
 				} else {
 					Log.e(TAG, "Error al insertar usuario. Code: " + responseCode);
-					if (callback != null) callback.onResult(false);
+					if (callback != null){
+						callback.onResult(false);
+					}
 				}
 
 			} catch (IOException | JSONException e) {
 				Log.e(TAG, "Error en la petición API: " + e.getMessage());
-				if (callback != null) callback.onResult(false);
+				if (callback != null){
+					callback.onResult(false);
+				}
 			} finally {
 				if (connection != null) {
 					connection.disconnect();
 				}
 			}
 		}).start();
+	}
+
+	public void insertDescription(int idUser, String descripcion, ApiInsertCallback callback){
+		new Thread(() -> {
+			HttpURLConnection connection = null;
+			try{
+				URL url = new URL(BASE_URL + "/addDescription/" + descripcion + "/" + idUser);
+				connection.setRequestMethod("POST");
+				connection.setRequestProperty("Content-Type", "application/json");
+				connection.setDoOutput(true);
+
+				JSONObject json = new JSONObject();
+				json.put("descripcion",descripcion);
+				json.put("id",idUser);
+
+				try (OutputStream os = connection.getOutputStream()) {
+					byte[] input = json.toString().getBytes(StandardCharsets.UTF_8);
+					os.write(input, 0, input.length);
+				}
+
+				int responseCode = connection.getResponseCode();
+				Log.d(TAG, "Insert Description Response Code: " + responseCode);
+
+				if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
+					Log.d(TAG, "Descripcion Insertada");
+					if (callback != null){
+						callback.onResult(true);
+					}
+				} else {
+					Log.e(TAG, "Error al insertar descripcion. Code: " + responseCode);
+					if (callback != null){
+						callback.onResult(false);
+					}
+				}
+			} catch (IOException | JSONException e) {
+				Log.e(TAG, "Error en la petición API: " + e.getMessage());
+				if (callback != null){
+					callback.onResult(false);
+				}
+			} finally {
+				if (connection != null) {
+					connection.disconnect();
+				}
+			}
+		});
 	}
 
 	public void insertHabito(String nombreUsuario, String descripcion, Image post){

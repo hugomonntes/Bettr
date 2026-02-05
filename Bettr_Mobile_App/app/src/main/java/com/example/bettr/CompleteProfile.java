@@ -1,5 +1,7 @@
 package com.example.bettr;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -10,8 +12,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class CompleteProfile extends AppCompatActivity {
+import com.example.bettr.ApiRest.Api_Inserts;
+import com.google.android.material.textfield.TextInputEditText;
 
+public class CompleteProfile extends AppCompatActivity {
+    TextInputEditText etBio, etUserName;
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +32,28 @@ public class CompleteProfile extends AppCompatActivity {
             return insets;
         });
 
-        Button btnFinish = findViewById(R.id.btnFinishProfile);
-        btnFinish.setOnClickListener(v -> {
-            Toast.makeText(this, "Perfil completado", Toast.LENGTH_SHORT).show();
-            // Aquí tengo que meter el Feed principal
-            finish();
+        etBio = findViewById(R.id.etBio);
+        etUserName = findViewById(R.id.etUserName); // TODO hacer funcion api devolver id user por su username
+
+        Api_Inserts apiInserts = null;
+        apiInserts.insertDescription(1,etBio.getText().toString(),success -> { // TODO me falta meter id
+            runOnUiThread(() -> {
+                if (success) {
+                    Toast.makeText(CompleteProfile.this, "Perfil Completado", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CompleteProfile.this, CompleteProfile.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(CompleteProfile.this, "Error al completar el perfil", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+
+//        Button btnFinish = findViewById(R.id.btnFinishProfile);
+//        btnFinish.setOnClickListener(v -> {
+//            Toast.makeText(this, "Perfil completado", Toast.LENGTH_SHORT).show();
+//            // Aquí tengo que meter el Feed principal
+//            finish();
+//        });
     }
 }

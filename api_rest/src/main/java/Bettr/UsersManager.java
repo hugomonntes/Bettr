@@ -115,12 +115,29 @@ public class UsersManager {
                     Users user = new Users(name, username, email, password_hash);
                     usersList.add(user);
                 }
-
             }
         } catch (ClassNotFoundException | SQLException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
         return Response.ok(usersList).build();
+    }
+
+    @GET
+    @Path("/getId/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsers(@PathParam("username") String username) {
+        try {
+            Class.forName("org.postgresql.Driver");
+            try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
+                Statement stmt = conn.createStatement();
+                String query = String.format("SELECT id FROM users WHERE username = '%s'", username);
+                ResultSet rs = stmt.executeQuery(query);
+                int id = rs.getInt("id");
+                return Response.ok(id).build();
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
     }
 
     @GET
@@ -166,7 +183,7 @@ public class UsersManager {
         }
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement stm = connection.createStatement();
-            String query = String.format( "UPDATE users SET description = '%s' WHERE id = %d", description, id);
+            String query = String.format("UPDATE users SET description = '%s' WHERE id = %d", description, id);
             int complete = stm.executeUpdate(query);
             return Response.ok(complete).build();
         } catch (Exception e) {
