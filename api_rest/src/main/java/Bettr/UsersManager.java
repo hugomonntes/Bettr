@@ -32,7 +32,7 @@ public class UsersManager {
     String password = "jsrMYBg6aAz-V9d4FfGwxw";
 
     @POST
-    @Path("/add")
+    @Path("/add") // TODO cambiar endpoint ver rest 
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(Users user) { // TODO fecha nacimiento y fecha creacion de la cuenta y en la base de datos.
         try {
@@ -176,9 +176,9 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/addDescription/{description}/{id}")
+    @Path("/users/{id}/description") // TODO estructurar endpoint
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postDescription(@PathParam("description") String description, @PathParam("id") int id) {
+    public Response postDescription(@PathParam("id") int id) { // TODO bodyparam de tipo text
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
