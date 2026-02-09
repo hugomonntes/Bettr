@@ -28,7 +28,7 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "/users/get/" + username + "/" + password + "/");
+                URL url = new URL(BASE_URL + "/users/" + username + "/" + password + "/");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -46,7 +46,7 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "/users/getId/" + username);
+                URL url = new URL(BASE_URL + "/users/" + username);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");

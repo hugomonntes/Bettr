@@ -32,7 +32,7 @@ public class UsersManager {
     String password = "jsrMYBg6aAz-V9d4FfGwxw";
 
     @POST
-    @Path("/add") // TODO cambiar endpoint ver rest 
+    @Path("/users") // TODO cambiar endpoint ver rest 
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(Users user) { // TODO fecha nacimiento y fecha creacion de la cuenta y en la base de datos.
         try {
@@ -56,7 +56,7 @@ public class UsersManager {
 
     @POST
     @Path("/editName")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON) // TODO cambiar endpoint
     public Response editName(Users user) { // FIXME no tener dos users con el mismo username
         try {
             Class.forName("org.postgresql.Driver");
@@ -76,7 +76,7 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/editUserName/{username}")
+    @Path("/editUserName/{username}") // TODO cambiar endpoint
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editUserName(Users user, @PathParam("username") String username) {
         try {
@@ -97,7 +97,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/get")
+    @Path("/users/all") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers() {
         ArrayList<Users> usersList = new ArrayList<>();
@@ -123,7 +123,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/getId/{username}")
+    @Path("/users/{username}") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(@PathParam("username") String username) {
         try {
@@ -144,7 +144,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/get/{username}/{password_hash}")
+    @Path("/users/{username}/{password_hash}") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
         try {
@@ -164,7 +164,7 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/postImage")
+    @Path("/postImage") // TODO cambiar endpoint
     @Consumes("image/png")
     public Response postImage(int imageData) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -176,9 +176,9 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/users/{id}/description") // TODO estructurar endpoint
+    @Path("/users/{id}/{description}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postDescription(@PathParam("id") int id) { // TODO bodyparam de tipo text
+    public Response postDescription(@PathParam("id") int id, @PathParam("description") String description) { // TODO bodyparam de tipo text
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {

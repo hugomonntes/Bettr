@@ -34,7 +34,7 @@ public class CompleteProfile extends AppCompatActivity {
         });
 
         etBio = findViewById(R.id.etBio);
-        etUserName = findViewById(R.id.etUserName); // TODO hacer funcion api devolver id user por su username
+        etUserName = findViewById(R.id.etUserName);
 
         int id = 0;
         Api_Gets apiGets = null;
