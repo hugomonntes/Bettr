@@ -32,7 +32,6 @@ public class UsersManager {
     String password = "jsrMYBg6aAz-V9d4FfGwxw";
 
     @POST
-    @Path("/users") // TODO cambiar endpoint ver rest 
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(Users user) { // TODO fecha nacimiento y fecha creacion de la cuenta y en la base de datos.
         try {
@@ -97,7 +96,6 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/users/all") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers() {
         ArrayList<Users> usersList = new ArrayList<>();
@@ -123,7 +121,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/users/{username}") // TODO cambiar endpoint
+    @Path("/{username}") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIdFromUsername(@PathParam("username") String username) {
         try {
@@ -144,7 +142,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/users/{username}/{password_hash}") // TODO cambiar endpoint
+    @Path("/{username}/{password_hash}") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserMatchPassword(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
         try {
@@ -176,7 +174,7 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/users/{id}/{description}")
+    @Path("/{id}/{description}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postDescription(@PathParam("id") int id, @PathParam("description") String description) { // TODO bodyparam de tipo text
         try {
