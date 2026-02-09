@@ -125,7 +125,7 @@ public class UsersManager {
     @GET
     @Path("/users/{username}") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers(@PathParam("username") String username) {
+    public Response getIdFromUsername(@PathParam("username") String username) {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
@@ -146,7 +146,7 @@ public class UsersManager {
     @GET
     @Path("/users/{username}/{password_hash}") // TODO cambiar endpoint
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
+    public Response getUserMatchPassword(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
