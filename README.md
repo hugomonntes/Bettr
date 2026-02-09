@@ -37,3 +37,5 @@ Implementación de un servidor gratuito para la API REST (Render), mejorando el 
 ## 6ª SEMANA DE DESARROLLO ( 6 FEB -  ACTUALIDAD 2026)
 
 Añadir métodos que me van haciendo falta a la Api como por ejemplo buscar un usuario mediante su id, para poder completar su perfil después de registrarse.
+
+Editar Endpoints de la API REST tomando buenas prácticas a la hora de definirlos.
