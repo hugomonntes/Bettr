@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Api_Gets {
-    private static final String BASE_URL = "https://bettr-idlo.onrender.com/rest";
+    private static final String BASE_URL = "https://bettr-idlo.onrender.com/rest/";
     private static final String TAG = "Api_Gets";
 
     public interface ApiCallback {
@@ -28,7 +28,7 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "/" + username + "/" + password);
+                URL url = new URL(BASE_URL + "/users/" + username + "/" + password);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -46,7 +46,7 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "/" + username);
+                URL url = new URL(BASE_URL + "/users/" + username);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");

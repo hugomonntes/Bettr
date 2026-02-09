@@ -36,29 +36,29 @@ public class CompleteProfile extends AppCompatActivity {
         etBio = findViewById(R.id.etBio);
         etUserName = findViewById(R.id.etUserName);
 
-        int id = 0;
-        Api_Gets apiGets = null;
-        apiGets.getUserByUsername(etUserName.getText().toString(), success -> {
-            runOnUiThread(()->{
-                if (success) {
-                    // id
-                }
-            });
-        });
+//        int id = 0;
+//        Api_Gets apiGets = null;
+//        apiGets.getUserByUsername(etUserName.getText().toString(), success -> {
+//            runOnUiThread(()->{
+//                if (success) {
+//                    // id
+//                }
+//            });
+//        });
 
-        Api_Inserts apiInserts = null;
-        apiInserts.insertDescription(id,etBio.getText().toString(),success -> { // TODO me falta meter id
-            runOnUiThread(() -> {
-                if (success) {
-                    Toast.makeText(CompleteProfile.this, "Perfil Completado", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CompleteProfile.this, CompleteProfile.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(CompleteProfile.this, "Error al completar el perfil", Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
+//        Api_Inserts apiInserts = null;
+//        apiInserts.insertDescription(id,etBio.getText().toString(),success -> { // TODO me falta meter id
+//            runOnUiThread(() -> {
+//                if (success) {
+//                    Toast.makeText(CompleteProfile.this, "Perfil Completado", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(CompleteProfile.this, CompleteProfile.class);
+//                    startActivity(intent);
+//                    finish();
+//                } else {
+//                    Toast.makeText(CompleteProfile.this, "Error al completar el perfil", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        });
 
 //        Button btnFinish = findViewById(R.id.btnFinishProfile);
 //        btnFinish.setOnClickListener(v -> {

@@ -73,7 +73,7 @@ public class Api_Inserts {
 		new Thread(() -> {
 			HttpURLConnection connection = null;
 			try{
-				URL url = new URL(BASE_URL+"/"+idUser+"/"+descripcion);
+				URL url = new URL(BASE_URL+"/users/"+idUser+"/"+descripcion);
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type", "application/json");
 				connection.setDoOutput(true);
