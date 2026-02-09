@@ -28,7 +28,7 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "/users/" + username + "/" + password + "/");
+                URL url = new URL(BASE_URL + "/" + username + "/" + password);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -46,7 +46,7 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "/users/" + username);
+                URL url = new URL(BASE_URL + "/" + username);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -65,7 +65,7 @@ public class Api_Gets {
             HttpURLConnection connection = null;
             ArrayList<Publicaciones> lista = new ArrayList<>();
             try {
-                URL url = new URL(BASE_URL + "/posts/getAll");
+                URL url = new URL(BASE_URL + "/posts/getAll"); // TODO cambiar endpoint
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");

@@ -73,7 +73,7 @@ public class Api_Inserts {
 		new Thread(() -> {
 			HttpURLConnection connection = null;
 			try{
-				URL url = new URL(BASE_URL+"/users/"+idUser+"/"+descripcion);
+				URL url = new URL(BASE_URL+"/"+idUser+"/"+descripcion);
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type", "application/json");
 				connection.setDoOutput(true);
@@ -118,7 +118,7 @@ public class Api_Inserts {
 		new Thread(() -> {
 			HttpURLConnection connection = null;
 			try {
-				URL url = new URL(BASE_URL + "/habits/add");
+				URL url = new URL(BASE_URL + "/habits/add"); // TODO cambiar endpoint
 				connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Content-Type", "application/json");
