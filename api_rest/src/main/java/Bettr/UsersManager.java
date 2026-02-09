@@ -17,7 +17,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/users")
+@Path("/users") // TODO VER QUE PONER AQUI
 public class UsersManager {
     // Dotenv dotenv = Dotenv.load(); // TODO no encuentra el archivo .env
 
