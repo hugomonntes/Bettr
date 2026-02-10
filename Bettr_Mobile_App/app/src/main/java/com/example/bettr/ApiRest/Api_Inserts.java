@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Api_Inserts {
 	private static final String TAG = "Api_Inserts"; 
-	private static final String BASE_URL = "https://bettr-idlo.onrender.com/rest";
+	private static final String BASE_URL = "https://bettr-g5yv.onrender.com/rest";
 
 	public interface ApiInsertCallback {
 		void onResult(boolean success);
