@@ -31,7 +31,7 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome back"
+        android:text="@string/welcome_back"
         android:textSize="26sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
@@ -44,7 +44,7 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log in to your account"
+        android:text="@string/login_subtitle"
         android:textSize="14sp"
         android:textColor="#D1D5DB"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
@@ -53,10 +53,10 @@
         android:layout_marginTop="8dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilUserName"
+        android:id="@+id/tilUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Username"
+        android:hint="@string/username"
         app:boxBackgroundMode="filled"
         app:boxBackgroundColor="#2A2E33"
         app:boxStrokeColor="#FACC15"
@@ -73,18 +73,18 @@
         android:layout_marginEnd="32dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etUserName"
+            android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:inputType="textEmailAddress"/>
+            android:inputType="text"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="@string/prompt_password"
         app:passwordToggleEnabled="true"
         app:boxBackgroundMode="filled"
         app:boxBackgroundColor="#2A2E33"
@@ -94,7 +94,7 @@
         app:boxCornerRadiusTopEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
         app:boxCornerRadiusBottomEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/tilUserName"
+        app:layout_constraintTop_toBottomOf="@id/tilUsername"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="18dp"
@@ -113,7 +113,7 @@
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="58dp"
-        android:text="Log In"
+        android:text="@string/btn_login"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="#1C1F22"
@@ -130,7 +130,7 @@
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don’t have an account? Sign up"
+        android:text="@string/no_account"
         android:textSize="14sp"
         android:textColor="#FACC15"
         app:layout_constraintTop_toBottomOf="@id/btnLogin"

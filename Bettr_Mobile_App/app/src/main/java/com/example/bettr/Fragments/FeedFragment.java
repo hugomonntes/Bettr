@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +22,7 @@ public class FeedFragment extends Fragment {
 
     private RecyclerView rvFeed;
     private AdapterFeed adapter;
-    private ArrayList<Publicaciones> listaPublicaciones = new ArrayList<>();
+    private final ArrayList<Publicaciones> listaPublicaciones = new ArrayList<>();
     private Api_Gets apiGets;
 
     @Nullable
@@ -41,8 +40,9 @@ public class FeedFragment extends Fragment {
     }
 
     private void loadPosts() {
-        apiGets.getPublicaciones(posts -> {
-            if (isAdded()) {
+        // Corregido: Llamar a getHabits que es el método real en Api_Gets
+        apiGets.getHabits(posts -> {
+            if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     if (posts != null && !posts.isEmpty()) {
                         listaPublicaciones.clear();

@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Api_Gets {
-    private static final String BASE_URL = "https://bettr-g5yv.onrender.com/rest/";
+    private static final String BASE_URL = "https://bettr-g5yv.onrender.com/rest";
     private static final String TAG = "Api_Gets";
 
     public interface ApiCallback {
@@ -28,7 +28,8 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
-                URL url = new URL(BASE_URL + "users/" + username + "/" + password);
+
+                URL url = new URL(BASE_URL + "/users/" + username + "/" + password);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -42,30 +43,12 @@ public class Api_Gets {
         }).start();
     }
 
-    public void getUserByUsername(String username, ApiCallback callback) {
-        new Thread(() -> {
-            HttpURLConnection connection = null;
-            try {
-                URL url = new URL(BASE_URL + "users/" + username);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setRequestProperty("Accept", "application/json");
-                int responseCode = connection.getResponseCode();
-                callback.onResult(responseCode == HttpURLConnection.HTTP_OK);
-            } catch (IOException e) {
-                callback.onResult(false);
-            } finally {
-                if (connection != null) connection.disconnect();
-            }
-        }).start();
-    }
-
-    public void getPublicaciones(PostsCallback callback) {
+    public void getHabits(PostsCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             ArrayList<Publicaciones> lista = new ArrayList<>();
             try {
-                URL url = new URL(BASE_URL + "/posts/getAll"); // TODO cambiar endpoint
+                URL url = new URL(BASE_URL + "/habits"); 
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
@@ -81,19 +64,19 @@ public class Api_Gets {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         lista.add(new Publicaciones(
-                                obj.getString("nombreUsuario"),
-                                obj.optString("imageUrl", ""),
-                                obj.getString("descripcion"),
-                                obj.optString("info", "Entrenamiento"),
-                                obj.optInt("likes", 0),
-                                obj.optInt("streak", 0)
+                                obj.optString("username", "User"),
+                                obj.optString("image_url", ""),
+                                obj.optString("description", ""),
+                                obj.optString("habit_type", "Habit"),
+                                obj.optInt("likes_count", 0),
+                                obj.optInt("streak_count", 0)
                         ));
                     }
                 }
                 callback.onResult(lista);
             } catch (IOException | JSONException e) {
-                Log.e(TAG, "Error: " + e.getMessage());
-                callback.onResult(lista); // Devuelve lista vacía en error
+                Log.e(TAG, "Error fetching habits: " + e.getMessage());
+                callback.onResult(lista);
             } finally {
                 if (connection != null) connection.disconnect();
             }

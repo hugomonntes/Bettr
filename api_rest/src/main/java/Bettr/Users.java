@@ -1,14 +1,19 @@
 package Bettr;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class Users implements Serializable{
-    String name;
-    String username;
-    String email;
-    String password_hash;
+public class Users implements Serializable {
+    private int id;
+    private String name;
+    private String username;
+    private String email;
+    private String password_hash;
+    private String description;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 
     public Users() {
     }
@@ -18,6 +23,45 @@ public class Users implements Serializable{
         this.username = username;
         this.email = email;
         this.password_hash = password_hash;
+        this.created_at = LocalDateTime.now();
+    }
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword_hash() {
+        return password_hash;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setEmail(String email) {
@@ -36,20 +80,25 @@ public class Users implements Serializable{
         this.username = username;
     }
 
-    public String getName() {
-        return name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getUsername() {
-        return username;
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
     }
 
-    public String getEmail() {
-        return email;
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
-    public String getPassword_hash() {
-        BCrypt bCrypt = new BCrypt();
-        return bCrypt.hashpw(password_hash, bCrypt.gensalt());
+    // Method to hash password
+    public String hashPassword(String plainPassword) {
+        return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+    }
+
+    // Method to verify password
+    public boolean verifyPassword(String plainPassword) {
+        return BCrypt.checkpw(plainPassword, this.password_hash);
     }
 }

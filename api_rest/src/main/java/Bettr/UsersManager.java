@@ -17,7 +17,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/users") // TODO VER QUE PONER AQUI
+@Path("/users")
 public class UsersManager {
     // Dotenv dotenv = Dotenv.load(); // TODO no encuentra el archivo .env
 
@@ -33,7 +33,7 @@ public class UsersManager {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addUser(Users user) { // TODO fecha nacimiento y fecha creacion de la cuenta y en la base de datos.
+    public Response addUser(Users user) {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
@@ -55,8 +55,8 @@ public class UsersManager {
 
     @POST
     @Path("/editName")
-    @Consumes(MediaType.APPLICATION_JSON) // TODO cambiar endpoint
-    public Response editName(Users user) { // FIXME no tener dos users con el mismo username
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editName(Users user) {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
@@ -75,7 +75,7 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/editUserName/{username}") // TODO cambiar endpoint
+    @Path("/editUserName/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response editUserName(Users user, @PathParam("username") String username) {
         try {
@@ -121,7 +121,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/{username}") // TODO cambiar endpoint
+    @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIdFromUsername(@PathParam("username") String username) {
         try {
@@ -142,7 +142,7 @@ public class UsersManager {
     }
 
     @GET
-    @Path("/{username}/{password_hash}") // TODO cambiar endpoint
+    @Path("/{username}/{password_hash}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserMatchPassword(@PathParam("username") String username, @PathParam("password_hash") String password_hash) {
         try {
@@ -162,21 +162,9 @@ public class UsersManager {
     }
 
     @POST
-    @Path("/postImage") // TODO cambiar endpoint
-    @Consumes("image/png")
-    public Response postImage(int imageData) {
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            Statement stm = connection.createStatement();
-            stm.executeUpdate("INSERT INTO habitos VALUES ..."); // TODO Modificar consulta segun la tabla de habitos
-        } catch (Exception e) {
-        }
-        return Response.ok().build();
-    }
-
-    @POST
     @Path("/{id}/{description}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postDescription(@PathParam("id") int id, @PathParam("description") String description) { // TODO bodyparam de tipo text
+    public Response postDescription(@PathParam("id") int id, @PathParam("description") String description) {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -192,3 +180,4 @@ public class UsersManager {
         }
     }
 }
+

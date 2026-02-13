@@ -1,12 +1,41 @@
 <resources>
     <string name="app_name">Bettr</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_login">Iniciar Sesión</string>
+
+    <!-- Intro -->
+    <string name="welcome_bettr">Bienvenido a Bettr</string>
+    <string name="intro_desc">Sigue tu progreso. Mejora cada día.\nBettr te ayuda a convertir datos en mejores decisiones.</string>
+    <string name="btn_login">Iniciar Sesión</string>
+    <string name="btn_register">Crear cuenta</string>
+
+    <!-- Login/Register -->
+    <string name="welcome_back">Bienvenido de nuevo</string>
+    <string name="login_subtitle">Inicia sesión en tu cuenta</string>
+    <string name="prompt_email">Correo electrónico</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="no_account">¿No tienes cuenta? Regístrate</string>
+    <string name="already_account">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="full_name">Nombre completo</string>
+    <string name="username">Nombre de usuario</string>
+
+    <!-- Complete Profile -->
+    <string name="complete_profile">Completa tu perfil</string>
+    <string name="select_photo">Seleccionar foto</string>
+    <string name="bio_hint">Cuéntanos algo sobre ti</string>
+    <string name="finish">Finalizar</string>
+
+    <!-- Camera / Post -->
+    <string name="share_habit">Comparte tu hábito</string>
+    <string name="btn_camera">Cámara</string>
+    <string name="btn_gallery">Galería</string>
+    <string name="post_description">Escribe una descripción...</string>
+    <string name="btn_post">Publicar Hábito</string>
+
+    <!-- Fragments -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_habits">Hábitos</string>
+    <string name="nav_social">Social</string>
+    <string name="nav_profile">Perfil</string>
+    <string name="nav_camera">Cámara</string>
 </resources>

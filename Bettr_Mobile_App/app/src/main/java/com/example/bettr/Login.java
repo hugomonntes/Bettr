@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Login extends AppCompatActivity {
 
-	private EditText etEmail, etPassword;
+	private EditText etUsername, etPassword;
 	private Button btnLogin;
 	private Api_Gets apiGets;
 
@@ -38,26 +38,32 @@ public class Login extends AppCompatActivity {
 			return insets;
 		});
 
-		etEmail = findViewById(R.id.etUserName);
+		etUsername = findViewById(R.id.etUsername);
 		etPassword = findViewById(R.id.etPassword);
 		btnLogin = findViewById(R.id.btnLogin);
 
-		btnLogin.setOnClickListener(v -> loginUser());
+		if (btnLogin != null) {
+			btnLogin.setOnClickListener(v -> loginUser());
+		}
 
 		TextView tvRegister = findViewById(R.id.tvRegister);
-		tvRegister.setOnClickListener(v -> {
-			Intent intent = new Intent(Login.this, Register.class);
-			startActivity(intent);
-			finish();
-		});
+		if (tvRegister != null) {
+			tvRegister.setOnClickListener(v -> {
+				Intent intent = new Intent(Login.this, Register.class);
+				startActivity(intent);
+				finish();
+			});
+		}
 	}
 
 	private void loginUser() {
-		String username = etEmail.getText().toString().trim();
+		if (etUsername == null || etPassword == null) return;
+		
+		String username = etUsername.getText().toString().trim();
 		String password = etPassword.getText().toString();
 
 		if (username.isEmpty() || password.isEmpty()) {
-			Toast.makeText(this, "Please write on all fields", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -66,12 +72,12 @@ public class Login extends AppCompatActivity {
 		apiGets.getUser(username, passwordHash, success -> {
 			runOnUiThread(() -> {
 				if (success) {
-					Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+					Toast.makeText(Login.this, "Sesión iniciada correctamente", Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(Login.this, Feed.class);
 					startActivity(intent);
 					finish();
 				} else {
-					Toast.makeText(Login.this, "user,password or server error", Toast.LENGTH_SHORT).show();
+					Toast.makeText(Login.this, "Usuario, contraseña o error de servidor", Toast.LENGTH_SHORT).show();
 				}
 			});
 		});
