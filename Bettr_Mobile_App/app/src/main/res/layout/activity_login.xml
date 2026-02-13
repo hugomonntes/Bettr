@@ -138,4 +138,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="26dp"/>
 
+    <!-- Overlay de Carga -->
+    <FrameLayout
+        android:id="@+id/loading_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="20dp">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:indicatorColor="#FACC15"
+            app:trackThickness="4dp" />
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

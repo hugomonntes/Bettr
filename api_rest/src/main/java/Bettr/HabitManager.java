@@ -26,8 +26,7 @@ public class HabitManager {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
-                String query = "INSERT INTO habits (user_id, description, image_url, habit_type, likes_count, streak_count) VALUES (?, ?, ?, ?, 0, 0)";
-
+                String query = "INSERT INTO habits (user_id, description, image_url, habit_type) VALUES (?, ?, ?, ?)";
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setInt(1, habit.getUser_id());
                     pstmt.setString(2, habit.getDescription());
@@ -42,4 +41,3 @@ public class HabitManager {
         }
     }
 }
-

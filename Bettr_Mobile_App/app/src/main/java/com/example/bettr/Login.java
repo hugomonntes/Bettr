@@ -2,10 +2,11 @@ package com.example.bettr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class Login extends AppCompatActivity {
 	private EditText etUsername, etPassword;
 	private Button btnLogin;
 	private Api_Gets apiGets;
+	private FrameLayout loadingOverlay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class Login extends AppCompatActivity {
 		setContentView(R.layout.activity_login);
 
 		apiGets = new Api_Gets();
+		loadingOverlay = findViewById(R.id.loading_overlay);
 
 		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
 			Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -63,24 +66,30 @@ public class Login extends AppCompatActivity {
 		String password = etPassword.getText().toString();
 
 		if (username.isEmpty() || password.isEmpty()) {
-			Toast.makeText(this, "Por favor, rellena todos los campos", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
+		showLoading();
 		String passwordHash = hashPassword(password);
 
 		apiGets.getUser(username, passwordHash, success -> {
 			runOnUiThread(() -> {
+				hideLoading();
 				if (success) {
-					Toast.makeText(Login.this, "Sesión iniciada correctamente", Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(Login.this, Feed.class);
 					startActivity(intent);
 					finish();
-				} else {
-					Toast.makeText(Login.this, "Usuario, contraseña o error de servidor", Toast.LENGTH_SHORT).show();
 				}
 			});
 		});
+	}
+
+	private void showLoading() {
+		if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+	}
+
+	private void hideLoading() {
+		if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
 	}
 
 	private String hashPassword(String password) {

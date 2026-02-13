@@ -2,10 +2,11 @@ package com.example.bettr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ public class Register extends AppCompatActivity {
     private EditText etName, etUsername, etEmail, etPassword, etConfirmPassword;
     private Button btnRegister;
     private Api_Inserts apiInserts;
+    private FrameLayout loadingOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         apiInserts = new Api_Inserts();
+        loadingOverlay = findViewById(R.id.loading_overlay);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -62,34 +65,42 @@ public class Register extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString();
 
         if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() < 6) {
-            Toast.makeText(this, "Password is too short (min 6 chars)", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        showLoading();
         String passwordHash = hashPassword(password);
 
+        apiGetsInserts(name, username, email, passwordHash);
+    }
+
+    private void apiGetsInserts(String name, String username, String email, String passwordHash) {
         apiInserts.insertUsuario(name, username, email, passwordHash, success -> {
             runOnUiThread(() -> {
+                hideLoading();
                 if (success) {
-                    Toast.makeText(Register.this, "Registro completado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Register.this, CompleteProfile.class);
                     startActivity(intent);
                     finish();
-                } else {
-                    Toast.makeText(Register.this, "Error al crear la cuenta. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show();
                 }
             });
         });
+    }
+
+    private void showLoading() {
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading() {
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
     }
 
     private String hashPassword(String password) {
