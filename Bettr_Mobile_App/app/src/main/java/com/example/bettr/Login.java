@@ -72,11 +72,12 @@ public class Login extends AppCompatActivity {
 		showLoading();
 		String passwordHash = hashPassword(password);
 
-		apiGets.getUser(username, passwordHash, success -> {
+		apiGets.getUser(username, passwordHash, (success, userId) -> {
 			runOnUiThread(() -> {
 				hideLoading();
 				if (success) {
 					Intent intent = new Intent(Login.this, Feed.class);
+					intent.putExtra("USER_ID", userId);
 					startActivity(intent);
 					finish();
 				}

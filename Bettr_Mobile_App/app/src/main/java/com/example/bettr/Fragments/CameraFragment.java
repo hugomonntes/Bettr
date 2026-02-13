@@ -3,7 +3,6 @@ package com.example.bettr.Fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -21,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.bettr.ApiRest.Api_Inserts;
+import com.example.bettr.Feed;
 import com.example.bettr.R;
 
 import java.io.IOException;
@@ -33,7 +32,6 @@ public class CameraFragment extends Fragment {
     private Bitmap selectedBitmap;
     private Api_Inserts apiInserts;
 
-    // Launcher para la Cámara
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -41,12 +39,11 @@ public class CameraFragment extends Fragment {
                     Bundle extras = result.getData().getExtras();
                     selectedBitmap = (Bitmap) extras.get("data");
                     ivPreview.setImageBitmap(selectedBitmap);
-                    ivPreview.setImageTintList(null); // Quitar el tinte gris del icono
+                    ivPreview.setImageTintList(null);
                 }
             }
     );
 
-    // Launcher para la Galería
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
@@ -88,32 +85,23 @@ public class CameraFragment extends Fragment {
 
     private void postHabit() {
         String description = etDescription.getText().toString().trim();
-        
-        if (selectedBitmap == null) {
-            Toast.makeText(getContext(), "Please select or take a photo first", Toast.LENGTH_SHORT).show();
-            return;
+        if (selectedBitmap == null || description.isEmpty()) return;
+
+        if (getActivity() instanceof Feed) {
+            ((Feed) getActivity()).showLoading();
         }
 
-        if (description.isEmpty()) {
-            Toast.makeText(getContext(), "Please write a description", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // URL de ejemplo hasta integrar subida real de imagen
+        String dummyImageUrl = "https://bettr-g5yv.onrender.com/uploads/sample.jpg";
 
-        // TODO: En una app real, aquí subirías el Bitmap a un servidor (Cloudinary/Firebase)
-        // y obtendrías una URL. Por ahora usaremos una URL de ejemplo.
-        String dummyImageUrl = "https://bettr.app/sample_habit.jpg";
-
-        // id_usuario fijo a 1 para pruebas, deberías usar el ID del usuario logueado
-        apiInserts.addHabit(1, description, dummyImageUrl, "Daily Habit", success -> {
+        apiInserts.addHabit(1, description, dummyImageUrl, "Deporte", success -> {
             if (isAdded()) {
                 requireActivity().runOnUiThread(() -> {
-                    if (success) {
-                        Toast.makeText(getContext(), "Habit posted successfully!", Toast.LENGTH_SHORT).show();
-                        etDescription.setText("");
-                        ivPreview.setImageResource(android.R.drawable.ic_menu_camera);
-                        selectedBitmap = null;
-                    } else {
-                        Toast.makeText(getContext(), "Error posting habit", Toast.LENGTH_SHORT).show();
+                    if (getActivity() instanceof Feed) {
+                        ((Feed) getActivity()).hideLoading();
+                        if (success) {
+                            ((Feed) getActivity()).navigateToHome();
+                        }
                     }
                 });
             }

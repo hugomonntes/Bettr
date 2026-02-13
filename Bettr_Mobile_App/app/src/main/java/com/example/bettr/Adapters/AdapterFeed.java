@@ -28,7 +28,6 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
         return new MyViewHolder(view);
     }
 
-    // TODO tengo que poner la imagen con la peticion a la base de datos y poner el nombre de usuario e imagen.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Publicaciones post = listaPublicaciones.get(position);
@@ -37,6 +36,9 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
         holder.tvDescription.setText(post.getDescripcion());
         holder.tvLikes.setText(String.valueOf(post.getLikes()));
         holder.tvStreak.setText("🔥 " + post.getStreak());
+
+        // Por ahora usamos el logo como placeholder. 
+        // Si tienes una URL real, aquí es donde usarías Glide.with(context).load(post.getImageUrl()).into(holder.ivPostImage);
         holder.ivPostImage.setImageResource(R.drawable.logobettr);
     }
 
@@ -54,15 +56,10 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
             tvUserName = itemView.findViewById(R.id.tvUserName);
             tvPostInfo = itemView.findViewById(R.id.tvPostInfo);
             tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvLikes = itemView.findViewById(R.id.llActions).findViewWithTag("likes_text");
-            tvUserName = itemView.findViewById(R.id.tvUserName);
-            tvPostInfo = itemView.findViewById(R.id.tvPostInfo);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
             ivPostImage = itemView.findViewById(R.id.ivPostImage);
             ivProfilePost = itemView.findViewById(R.id.ivProfilePost);
-
-            tvLikes = (TextView) ((ViewGroup)itemView.findViewById(R.id.llActions)).getChildAt(1);
-            tvStreak = (TextView) ((ViewGroup)((ViewGroup)itemView.findViewById(R.id.cvStreakCount)).getChildAt(0)).getChildAt(0);
+            tvLikes = itemView.findViewById(R.id.tvLikes);
+            tvStreak = itemView.findViewById(R.id.tvStreak);
         }
     }
 }

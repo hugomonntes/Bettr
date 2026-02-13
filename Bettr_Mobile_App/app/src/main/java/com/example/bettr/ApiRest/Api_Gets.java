@@ -28,12 +28,18 @@ public class Api_Gets {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
+                // Asegúrate de que esta URL coincida con tu backend
                 URL url = new URL(BASE_URL + "/users/" + username + "/" + password);
+                Log.d(TAG, "Conectando a: " + url.toString());
+                
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
+                connection.setConnectTimeout(5000);
 
                 int responseCode = connection.getResponseCode();
+                Log.d(TAG, "Response Code: " + responseCode);
+
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     StringBuilder response = new StringBuilder();
@@ -41,14 +47,22 @@ public class Api_Gets {
                     while ((line = in.readLine()) != null) response.append(line);
                     in.close();
 
-                    JSONObject userObj = new JSONObject(response.toString());
-                    int id = userObj.optInt("id", -1);
+                    Log.d(TAG, "Respuesta Server: " + response.toString());
+
+                    int id = -1;
+                    try {
+                        JSONObject userObj = new JSONObject(response.toString());
+                        id = userObj.optInt("id", -1);
+                    } catch (JSONException e) {
+                        Log.w(TAG, "No se pudo parsear el ID del usuario, pero el login es OK");
+                    }
+                    
                     callback.onResult(true, id);
                 } else {
                     callback.onResult(false, -1);
                 }
-            } catch (IOException | JSONException e) {
-                Log.e(TAG, "Error login: " + e.getMessage());
+            } catch (IOException e) {
+                Log.e(TAG, "Error de red en login: " + e.getMessage());
                 callback.onResult(false, -1);
             } finally {
                 if (connection != null) connection.disconnect();

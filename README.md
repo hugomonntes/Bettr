@@ -39,3 +39,11 @@ Implementación de un servidor gratuito para la API REST (Render), mejorando el 
 Añadir métodos que me van haciendo falta a la Api como por ejemplo buscar un usuario mediante su id, para poder completar su perfil después de registrarse.
 
 Editar Endpoints de la API REST tomando buenas prácticas a la hora de definirlos.
+
+Añadir nueva funcionalidad a la API REST para la gestión de hábitos diarios, creando las clases `Habit.java` y `HabitManager.java` que permiten a los usuarios publicar sus hábitos con imagen y descripción.
+
+Desarrollar nueva vista en la aplicación móvil para publicar hábitos:
+- Creación del `CameraFragment` con funcionalidad para tomar fotos con la cámara o seleccionar imágenes de la galería
+- Implementación del layout `fragment_camera.xml` con diseño moderno y oscuro
+- Integración con la API para publicar hábitos con descripción e imagen
+- Botones para cámara, galería y publicación de hábitos

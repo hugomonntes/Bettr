@@ -2,6 +2,7 @@ package com.example.bettr;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -22,6 +23,7 @@ public class Feed extends AppCompatActivity {
 
     private FrameLayout btnHome, btnHabits, btnCamera, btnSocial, btnProfile;
     private ImageView ivHome, ivHabits, ivCamera, ivSocial, ivProfile;
+    private FrameLayout loadingOverlay;
     private int colorActive = Color.parseColor("#FACC15");
     private int colorInactive = Color.parseColor("#9CA3AF");
 
@@ -30,6 +32,8 @@ public class Feed extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_feed);
+
+        loadingOverlay = findViewById(R.id.loading_overlay);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -40,9 +44,21 @@ public class Feed extends AppCompatActivity {
         initNav();
         
         if (savedInstanceState == null) {
-            updateNav(R.id.btn_nav_home);
-            loadFragment(new FeedFragment());
+            navigateToHome();
         }
+    }
+
+    public void showLoading() {
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+    }
+
+    public void hideLoading() {
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
+    }
+
+    public void navigateToHome() {
+        updateNavUI(R.id.btn_nav_home);
+        loadFragment(new FeedFragment());
     }
 
     private void initNav() {
@@ -58,14 +74,14 @@ public class Feed extends AppCompatActivity {
         ivSocial = findViewById(R.id.iv_social_icon);
         ivProfile = findViewById(R.id.iv_profile_icon);
 
-        btnHome.setOnClickListener(v -> { updateNav(R.id.btn_nav_home); loadFragment(new FeedFragment()); });
-        btnHabits.setOnClickListener(v -> { updateNav(R.id.btn_nav_habits); loadFragment(new HabitsFragment()); });
-        btnCamera.setOnClickListener(v -> { updateNav(R.id.btn_nav_camera); loadFragment(new CameraFragment()); });
-        btnSocial.setOnClickListener(v -> { updateNav(R.id.btn_nav_social); loadFragment(new SocialFragment()); });
-        btnProfile.setOnClickListener(v -> { updateNav(R.id.btn_nav_profile); loadFragment(new ProfileFragment()); });
+        btnHome.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_home); loadFragment(new FeedFragment()); });
+        btnHabits.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_habits); loadFragment(new HabitsFragment()); });
+        btnCamera.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_camera); loadFragment(new CameraFragment()); });
+        btnSocial.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_social); loadFragment(new SocialFragment()); });
+        btnProfile.setOnClickListener(v -> { updateNavUI(R.id.btn_nav_profile); loadFragment(new ProfileFragment()); });
     }
 
-    private void updateNav(int selectedId) {
+    private void updateNavUI(int selectedId) {
         ivHome.setColorFilter(colorInactive);
         ivHabits.setColorFilter(colorInactive);
         ivCamera.setColorFilter(colorInactive);
