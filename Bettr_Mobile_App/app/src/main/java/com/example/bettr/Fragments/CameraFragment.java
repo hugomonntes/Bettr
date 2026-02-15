@@ -68,6 +68,7 @@ public class CameraFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
+        apiInserts = new Api_Gets_Inserts(); // TODO: check if this is the correct class name
         apiInserts = new Api_Inserts();
         ivPreview = view.findViewById(R.id.ivPreview);
         etDescription = view.findViewById(R.id.etDescription);
@@ -84,21 +85,29 @@ public class CameraFragment extends Fragment {
         }
 
         if (btnGallery != null) {
-            btnGallery.setOnClickListener(v -> galleryLauncher.launch("image/*"));
+            btnGallery.setOnClickListener(v -> {
+                galleryLauncher.launch("image/*");
+            });
         }
 
         if (btnPost != null) {
-            btnPost.setOnClickListener(v -> postHabit());
+            btnPost.setOnClickListener(v -> {
+                postHabit();
+            });
         }
 
         return view;
     }
 
     private void postHabit() {
-        if (etDescription == null) return;
+        if (etDescription == null) {
+            return;
+        }
         
         String description = etDescription.getText().toString().trim();
-        if (selectedBitmap == null || description.isEmpty()) return;
+        if (selectedBitmap == null || description.isEmpty()) {
+            return;
+        }
 
         showLoading();
 
@@ -127,10 +136,14 @@ public class CameraFragment extends Fragment {
     }
 
     private void showLoading() {
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hideLoading() {
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 }

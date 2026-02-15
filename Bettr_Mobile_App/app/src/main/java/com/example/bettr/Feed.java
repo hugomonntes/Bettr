@@ -49,11 +49,15 @@ public class Feed extends AppCompatActivity {
     }
 
     public void showLoading() {
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+        }
     }
 
     public void hideLoading() {
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
     public void navigateToHome() {

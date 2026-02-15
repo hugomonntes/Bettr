@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class Register extends AppCompatActivity {
     private EditText etName, etUsername, etEmail, etPassword, etConfirmPassword;
-    private Button btnRegister;
     private Api_Inserts apiInserts;
     private FrameLayout loadingOverlay;
 
@@ -45,16 +44,22 @@ public class Register extends AppCompatActivity {
         etEmail = findViewById(R.id.etUserName);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
-        btnRegister = findViewById(R.id.btnRegister);
+        Button btnRegister = findViewById(R.id.btnRegister);
 
-        btnRegister.setOnClickListener(v -> registerUser());
+        if (btnRegister != null) {
+            btnRegister.setOnClickListener(v -> {
+                registerUser();
+            });
+        }
 
         TextView tvLogin = findViewById(R.id.tvLogin);
-        tvLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(Register.this, Login.class);
-            startActivity(intent);
-            finish();
-        });
+        if (tvLogin != null) {
+            tvLogin.setOnClickListener(v -> {
+                Intent intent = new Intent(Register.this, Login.class);
+                startActivity(intent);
+                finish();
+            });
+        }
     }
 
     private void registerUser() {
@@ -96,11 +101,15 @@ public class Register extends AppCompatActivity {
     }
 
     private void showLoading() {
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hideLoading() {
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
     private String hashPassword(String password) {
@@ -111,7 +120,9 @@ public class Register extends AppCompatActivity {
 
             for (byte b : hash) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
                 hexString.append(hex);
             }
 

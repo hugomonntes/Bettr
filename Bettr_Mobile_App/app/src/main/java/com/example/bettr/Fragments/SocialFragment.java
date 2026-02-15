@@ -22,6 +22,7 @@ import com.example.bettr.Dao.User;
 import com.example.bettr.Feed;
 import com.example.bettr.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -29,10 +30,11 @@ public class SocialFragment extends Fragment {
 
     private RecyclerView rvUsers;
     private AdapterUsers adapter;
-    private ArrayList<User> allUsers = new ArrayList<>();
+    private ArrayList<User> allUsersList = new ArrayList<>();
     private Api_Gets apiGets;
     private Api_Inserts apiInserts;
     private int myUserId;
+    private TextInputEditText etSearch;
 
     @Nullable
     @Override
@@ -48,65 +50,78 @@ public class SocialFragment extends Fragment {
         rvUsers = view.findViewById(R.id.rvUsers);
         rvUsers.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        TextInputEditText etSearch = view.findViewById(R.id.etSearch);
-        etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        etSearch = view.findViewById(R.id.etSearch);
+        TextInputLayout tilSearch = view.findViewById(R.id.tilSearch);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filterUsers(s.toString());
-            }
+        if (tilSearch != null) {
+            tilSearch.setEndIconOnClickListener(v -> {
+                String query = etSearch.getText().toString().trim();
+                searchUsers(query);
+            });
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        loadUsers();
+        loadInitialUsers();
 
         return view;
     }
 
-    private void loadUsers() {
-        if (getActivity() instanceof Feed) ((Feed) getActivity()).showLoading();
+    private void loadInitialUsers() {
+        if (getActivity() instanceof Feed) {
+            ((Feed) getActivity()).showLoading();
+        }
         
         apiGets.searchUsers("", users -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    if (getActivity() instanceof Feed) ((Feed) getActivity()).hideLoading();
-                    allUsers.clear();
-                    for (User u : users) {
-                        if (u.getId() != myUserId) allUsers.add(u);
+                    if (getActivity() instanceof Feed) {
+                        ((Feed) getActivity()).hideLoading();
                     }
-                    adapter = new AdapterUsers(new ArrayList<>(allUsers), this::followUser);
-                    rvUsers.setAdapter(adapter);
+                    updateList(users);
                 });
             }
         });
     }
 
-    private void filterUsers(String text) {
-        ArrayList<User> filteredList = new ArrayList<>();
-        for (User user : allUsers) {
-            if (user.getUsername().toLowerCase().contains(text.toLowerCase()) || 
-                user.getName().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(user);
+    private void searchUsers(String query) {
+        if (getActivity() instanceof Feed) {
+            ((Feed) getActivity()).showLoading();
+        }
+        
+        apiGets.searchUsers(query, users -> {
+            if (isAdded() && getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    if (getActivity() instanceof Feed) {
+                        ((Feed) getActivity()).hideLoading();
+                    }
+                    updateList(users);
+                });
+            }
+        });
+    }
+
+    private void updateList(ArrayList<User> users) {
+        allUsersList.clear();
+        for (User u : users) {
+            if (u.getId() != myUserId) {
+                allUsersList.add(u);
             }
         }
-        if (adapter != null) {
-            adapter.setUsers(filteredList);
-        }
+        adapter = new AdapterUsers(allUsersList, this::followUser);
+        rvUsers.setAdapter(adapter);
     }
 
     private void followUser(User userToFollow) {
-        if (myUserId == -1) return;
-        
-        if (getActivity() instanceof Feed) ((Feed) getActivity()).showLoading();
+        if (myUserId == -1) {
+            return;
+        }
+        if (getActivity() instanceof Feed) {
+            ((Feed) getActivity()).showLoading();
+        }
         
         apiInserts.followUser(myUserId, userToFollow.getId(), success -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    if (getActivity() instanceof Feed){
+                    if (getActivity() instanceof Feed) {
                         ((Feed) getActivity()).hideLoading();
                     }
                 });

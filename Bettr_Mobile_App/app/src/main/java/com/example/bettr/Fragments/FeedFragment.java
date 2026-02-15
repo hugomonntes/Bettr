@@ -1,5 +1,7 @@
 package com.example.bettr.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bettr.Adapters.AdapterFeed;
 import com.example.bettr.ApiRest.Api_Gets;
+import com.example.bettr.Feed;
 import com.example.bettr.Publicaciones.Habit;
 import com.example.bettr.R;
 
@@ -24,6 +27,7 @@ public class FeedFragment extends Fragment {
     private AdapterFeed adapter;
     private final ArrayList<Habit> listaHabitos = new ArrayList<>();
     private Api_Gets apiGets;
+    private int myUserId;
 
     @Nullable
     @Override
@@ -34,15 +38,34 @@ public class FeedFragment extends Fragment {
         rvFeed = view.findViewById(R.id.rvFeed);
         rvFeed.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        loadPosts();
+        SharedPreferences prefs = requireActivity().getSharedPreferences("BettrPrefs", Context.MODE_PRIVATE);
+        myUserId = prefs.getInt("userId", -1);
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPosts();
+    }
+
     private void loadPosts() {
-        apiGets.getHabits(habits -> {
+        if (myUserId == -1) {
+            setupDummyData();
+            return;
+        }
+
+        if (getActivity() instanceof Feed) {
+            ((Feed) getActivity()).showLoading();
+        }
+
+        apiGets.getSocialFeed(myUserId, habits -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
+                    if (getActivity() instanceof Feed) {
+                        ((Feed) getActivity()).hideLoading();
+                    }
                     if (habits != null && !habits.isEmpty()) {
                         listaHabitos.clear();
                         listaHabitos.addAll(habits);

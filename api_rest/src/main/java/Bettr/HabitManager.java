@@ -3,18 +3,22 @@ package Bettr;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/habits")
 public class HabitManager {
-    // Conexión a la base de datos
     String url = "jdbc:postgresql://aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require";
     String user = "postgres.mqborjmvfvlemhewhscw";
     String password = "jsrMYBg6aAz-V9d4FfGwxw";
@@ -40,8 +44,6 @@ public class HabitManager {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
-
-    // EN TU SERVIDOR (HabitManager.java)
 
     @GET
     @Path("/feed/{userId}")

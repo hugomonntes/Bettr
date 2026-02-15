@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Habit implements Serializable {
     private int id;
     private int user_id;
+    private String username;
     private String description;
     private String image_url;
     private String habit_type;
@@ -57,6 +58,10 @@ public class Habit implements Serializable {
         return created_at;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     // Setters
     public void setId(int id) {
         this.id = id;
@@ -88,6 +93,10 @@ public class Habit implements Serializable {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
 

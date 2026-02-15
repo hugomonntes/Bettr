@@ -61,18 +61,26 @@ public class Login extends AppCompatActivity {
     }
 
     private void loginUser() {
-        if (etUsername == null || etPassword == null) return;
+        if (etUsername == null || etPassword == null) {
+            return;
+        }
         
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString();
 
-        if (username.isEmpty() || password.isEmpty()) return;
+        if (username.isEmpty() || password.isEmpty()) {
+            return;
+        }
 
-        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+        }
         String passwordHash = hashPassword(password);
 
         apiGets.getUser(username, passwordHash, (success, userId) -> runOnUiThread(() -> {
-            if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
+            if (loadingOverlay != null) {
+                loadingOverlay.setVisibility(View.GONE);
+            }
             if (success) {
                 // Guardar ID de usuario para usarlo en toda la app
                 SharedPreferences prefs = getSharedPreferences("BettrPrefs", Context.MODE_PRIVATE);
@@ -92,7 +100,9 @@ public class Login extends AppCompatActivity {
             StringBuilder hexString = new StringBuilder();
             for (byte b : hash) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
                 hexString.append(hex);
             }
             return hexString.toString();

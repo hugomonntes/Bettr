@@ -49,7 +49,6 @@ public class Api_Inserts {
                 if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                     if (callback != null) callback.onResult(true);
                 } else {
-                    // LEER EL ERROR DEL SERVIDOR
                     try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
                         StringBuilder response = new StringBuilder();
                         String line;
