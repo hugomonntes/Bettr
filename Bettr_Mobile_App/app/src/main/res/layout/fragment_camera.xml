@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Share your habit"
+        android:text="@string/share_habit"
         android:textColor="#FFFFFF"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -59,7 +59,7 @@
             android:layout_height="56dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Camera"
+            android:text="@string/btn_camera"
             app:backgroundTint="#2A2E33"
             app:cornerRadius="16dp"
             app:icon="@android:drawable/ic_menu_camera"
@@ -73,7 +73,7 @@
             android:layout_height="56dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Gallery"
+            android:text="@string/btn_gallery"
             app:backgroundTint="#2A2E33"
             app:cornerRadius="16dp"
             app:icon="@android:drawable/ic_menu_gallery"
@@ -86,7 +86,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:hint="Write a description..."
+        android:hint="@string/post_description"
         app:boxBackgroundColor="#1A1A1A"
         app:boxCornerRadiusBottomEnd="16dp"
         app:boxCornerRadiusBottomStart="16dp"
@@ -110,12 +110,32 @@
         android:layout_height="58dp"
         android:layout_marginTop="32dp"
         android:backgroundTint="#FACC15"
-        android:text="Post Habit"
+        android:text="@string/btn_post"
         android:textColor="#1C1F22"
         android:textStyle="bold"
         app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilDescription" />
+
+    <!-- Overlay de Carga específico para el fragmento -->
+    <FrameLayout
+        android:id="@+id/camera_loading_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3121212"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="10dp">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:indicatorColor="#FACC15"
+            app:trackThickness="4dp" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,14 @@
 package com.example.bettr.Publicaciones;
 
-public class Publicaciones {
+public class Habit {
     private String nombreUsuario;
     private String imageUrl;
     private int likes;
     private String descripcion;
-    private String info; // Entrenamiento, Futbol, etc.
+    private String info;
     private int streak;
 
-    public Publicaciones(String nombreUsuario, String imageUrl, String descripcion, String info, int likes, int streak) {
+    public Habit(String nombreUsuario, String imageUrl, String descripcion, String info, int likes, int streak) {
         this.nombreUsuario = nombreUsuario;
         this.imageUrl = imageUrl;
         this.descripcion = descripcion;

@@ -40,4 +40,42 @@ public class HabitManager {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
+
+    // EN TU SERVIDOR (HabitManager.java)
+
+    @GET
+    @Path("/feed/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFeedForUser(@PathParam("userId") int userId) {
+        List<Habit> feedHabits = new ArrayList<>();
+        String sql = "SELECT h.*, u.username " +
+                "FROM Habits h " +
+                "JOIN Users u ON h.user_id = u.id " +
+                "WHERE h.user_id IN (SELECT following_id FROM Followers WHERE follower_id = ?) " +
+                "   OR h.user_id = ? " +
+                "ORDER BY h.created_at DESC";
+
+        try (Connection conn = DriverManager.getConnection(url, this.user, password);
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Habit habit = new Habit();
+                habit.setId(rs.getInt("id"));
+                habit.setUser_id(rs.getInt("user_id"));
+                habit.setDescription(rs.getString("description"));
+                habit.setImage_url(rs.getString("image_url"));
+                habit.setHabit_type(rs.getString("habit_type"));
+                habit.setUsername(rs.getString("username")); 
+                feedHabits.add(habit);
+            }
+            return Response.ok(feedHabits).build();
+
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
 }

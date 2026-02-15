@@ -1,7 +1,9 @@
 package com.example.bettr.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -31,6 +34,7 @@ public class CameraFragment extends Fragment {
     private Button btnCamera, btnGallery, btnPost;
     private Bitmap selectedBitmap;
     private Api_Inserts apiInserts;
+    private FrameLayout loadingOverlay;
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -70,41 +74,63 @@ public class CameraFragment extends Fragment {
         btnCamera = view.findViewById(R.id.btnCamera);
         btnGallery = view.findViewById(R.id.btnGallery);
         btnPost = view.findViewById(R.id.btnPost);
+        loadingOverlay = view.findViewById(R.id.camera_loading_overlay);
 
-        btnCamera.setOnClickListener(v -> {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            cameraLauncher.launch(intent);
-        });
+        if (btnCamera != null) {
+            btnCamera.setOnClickListener(v -> {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraLauncher.launch(intent);
+            });
+        }
 
-        btnGallery.setOnClickListener(v -> galleryLauncher.launch("image/*"));
+        if (btnGallery != null) {
+            btnGallery.setOnClickListener(v -> galleryLauncher.launch("image/*"));
+        }
 
-        btnPost.setOnClickListener(v -> postHabit());
+        if (btnPost != null) {
+            btnPost.setOnClickListener(v -> postHabit());
+        }
 
         return view;
     }
 
     private void postHabit() {
+        if (etDescription == null) return;
+        
         String description = etDescription.getText().toString().trim();
         if (selectedBitmap == null || description.isEmpty()) return;
 
-        if (getActivity() instanceof Feed) {
-            ((Feed) getActivity()).showLoading();
+        showLoading();
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("BettrPrefs", Context.MODE_PRIVATE);
+        int userId = prefs.getInt("userId", -1);
+
+        if (userId == -1) {
+            hideLoading();
+            return;
         }
 
-        // URL de ejemplo hasta integrar subida real de imagen
         String dummyImageUrl = "https://bettr-g5yv.onrender.com/uploads/sample.jpg";
 
-        apiInserts.addHabit(1, description, dummyImageUrl, "Deporte", success -> {
-            if (isAdded()) {
-                requireActivity().runOnUiThread(() -> {
-                    if (getActivity() instanceof Feed) {
-                        ((Feed) getActivity()).hideLoading();
-                        if (success) {
+        apiInserts.addHabit(userId, description, dummyImageUrl, "Deporte", success -> {
+            if (isAdded() && getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    hideLoading();
+                    if (success) {
+                        if (getActivity() instanceof Feed) {
                             ((Feed) getActivity()).navigateToHome();
                         }
                     }
                 });
             }
         });
+    }
+
+    private void showLoading() {
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoading() {
+        if (loadingOverlay != null) loadingOverlay.setVisibility(View.GONE);
     }
 }

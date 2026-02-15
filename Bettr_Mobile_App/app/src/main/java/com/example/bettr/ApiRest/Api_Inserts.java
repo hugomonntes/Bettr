@@ -100,4 +100,30 @@ public class Api_Inserts {
             }
         }).start();
     }
+
+    public void followUser(int followerId, int followingId, ApiInsertCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/follow/" + followerId + "/" + followingId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setDoOutput(true);
+
+                int responseCode = connection.getResponseCode();
+                Log.d(TAG, "Follow Response Code: " + responseCode);
+
+                if (callback != null) {
+                    callback.onResult(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED);
+                }
+
+            } catch (IOException e) {
+                Log.e(TAG, "Error en followUser: " + e.getMessage());
+                if (callback != null) callback.onResult(false);
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+        }).start();
+    }
 }

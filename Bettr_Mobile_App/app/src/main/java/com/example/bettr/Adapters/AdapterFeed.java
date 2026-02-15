@@ -9,16 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bettr.Publicaciones.Publicaciones;
+import com.example.bettr.Publicaciones.Habit;
 import com.example.bettr.R;
 
 import java.util.ArrayList;
 
 public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> {
-    private ArrayList<Publicaciones> listaPublicaciones;
+    private ArrayList<Habit> listaHabitos;
 
-    public AdapterFeed(ArrayList<Publicaciones> listaPublicaciones) {
-        this.listaPublicaciones = listaPublicaciones;
+    public AdapterFeed(ArrayList<Habit> listaHabitos) {
+        this.listaHabitos = listaHabitos;
     }
 
     @NonNull
@@ -30,21 +30,19 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Publicaciones post = listaPublicaciones.get(position);
-        holder.tvUserName.setText(post.getNombreUsuario());
-        holder.tvPostInfo.setText(post.getInfo());
-        holder.tvDescription.setText(post.getDescripcion());
-        holder.tvLikes.setText(String.valueOf(post.getLikes()));
-        holder.tvStreak.setText("🔥 " + post.getStreak());
+        Habit habit = listaHabitos.get(position);
+        holder.tvUserName.setText(habit.getNombreUsuario());
+        holder.tvPostInfo.setText(habit.getInfo());
+        holder.tvDescription.setText(habit.getDescripcion());
+        holder.tvLikes.setText(String.valueOf(habit.getLikes()));
+        holder.tvStreak.setText("🔥 " + habit.getStreak());
 
-        // Por ahora usamos el logo como placeholder. 
-        // Si tienes una URL real, aquí es donde usarías Glide.with(context).load(post.getImageUrl()).into(holder.ivPostImage);
         holder.ivPostImage.setImageResource(R.drawable.logobettr);
     }
 
     @Override
     public int getItemCount() {
-        return listaPublicaciones.size();
+        return listaHabitos.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

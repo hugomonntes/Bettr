@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bettr.Adapters.AdapterFeed;
 import com.example.bettr.ApiRest.Api_Gets;
-import com.example.bettr.Publicaciones.Publicaciones;
+import com.example.bettr.Publicaciones.Habit;
 import com.example.bettr.R;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class FeedFragment extends Fragment {
 
     private RecyclerView rvFeed;
     private AdapterFeed adapter;
-    private final ArrayList<Publicaciones> listaPublicaciones = new ArrayList<>();
+    private final ArrayList<Habit> listaHabitos = new ArrayList<>();
     private Api_Gets apiGets;
 
     @Nullable
@@ -40,14 +40,13 @@ public class FeedFragment extends Fragment {
     }
 
     private void loadPosts() {
-        // Corregido: Llamar a getHabits que es el método real en Api_Gets
-        apiGets.getHabits(posts -> {
+        apiGets.getHabits(habits -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    if (posts != null && !posts.isEmpty()) {
-                        listaPublicaciones.clear();
-                        listaPublicaciones.addAll(posts);
-                        adapter = new AdapterFeed(listaPublicaciones);
+                    if (habits != null && !habits.isEmpty()) {
+                        listaHabitos.clear();
+                        listaHabitos.addAll(habits);
+                        adapter = new AdapterFeed(listaHabitos);
                         rvFeed.setAdapter(adapter);
                     } else {
                         setupDummyData();
@@ -58,11 +57,11 @@ public class FeedFragment extends Fragment {
     }
 
     private void setupDummyData() {
-        listaPublicaciones.clear();
-        listaPublicaciones.add(new Publicaciones("Diego Costa", "", "Todos unos matados, putos perroflas", "Entrenamiento Futbol • 2h", 234, 45));
-        listaPublicaciones.add(new Publicaciones("Carlos Italiani", "", "Embaraja", "Cartas • 22h", 120, 12));
-        listaPublicaciones.add(new Publicaciones("Iago Doval", "", "Costa espabila", "Clase • 5min", 1120, 12));
-        adapter = new AdapterFeed(listaPublicaciones);
+        listaHabitos.clear();
+        listaHabitos.add(new Habit("Diego Costa", "", "Todos unos matados, putos perroflas", "Entrenamiento Futbol • 2h", 234, 45));
+        listaHabitos.add(new Habit("Carlos Italiani", "", "Embaraja", "Cartas • 22h", 120, 12));
+        listaHabitos.add(new Habit("Iago Doval", "", "Costa espabila", "Clase • 5min", 1120, 12));
+        adapter = new AdapterFeed(listaHabitos);
         rvFeed.setAdapter(adapter);
     }
 }
