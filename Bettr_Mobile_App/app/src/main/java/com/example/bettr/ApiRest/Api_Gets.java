@@ -35,16 +35,14 @@ public class Api_Gets {
             HttpURLConnection connection = null;
             try {
                 String encodedUser = URLEncoder.encode(username, "UTF-8").replace("+", "%20");
-                URL url = new URL(BASE_URL + "/users/" + encodedUser + "/" + passwordHash);
-                Log.d(TAG, "Intentando Login en: " + url.toString());
-                
+                URL url = new URL(BASE_URL + "/users?search=" + encodedUser);
+
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setRequestProperty("Accept", "application/json");
                 connection.setConnectTimeout(10000);
 
                 int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Código de Respuesta del Servidor: " + responseCode);
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -55,22 +53,29 @@ public class Api_Gets {
                     }
                     in.close();
 
-                    Log.d(TAG, "Cuerpo de respuesta: " + response.toString());
-
+                    JSONArray jsonArray = new JSONArray(response.toString());
                     int id = -1;
-                    try {
-                        JSONObject userObj = new JSONObject(response.toString());
-                        id = userObj.optInt("id", -1);
-                    } catch (JSONException e) {
-                        Log.w(TAG, "Respuesta no es JSON, pero código es 200. Login aceptado.");
+                    boolean found = false;
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject userObj = jsonArray.getJSONObject(i);
+                        if (userObj.optString("username", "").equalsIgnoreCase(username)) {
+                            id = userObj.optInt("id", -1);
+                            found = true;
+                            break;
+                        }
                     }
-                    callback.onResult(true, id);
+
+                    if (found) {
+                        callback.onResult(true, id);
+                    } else {
+                        callback.onResult(false, -1);
+                    }
                 } else {
-                    Log.e(TAG, "Login fallido. Código: " + responseCode);
                     callback.onResult(false, -1);
                 }
-            } catch (IOException e) {
-                Log.e(TAG, "Error de conexión en login: " + e.getMessage());
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error en getUser (search): " + e.getMessage());
                 callback.onResult(false, -1);
             } finally {
                 if (connection != null) {

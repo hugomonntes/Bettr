@@ -31,6 +31,7 @@ public class Api_Inserts {
                 connection.setDoOutput(true);
 
                 JSONObject json = new JSONObject();
+                // Asegúrate de que estos nombres coincidan EXACTAMENTE con los campos de tu clase Habit en el servidor
                 json.put("user_id", userId);
                 json.put("description", description);
                 json.put("image_url", imageUrl);
@@ -47,22 +48,32 @@ public class Api_Inserts {
                 Log.d(TAG, "Response Code: " + responseCode);
 
                 if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-                    if (callback != null) callback.onResult(true);
+                    if (callback != null) {
+                        callback.onResult(true);
+                    }
                 } else {
                     try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8))) {
                         StringBuilder response = new StringBuilder();
                         String line;
-                        while ((line = br.readLine()) != null) response.append(line.trim());
+                        while ((line = br.readLine()) != null) {
+                            response.append(line.trim());
+                        }
                         Log.e(TAG, "Error del Servidor: " + response.toString());
                     }
-                    if (callback != null) callback.onResult(false);
+                    if (callback != null) {
+                        callback.onResult(false);
+                    }
                 }
 
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Error de red/JSON: " + e.getMessage());
-                if (callback != null) callback.onResult(false);
+                if (callback != null) {
+                    callback.onResult(false);
+                }
             } finally {
-                if (connection != null) connection.disconnect();
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
         }).start();
     }
@@ -89,13 +100,18 @@ public class Api_Inserts {
                 }
 
                 int responseCode = connection.getResponseCode();
-                if (callback != null) callback.onResult(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED);
+                if (callback != null) {
+                    callback.onResult(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED);
+                }
 
             } catch (IOException | JSONException e) {
-                Log.e(TAG, "Error: " + e.getMessage());
-                if (callback != null) callback.onResult(false);
+                if (callback != null) {
+                    callback.onResult(false);
+                }
             } finally {
-                if (connection != null) connection.disconnect();
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
         }).start();
     }
@@ -111,17 +127,54 @@ public class Api_Inserts {
                 connection.setDoOutput(true);
 
                 int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Follow Response Code: " + responseCode);
-
                 if (callback != null) {
                     callback.onResult(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED);
                 }
 
             } catch (IOException e) {
-                Log.e(TAG, "Error en followUser: " + e.getMessage());
-                if (callback != null) callback.onResult(false);
+                if (callback != null) {
+                    callback.onResult(false);
+                }
             } finally {
-                if (connection != null) connection.disconnect();
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    public void updateUserProfile(int userId, String description, String avatarBase64, ApiInsertCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/" + userId + "/profile");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setDoOutput(true);
+
+                JSONObject json = new JSONObject();
+                json.put("description", description);
+                json.put("avatar", avatarBase64);
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = json.toString().getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = connection.getResponseCode();
+                if (callback != null) {
+                    callback.onResult(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED);
+                }
+
+            } catch (IOException | JSONException e) {
+                if (callback != null) {
+                    callback.onResult(false);
+                }
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
         }).start();
     }

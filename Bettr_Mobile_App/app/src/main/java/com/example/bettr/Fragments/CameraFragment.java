@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import com.example.bettr.ApiRest.Api_Inserts;
 import com.example.bettr.Feed;
 import com.example.bettr.R;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class CameraFragment extends Fragment {
@@ -68,7 +71,6 @@ public class CameraFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
-        apiInserts = new Api_Gets_Inserts(); // TODO: check if this is the correct class name
         apiInserts = new Api_Inserts();
         ivPreview = view.findViewById(R.id.ivPreview);
         etDescription = view.findViewById(R.id.etDescription);
@@ -119,9 +121,9 @@ public class CameraFragment extends Fragment {
             return;
         }
 
-        String dummyImageUrl = "https://bettr-g5yv.onrender.com/uploads/sample.jpg";
+        String imageBase64 = encodeImageToBase64(selectedBitmap);
 
-        apiInserts.addHabit(userId, description, dummyImageUrl, "Deporte", success -> {
+        apiInserts.addHabit(userId, description, imageBase64, "Deporte", success -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     hideLoading();
@@ -133,6 +135,13 @@ public class CameraFragment extends Fragment {
                 });
             }
         });
+    }
+
+    private String encodeImageToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+        byte[] byteArray = outputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     private void showLoading() {

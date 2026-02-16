@@ -12,6 +12,7 @@ public class Users implements Serializable {
     private String email;
     private String password_hash;
     private String description;
+    private String avatar;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
@@ -51,6 +52,10 @@ public class Users implements Serializable {
         return description;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
     public LocalDateTime getCreated_at() {
         return created_at;
     }
@@ -82,6 +87,10 @@ public class Users implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public void setCreated_at(LocalDateTime created_at) {

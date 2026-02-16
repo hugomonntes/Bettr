@@ -1,5 +1,8 @@
 package com.example.bettr.Adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +40,22 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
         holder.tvLikes.setText(String.valueOf(habit.getLikes()));
         holder.tvStreak.setText("🔥 " + habit.getStreak());
 
-        holder.ivPostImage.setImageResource(R.drawable.logobettr);
+        String imageData = habit.getImageUrl();
+        if (imageData != null && !imageData.isEmpty()) {
+            try {
+                byte[] decodedString = Base64.decode(imageData, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                if (decodedByte != null) {
+                    holder.ivPostImage.setImageBitmap(decodedByte);
+                } else {
+                    holder.ivPostImage.setImageResource(R.drawable.logobettr);
+                }
+            } catch (Exception e) {
+                holder.ivPostImage.setImageResource(R.drawable.logobettr);
+            }
+        } else {
+            holder.ivPostImage.setImageResource(R.drawable.logobettr);
+        }
     }
 
     @Override

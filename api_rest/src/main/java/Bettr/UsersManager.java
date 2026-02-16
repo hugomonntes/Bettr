@@ -3,8 +3,7 @@ package Bettr;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class UsersManager {
         }
     }
 
-    // 3. BUSCAR USUARIOS (Con filtro opcional por nombre/username)
+    // 3. BUSCAR USUARIOS
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(@QueryParam("search") String search) {
@@ -90,7 +89,6 @@ public class UsersManager {
                 if (search != null && !search.isEmpty()) {
                     query += " WHERE username ILIKE ? OR name ILIKE ?";
                 }
-                
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     if (search != null && !search.isEmpty()) {
                         pstmt.setString(1, "%" + search + "%");
@@ -121,7 +119,6 @@ public class UsersManager {
         try {
             Class.forName("org.postgresql.Driver");
             try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
-                // ON CONFLICT DO NOTHING evita errores si ya lo sigue
                 String query = "INSERT INTO Followers (follower_id, following_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
                 try (PreparedStatement pstmt = conn.prepareStatement(query)) {
                     pstmt.setInt(1, fId);
@@ -135,7 +132,30 @@ public class UsersManager {
         }
     }
 
-    // 5. EDITAR DESCRIPCIÓN
+    // 5. ACTUALIZAR PERFIL
+    @POST
+    @Path("/{id}/profile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateProfile(@PathParam("id") int id, Users userBody) {
+        try {
+            Class.forName("org.postgresql.Driver");
+            try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
+                // Actualizamos la descripción y el campo avatar (que recibe el Base64)
+                String query = "UPDATE users SET description = ?, avatar = ? WHERE id = ?";
+                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                    pstmt.setString(1, userBody.getDescription());
+                    pstmt.setString(2, userBody.getAvatar()); // Guardamos el Base64 como texto
+                    pstmt.setInt(3, id);
+                    pstmt.executeUpdate();
+                    return Response.ok().build();
+                }
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    // 6. EDITAR DESCRIPCIÓN SIMPLE
     @POST
     @Path("/{id}/description")
     @Consumes(MediaType.APPLICATION_JSON)
