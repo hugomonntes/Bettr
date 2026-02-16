@@ -1,11 +1,10 @@
 package com.example.bettr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -34,6 +34,17 @@ public class CompleteProfile extends AppCompatActivity {
     private Bitmap avatarBitmap;
     private Api_Inserts apiInserts;
     private FrameLayout loadingOverlay;
+
+    private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Bundle extras = result.getData().getExtras();
+                    avatarBitmap = (Bitmap) extras.get("data");
+                    ivAvatar.setImageBitmap(avatarBitmap);
+                }
+            }
+    );
 
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
@@ -60,7 +71,7 @@ public class CompleteProfile extends AppCompatActivity {
         ivAvatar = findViewById(R.id.ivAvatar);
         Button btnSelectImage = findViewById(R.id.btnSelectImage);
         Button btnFinish = findViewById(R.id.btnFinishProfile);
-        loadingOverlay = findViewById(R.id.loading_overlay); // Asegúrate de tener este ID en el XML
+        loadingOverlay = findViewById(R.id.loading_overlay);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -69,12 +80,27 @@ public class CompleteProfile extends AppCompatActivity {
         });
 
         if (btnSelectImage != null) {
-            btnSelectImage.setOnClickListener(v -> galleryLauncher.launch("image/*"));
+            btnSelectImage.setOnClickListener(v -> showImageSourceDialog());
         }
 
         if (btnFinish != null) {
             btnFinish.setOnClickListener(v -> finishProfile());
         }
+    }
+
+    private void showImageSourceDialog() {
+        String[] options = {"Cámara", "Galería"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccionar foto de perfil");
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraLauncher.launch(intent);
+            } else {
+                galleryLauncher.launch("image/*");
+            }
+        });
+        builder.show();
     }
 
     private void finishProfile() {
@@ -108,7 +134,7 @@ public class CompleteProfile extends AppCompatActivity {
 
     private String encodeImageToBase64(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream); // Comprimimos más para el avatar
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
         byte[] byteArray = outputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }

@@ -3,8 +3,6 @@ package com.example.bettr.Fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,14 +104,18 @@ public class SocialFragment extends Fragment {
                 allUsersList.add(u);
             }
         }
-        adapter = new AdapterUsers(allUsersList, this::followUser);
+        // Creamos el adaptador pasando el listener que ahora maneja la posición
+        adapter = new AdapterUsers(allUsersList, (user, position) -> {
+            followUser(user, position);
+        });
         rvUsers.setAdapter(adapter);
     }
 
-    private void followUser(User userToFollow) {
-        if (myUserId == -1) {
+    private void followUser(User userToFollow, int position) {
+        if (myUserId == -1 || userToFollow.isFollowing()) {
             return;
         }
+        
         if (getActivity() instanceof Feed) {
             ((Feed) getActivity()).showLoading();
         }
@@ -123,6 +125,13 @@ public class SocialFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     if (getActivity() instanceof Feed) {
                         ((Feed) getActivity()).hideLoading();
+                    }
+                    if (success) {
+                        // Actualizamos el estado localmente para que el botón cambie
+                        userToFollow.setFollowing(true);
+                        if (adapter != null) {
+                            adapter.notifyItemChanged(position);
+                        }
                     }
                 });
             }

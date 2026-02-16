@@ -1,5 +1,6 @@
 package com.example.bettr.Adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> 
     private OnFollowClickListener listener;
 
     public interface OnFollowClickListener {
-        void onFollowClick(User user);
+        void onFollowClick(User user, int position);
     }
 
     public AdapterUsers(ArrayList<User> users, OnFollowClickListener listener) {
@@ -44,9 +45,20 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> 
         
         holder.ivAvatar.setImageResource(R.drawable.logobettr);
 
+        // Cambiamos el estado del botón según si ya lo seguimos
+        if (user.isFollowing()) {
+            holder.btnFollow.setText("Siguiendo");
+            holder.btnFollow.setBackgroundColor(Color.parseColor("#374151")); // Gris oscuro
+            holder.btnFollow.setTextColor(Color.WHITE);
+        } else {
+            holder.btnFollow.setText("Seguir");
+            holder.btnFollow.setBackgroundColor(Color.parseColor("#FACC15")); // Amarillo Bettr
+            holder.btnFollow.setTextColor(Color.parseColor("#1C1F22"));
+        }
+
         holder.btnFollow.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onFollowClick(user);
+                listener.onFollowClick(user, position);
             }
         });
     }
