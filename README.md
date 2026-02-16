@@ -34,7 +34,7 @@ Crear desarrollo de las diferentes vistas de la aplicaión así como la navegaci
 
 Implementación de un servidor gratuito para la API REST (Render), mejorando el acceso a la aplicación desde cualquier plataforma o dispositivo sin depender de un servidor local arrancado en la misma red que el dispositivo desde el que se quiere acceder a la app.
 
-## 6ª SEMANA DE DESARROLLO ( 6 FEB -  ACTUALIDAD 2026)
+## 6ª SEMANA DE DESARROLLO ( 6 FEB -  12 FEB 2026)
 
 Añadir métodos que me van haciendo falta a la Api como por ejemplo buscar un usuario mediante su id, para poder completar su perfil después de registrarse.
 
@@ -47,3 +47,35 @@ Desarrollar nueva vista en la aplicación móvil para publicar hábitos:
 - Implementación del layout `fragment_camera.xml` con diseño moderno y oscuro
 - Integración con la API para publicar hábitos con descripción e imagen
 - Botones para cámara, galería y publicación de hábitos
+
+## 7ª SEMANA DE DESARROLLO ( 13 FEB - ACTUALIDAD 2026)
+
+Migración completa de la base de datos de MySQL a **PostgreSQL** en **Supabase**, aprovechando las ventajas de un backend como servicio con autenticación integrada, almacenamiento de archivos y API automática.
+
+Implementación del **sistema de Feed** en la API REST:
+- Nuevo endpoint `/habits/feed/{userId}` que devuelve los hábitos de los usuarios que sigues y los tuyos propios
+- Consulta SQL optimizada con JOIN entre tablas para obtener el username del creador del hábito
+- Ordenación por fecha de creación descendente
+
+Implementación del **sistema de seguidores**:
+- Endpoint para seguir a usuarios `/users/follow/{followerId}/{followingId}`
+- Uso de "UPSERT" con `ON CONFLICT DO NOTHING` para evitar duplicados
+- Preparado para futura funcionalidad de dejar de seguir
+
+Implementación de **búsqueda de usuarios**:
+- Nuevo endpoint `/users?search={termino}` para buscar usuarios por nombre o username
+- Uso de `ILIKE` para búsqueda case-insensitive en PostgreSQL
+
+Mejora del **perfil de usuario**:
+- Endpoint para actualizar descripción y avatar `POST /users/{id}/profile`
+- Endpoint específico para editar solo la descripción `POST /users/{id}/description`
+- Almacenamiento de avatar en Base64
+
+Sistema de **tipos de hábitos**:
+- Campo `habit_type` en el modelo para categorizar hábitos
+- Preparado para futuras estadísticas y filtros por tipo
+
+Implementación de nuevos componentes en la aplicación móvil:
+- Mejora del sistema de navegación con fragmentos
+- Integración con los nuevos endpoints de la API
+- Preparación para el sistema de follows
