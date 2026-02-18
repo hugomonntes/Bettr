@@ -1,0 +1,321 @@
+/* Bettr Dashboard Styles */
+
+.textarea {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    color: var(--text-white);
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--primary-yellow);
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.1);
+}
+
+.textarea::placeholder {
+    color: var(--text-muted);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .content {
+        padding: 16px;
+    }
+    
+    .card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+/* Additional Dashboard Elements */
+.week-tracker {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.week-tracker-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Floating Action Button (Mobile) */
+.fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--primary-yellow);
+    color: var(--bg-dark);
+    border: none;
+    box-shadow: 0 4px 16px rgba(250, 204, 21, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(250, 204, 21, 0.5);
+}
+
+.fab svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Mobile bottom nav */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 8px 0;
+    z-index: 100;
+}
+
+.mobile-nav-items {
+    display: flex;
+    justify-content: space-around;
+}
+
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: color 0.2s;
+}
+
+.mobile-nav-item.active,
+.mobile-nav-item:hover {
+    color: var(--primary-yellow);
+}
+
+.mobile-nav-item svg {
+    width: 24px;
+    height: 24px;
+}
+
+@media (max-width: 768px) {
+    .mobile-nav {
+        display: block;
+    }
+    
+    .fab {
+        bottom: 80px;
+    }
+    
+    .main-content {
+        padding-bottom: 80px;
+    }
+}
+
+/* Profile Edit Modal */
+.profile-edit-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.profile-avatar-upload {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+}
+
+.profile-avatar-upload .profile-avatar-large {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.profile-avatar-upload .upload-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.profile-avatar-upload:hover .upload-overlay {
+    opacity: 1;
+}
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--error);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+/* Empty States */
+.empty-state-action {
+    margin-top: 20px;
+}
+
+/* Habit Type Tags */
+.habit-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(250, 204, 21, 0.1);
+    color: var(--primary-yellow);
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* Streak Counter */
+.streak-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-yellow);
+    font-weight: 600;
+}
+
+.streak-counter svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Achievement Badge */
+.achievement-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-yellow), #EAB308);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+/* Settings List */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background: var(--bg-card);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.settings-item:hover {
+    background: rgba(250, 204, 21, 0.1);
+}
+
+.settings-item-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.settings-item-left svg {
+    width: 22px;
+    height: 22px;
+    color: var(--text-grey);
+}
+
+.settings-item-right {
+    color: var(--text-muted);
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-card-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--primary-yellow);
+}
+
+.stat-card-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+

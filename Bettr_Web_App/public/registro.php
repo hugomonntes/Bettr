@@ -1,228 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registrarse - Bettr</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #111;
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 400px;
-      background: #111;
-      border-radius: 24px;
-      padding: 40px 32px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .logo-icon {
-      width: 64px;
-      height: 64px;
-      background: #FCD34D;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      margin-bottom: 16px;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 28px;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 14px;
-      margin-bottom: 32px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #e2e8f0;
-    }
-
-    input {
-      width: 100%;
-      padding: 14px 16px;
-      background: #111;
-      border: 1px solid #2d3548;
-      border-radius: 12px;
-      color: #ffffff;
-      font-size: 16px;
-      transition: all 0.3s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #FCD34D;
-      box-shadow: 0 0 0 3px rgba(252, 211, 77, 0.1);
-    }
-
-    input::placeholder {
-      color: #64748b;
-    }
-
-    .terms {
-      margin-bottom: 24px;
-      font-size: 13px;
-      color: #94a3b8;
-      line-height: 1.6;
-    }
-
-    .terms a {
-      color: #FCD34D;
-      text-decoration: none;
-    }
-
-    .terms a:hover {
-      text-decoration: underline;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 16px;
-      background: #FCD34D;
-      color: #0a0e27;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      margin-bottom: 20px;
-    }
-
-    .btn:hover {
-      background: #fbbf24;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(252, 211, 77, 0.4);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      margin: 24px 0;
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #2d3548;
-    }
-
-    .divider::before {
-      margin-right: 12px;
-    }
-
-    .divider::after {
-      margin-left: 12px;
-    }
-
-    .login-link {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 14px;
-    }
-
-    .login-link a {
-      color: #FCD34D;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .login-link a:hover {
-      text-decoration: underline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bettr - Regístrate</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/global.css">
 </head>
 <body>
-  <div class="container">
-    <div class="logo">
-      <div class="logo-icon">🏆</div>
+    <div class="auth-page">
+        <div class="auth-container">
+            <!-- Logo Card -->
+            <div class="auth-logo-card">
+                <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr" class="auth-logo">
+            </div>
+            
+            <!-- Title -->
+            <h1 class="auth-title">Crear Cuenta</h1>
+            <p class="auth-subtitle">Únete a Bettr hoy</p>
+            
+            <!-- Error Message -->
+            <div id="errorMessage" class="auth-error"></div>
+            
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form">
+                <div class="auth-form-group">
+                    <label for="name">Nombre Completo</label>
+                    <div class="input-icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <input type="text" id="name" name="name" placeholder="Ingresa tu nombre" required>
+                    </div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="username">Usuario</label>
+                    <div class="input-icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                        </svg>
+                        <input type="text" id="username" name="username" placeholder="Elige un usuario" required>
+                    </div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <div class="input-icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <input type="email" id="email" name="email" placeholder="Ingresa tu correo" required>
+                    </div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <input type="password" id="password" name="password" placeholder="Crea una contraseña" required>
+                        <button type="button" class="input-toggle" onclick="togglePassword('password')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar">
+                            <div class="password-strength-bar-fill" id="strengthBar"></div>
+                        </div>
+                        <span class="password-strength-text" id="strengthText"></span>
+                    </div>
+                </div>
+                
+                <div class="auth-form-group">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <div class="input-icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repite tu contraseña" required>
+                        <button type="button" class="input-toggle" onclick="togglePassword('confirmPassword')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="auth-btn" id="registerBtn">Crear Cuenta</button>
+            </form>
+            
+            <!-- Login Link -->
+            <p class="auth-link">
+                ¿Ya tienes cuenta? <a href="login.php">Inicia Sesión</a>
+            </p>
+        </div>
     </div>
     
-    <h1>Crear Cuenta</h1>
-    <p class="subtitle">Únete a Bettr y comienza tu viaje</p>
-
-    <form method="post" action="../app/validation/validate_register.php">
-      <div class="form-group">
-        <label for="name">Nombre Completo</label>
-        <input type="text" id="name" name="name" placeholder="Hugo Montes" required>
-      </div>
-
-      <div class="form-group">
-        <label for="username">Nombre de Usuario</label>
-        <input type="text" id="username" name="username" placeholder="@hmontes" required>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Correo Electrónico</label>
-        <input type="email" id="email" name="email" placeholder="tu@email.com" required>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" required>
-      </div>
-
-      <div class="form-group">
-        <label for="confirm-password">Confirmar Contraseña</label>
-        <input type="password" id="confirm-password" name="confirm-password" placeholder="Repite tu contraseña" required>
-      </div>
-
-      <div class="terms">
-        Al registrarte, aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a>
-      </div>
-
-      <button type="submit" class="btn">Crear Cuenta</button>
-    </form>
-
-    <div class="divider">o</div>
-
-    <div class="login-link">
-      ¿Ya tienes cuenta? <a href="login.php">Inicia sesión aquí</a>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
     </div>
-  </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    
+    <script src="assets/js/auth.js"></script>
+    <script>
+        function togglePassword(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            const toggleBtn = passwordInput.parentElement.querySelector('.input-toggle svg');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+            }
+        }
+        
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            strengthBar.className = 'password-strength-bar-fill';
+            if (password.length === 0) {
+                strengthBar.style.width = '0';
+                strengthText.textContent = '';
+            } else if (strength <= 2) {
+                strengthBar.classList.add('weak');
+                strengthText.textContent = 'Contraseña débil';
+                strengthText.style.color = '#EF4444';
+            } else if (strength <= 3) {
+                strengthBar.classList.add('medium');
+                strengthText.textContent = 'Contraseña media';
+                strengthText.style.color = '#F59E0B';
+            } else {
+                strengthBar.classList.add('strong');
+                strengthText.textContent = 'Contraseña fuerte';
+                strengthText.style.color = '#10B981';
+            }
+        });
+    </script>
 </body>
 </html>
+
