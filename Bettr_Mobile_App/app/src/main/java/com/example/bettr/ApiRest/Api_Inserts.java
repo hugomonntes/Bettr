@@ -31,7 +31,6 @@ public class Api_Inserts {
                 connection.setDoOutput(true);
 
                 JSONObject json = new JSONObject();
-                // Asegúrate de que estos nombres coincidan EXACTAMENTE con los campos de tu clase Habit en el servidor
                 json.put("user_id", userId);
                 json.put("description", description);
                 json.put("image_url", imageUrl);

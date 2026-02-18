@@ -45,7 +45,6 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> 
         
         holder.ivAvatar.setImageResource(R.drawable.logobettr);
 
-        // Cambiamos el estado del botón según si ya lo seguimos
         if (user.isFollowing()) {
             holder.btnFollow.setText("Siguiendo");
             holder.btnFollow.setBackgroundColor(Color.parseColor("#374151")); // Gris oscuro
