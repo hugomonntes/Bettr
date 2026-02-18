@@ -9,11 +9,14 @@ const PROXY_URL = 'api_proxy.php?endpoint=';
 // Global state
 let currentUser = null;
 let currentPage = 'feed';
+let habitImageBase64 = '';
+let cameraStream = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadUserFromSession();
     setupNavigation();
+    setupImageUpload();
     loadFeed();
 });
 
@@ -128,12 +131,12 @@ async function apiPost(endpoint, data) {
             body: JSON.stringify(data)
         });
         
-        const data = await response.json();
-        console.log('API Response:', response.status, data);
+        const responseData = await response.json();
+        console.log('API Response:', response.status, responseData);
         
         return {
             status: response.status,
-            data: data
+            data: responseData
         };
     } catch (error) {
         console.error('API Error:', error);
@@ -196,7 +199,7 @@ async function loadFeed() {
 }
 
 // Render Feed
-function renderFeed(habits) {
+async function renderFeed(habits) {
     const content = document.getElementById('mainContent');
     if (!content) return;
     
@@ -216,9 +219,20 @@ function renderFeed(habits) {
     }
     
     let html = '';
-    habits.forEach(habit => {
+    for (const habit of habits) {
         const avatarLetter = habit.username ? habit.username.charAt(0).toUpperCase() : 'U';
         const timeAgo = getTimeAgo(habit.created_at);
+        
+        // Check if current user has liked this habit
+        let isLiked = false;
+        try {
+            const likeStatus = await apiGet('habits/' + habit.id + '/isliked/' + currentUser.id);
+            if (likeStatus.data && likeStatus.data.liked === true) {
+                isLiked = true;
+            }
+        } catch (e) {
+            console.log('Error checking like status:', e);
+        }
         
         html += `
             <article class="card post">
@@ -236,8 +250,8 @@ function renderFeed(habits) {
                 </div>
                 
                 <div class="post-actions">
-                    <span class="post-action like-btn" data-habit-id="${habit.id}" onclick="toggleLike(${habit.id}, this)">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <span class="post-action like-btn ${isLiked ? 'liked' : ''}" data-habit-id="${habit.id}" onclick="toggleLike(${habit.id}, this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="${isLiked ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                         <span class="like-count">${habit.likes_count || 0}</span>
@@ -253,7 +267,7 @@ function renderFeed(habits) {
                 <p class="post-text">${habit.description || 'Nuevo hábito completado!'}</p>
             </article>
         `;
-    });
+    }
     
     content.innerHTML = html;
 }
@@ -589,6 +603,9 @@ function closeHabitModal() {
         const form = document.getElementById('habitForm');
         if (form) form.reset();
     }
+    // Reset image
+    habitImageBase64 = '';
+    removeHabitImage();
 }
 
 // Submit Habit
@@ -606,7 +623,7 @@ if (habitForm) {
             const result = await apiPost('habits', {
                 user_id: currentUser.id,
                 description: description,
-                image_url: '',
+                image_url: habitImageBase64,
                 habit_type: habitType
             });
             
@@ -615,6 +632,9 @@ if (habitForm) {
             if (result.status === 200 || result.status === 201) {
                 showToast('¡Hábito compartido!');
                 closeHabitModal();
+                // Reset image
+                habitImageBase64 = '';
+                removeHabitImage();
                 loadFeed();
             } else {
                 showToast('Error al compartir hábito', 'error');
@@ -678,5 +698,160 @@ if (habitModal) {
             closeHabitModal();
         }
     });
+}
+
+// ============================================
+// Image Upload Functions
+// ============================================
+
+function setupImageUpload() {
+    const imageInput = document.getElementById('habitImageInput');
+    if (imageInput) {
+        imageInput.addEventListener('change', handleImageUpload);
+    }
+}
+
+function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        showToast('La imagen debe ser menor de 10MB', 'error');
+        return;
+    }
+    
+    // Convert to Base64
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        habitImageBase64 = event.target.result;
+        
+        // Update preview
+        const preview = document.getElementById('habitImagePreview');
+        preview.innerHTML = `<img src="${habitImageBase64}" alt="Preview">`;
+        
+        // Show remove button
+        const removeBtn = document.getElementById('removeImageBtn');
+        if (removeBtn) removeBtn.style.display = 'block';
+        
+        // Update hidden input
+        const hiddenInput = document.getElementById('habitImageBase64');
+        if (hiddenInput) hiddenInput.value = habitImageBase64;
+    };
+    reader.onerror = function() {
+        showToast('Error al leer la imagen', 'error');
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeHabitImage() {
+    habitImageBase64 = '';
+    
+    // Reset preview
+    const preview = document.getElementById('habitImagePreview');
+    if (preview) {
+        preview.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="40" height="40">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Sin imagen</span>
+        `;
+    }
+    
+    // Hide remove button
+    const removeBtn = document.getElementById('removeImageBtn');
+    if (removeBtn) removeBtn.style.display = 'none';
+    
+    // Reset file input
+    const imageInput = document.getElementById('habitImageInput');
+    if (imageInput) imageInput.value = '';
+    
+    // Reset hidden input
+    const hiddenInput = document.getElementById('habitImageBase64');
+    if (hiddenInput) hiddenInput.value = '';
+}
+
+// ============================================
+// Camera Functions
+// ============================================
+
+async function openCamera() {
+    const cameraModal = document.getElementById('cameraModal');
+    if (!cameraModal) return;
+    
+    cameraModal.style.display = 'flex';
+    
+    const video = document.getElementById('cameraVideo');
+    if (!video) return;
+    
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: 'environment',
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            } 
+        });
+        video.srcObject = cameraStream;
+    } catch (error) {
+        console.error('Camera error:', error);
+        showToast('Error al acceder a la cámara', 'error');
+        closeCamera();
+    }
+}
+
+function closeCamera() {
+    const cameraModal = document.getElementById('cameraModal');
+    if (cameraModal) {
+        cameraModal.style.display = 'none';
+    }
+    
+    // Stop camera stream
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+    
+    const video = document.getElementById('cameraVideo');
+    if (video) {
+        video.srcObject = null;
+    }
+}
+
+function takePhoto() {
+    const video = document.getElementById('cameraVideo');
+    const canvas = document.getElementById('cameraCanvas');
+    
+    if (!video || !canvas) return;
+    
+    // Set canvas dimensions to match video
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    
+    // Draw video frame to canvas
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Convert to Base64
+    habitImageBase64 = canvas.toDataURL('image/jpeg', 0.85);
+    
+    // Update preview
+    const preview = document.getElementById('habitImagePreview');
+    if (preview) {
+        preview.innerHTML = `<img src="${habitImageBase64}" alt="Preview">`;
+    }
+    
+    // Show remove button
+    const removeBtn = document.getElementById('removeImageBtn');
+    if (removeBtn) removeBtn.style.display = 'block';
+    
+    // Update hidden input
+    const hiddenInput = document.getElementById('habitImageBase64');
+    if (hiddenInput) hiddenInput.value = habitImageBase64;
+    
+    // Close camera
+    closeCamera();
+    
+    showToast('¡Foto capturada!');
 }
 

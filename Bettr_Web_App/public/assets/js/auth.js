@@ -236,7 +236,7 @@ if (registerForm) {
             if (result.status === 201 || result.status === 200) {
                 showToast('¡Cuenta creada exitosamente!');
                 setTimeout(() => {
-                    window.location.href = 'login.php';
+                    window.location.href = 'completar_perfil.php';
                 }, 1500);
             } else if (result.status === 500 && result.data && result.data.message) {
                 showError('Error: ' + result.data.message);
