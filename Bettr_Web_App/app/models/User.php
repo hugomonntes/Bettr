@@ -1,5 +1,4 @@
 <?php
-// Report only serious errors
 error_reporting(E_ERROR | E_PARSE);
 
 class User{
@@ -8,7 +7,6 @@ class User{
     private $username;
     private $email;
     private $password;
-
     private $avatar;
 
     public function __construct($id, $name, $username, $email, $password, $avatar){
@@ -68,3 +66,4 @@ class User{
         return "User [id=$this->id, name=$this->name, username=$this->username, email=$this->email, avatar=$this->avatar]";
     }
 }
+

@@ -1,5 +1,4 @@
 <?php
-// Report only serious errors
 error_reporting(E_ERROR | E_PARSE);
 
 require_once __DIR__ . '/../../public/DAO/Conection.php';
@@ -23,7 +22,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $emailExists = $usersDAO->emailExists($_POST['email']);
     if(!$nameExists && !$usernameExists && !$emailExists) {
         $usersDAO -> createUser($_POST['name'], $_POST['username'], $_POST['email'], $_POST['password']);
-    } else { // Hacer un cambio de lógica para mostrar todos los errores
+    } else {
         $errors = [];
         if($nameExists){
             $errors[] = "<br>El nombre ya está en uso.";
@@ -38,4 +37,3 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-//TODO comprobar longitud de contraseña y demás validaciones

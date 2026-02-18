@@ -1,26 +1,16 @@
-/**
- * Bettr Completar Perfil - JavaScript
- * Handles avatar upload and profile completion
- */
-
-// PHP Proxy URL
 const PROXY_URL = 'api_proxy.php?endpoint=';
 
-// Global state
 let currentUser = null;
 let avatarBase64 = '';
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadUserFromSession();
     setupAvatarUpload();
 });
 
-// Load user from session
 function loadUserFromSession() {
     const userStr = sessionStorage.getItem('bettr_user');
     if (!userStr) {
-        // No user logged in, redirect to login
         window.location.href = 'login.php';
         return;
     }
@@ -29,7 +19,6 @@ function loadUserFromSession() {
     updateAvatarPreview();
 }
 
-// Update avatar preview with user initial
 function updateAvatarPreview() {
     if (!currentUser) return;
     
@@ -40,7 +29,6 @@ function updateAvatarPreview() {
     }
 }
 
-// Setup avatar upload
 function setupAvatarUpload() {
     const avatarInput = document.getElementById('avatarInput');
     if (avatarInput) {
@@ -48,29 +36,24 @@ function setupAvatarUpload() {
     }
 }
 
-// Handle avatar file selection
 function handleAvatarChange(e) {
     const file = e.target.files[0];
     if (!file) return;
     
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
         showError('La imagen debe ser menor de 5MB');
         return;
     }
     
-    // Validate file type
     if (!file.type.match(/image\/(jpeg|jpg|png|gif)/)) {
         showError('Solo se permiten imágenes JPG, PNG o GIF');
         return;
     }
     
-    // Convert to Base64
     const reader = new FileReader();
     reader.onload = function(event) {
         avatarBase64 = event.target.result;
         
-        // Update preview
         const avatarPreview = document.getElementById('avatarPreview');
         avatarPreview.innerHTML = `<img src="${avatarBase64}" alt="Avatar">`;
     };
@@ -80,7 +63,6 @@ function handleAvatarChange(e) {
     reader.readAsDataURL(file);
 }
 
-// API Functions using PHP proxy
 async function apiGet(endpoint, params = {}) {
     let url = PROXY_URL + encodeURIComponent(endpoint);
     
@@ -136,7 +118,6 @@ async function apiPost(endpoint, data) {
     }
 }
 
-// Profile Form Handler
 const profileForm = document.getElementById('profileForm');
 if (profileForm) {
     profileForm.addEventListener('submit', async (e) => {
@@ -152,7 +133,6 @@ if (profileForm) {
         showLoading();
         
         try {
-            // Update profile with avatar and description
             const result = await apiPost('users/' + currentUser.id + '/profile', {
                 description: description,
                 avatar: avatarBase64
@@ -161,7 +141,6 @@ if (profileForm) {
             console.log('Profile update result:', result);
             
             if (result.status === 200 || result.status === 201) {
-                // Update session with new data
                 currentUser.description = description;
                 currentUser.avatar = avatarBase64;
                 sessionStorage.setItem('bettr_user', JSON.stringify(currentUser));
@@ -182,7 +161,6 @@ if (profileForm) {
     });
 }
 
-// Utility Functions
 function showLoading() {
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) overlay.classList.add('active');

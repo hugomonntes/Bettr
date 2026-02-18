@@ -1,18 +1,10 @@
-/**
- * Bettr Dashboard - JavaScript
- * Uses PHP proxy to avoid CORS issues
- */
-
-// PHP Proxy URL
 const PROXY_URL = 'api_proxy.php?endpoint=';
 
-// Global state
 let currentUser = null;
 let currentPage = 'feed';
 let habitImageBase64 = '';
 let cameraStream = null;
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadUserFromSession();
     setupNavigation();
@@ -20,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFeed();
 });
 
-// Load user from session
 function loadUserFromSession() {
     const userStr = sessionStorage.getItem('bettr_user');
     if (!userStr) {
@@ -32,13 +23,11 @@ function loadUserFromSession() {
     updateUserUI();
 }
 
-// Update user UI
 function updateUserUI() {
     if (!currentUser) return;
     
     const avatarEl = document.getElementById('userAvatar');
     if (avatarEl) {
-        // Show image if avatar exists, otherwise show initial
         if (currentUser.avatar) {
             avatarEl.innerHTML = `<img src="${currentUser.avatar}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">`;
         } else {
@@ -54,7 +43,6 @@ function updateUserUI() {
     if (usernameEl) usernameEl.textContent = '@' + (currentUser.username || 'user');
 }
 
-// Setup navigation
 function setupNavigation() {
     const navItems = document.querySelectorAll('.nav-item[data-page]');
     navItems.forEach(item => {
@@ -66,11 +54,9 @@ function setupNavigation() {
     });
 }
 
-// Navigate to page
 function navigateTo(page) {
     currentPage = page;
     
-    // Update active nav
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
         if (item.dataset.page === page) {
@@ -78,7 +64,6 @@ function navigateTo(page) {
         }
     });
     
-    // Load page content
     switch(page) {
         case 'feed':
             loadFeed();
@@ -95,7 +80,6 @@ function navigateTo(page) {
     }
 }
 
-// API Functions using PHP proxy
 async function apiGet(endpoint, params = {}) {
     let url = PROXY_URL + encodeURIComponent(endpoint);
     
@@ -157,7 +141,6 @@ async function apiDelete(endpoint) {
     console.log('API DELETE:', url);
     
     try {
-        // Use POST with custom header to override method, as DELETE with body is not well supported
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -179,7 +162,6 @@ async function apiDelete(endpoint) {
     }
 }
 
-// Load Feed
 async function loadFeed() {
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) pageTitle.textContent = 'Inicio';
@@ -205,7 +187,6 @@ async function loadFeed() {
     }
 }
 
-// Render Feed
 async function renderFeed(habits) {
     const content = document.getElementById('mainContent');
     if (!content) return;
@@ -230,7 +211,6 @@ async function renderFeed(habits) {
         const avatarLetter = habit.username ? habit.username.charAt(0).toUpperCase() : 'U';
         const timeAgo = getTimeAgo(habit.created_at);
         
-        // Check if current user has liked this habit
         let isLiked = false;
         try {
             const likeStatus = await apiGet('habits/' + habit.id + '/isliked/' + currentUser.id);
@@ -279,7 +259,6 @@ async function renderFeed(habits) {
     content.innerHTML = html;
 }
 
-// Load My Habits
 async function loadMyHabits() {
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) pageTitle.textContent = 'Mis Hábitos';
@@ -302,7 +281,6 @@ async function loadMyHabits() {
     }
 }
 
-// Load Discover (Search Users)
 async function loadDiscover() {
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) pageTitle.textContent = 'Descubrir';
@@ -322,11 +300,9 @@ async function loadDiscover() {
         </div>
     `;
     
-    // Load all users initially
     searchUsers('');
 }
 
-// Search Users
 async function searchUsers(query) {
     const usersList = document.getElementById('usersList');
     if (!usersList) return;
@@ -339,10 +315,8 @@ async function searchUsers(query) {
         console.log('Users result:', result);
         
         if (result.status === 200 && result.data) {
-            // Filter out current user
             const users = result.data.filter(u => u.id !== currentUser.id);
             
-            // Get following status for each user
             for (let user of users) {
                 const followStatus = await apiGet('users/isfollowing/' + currentUser.id + '/' + user.id);
                 user.isFollowing = followStatus.data && followStatus.data.following === true;
@@ -357,7 +331,6 @@ async function searchUsers(query) {
     }
 }
 
-// Render Users
 function renderUsers(users) {
     const usersList = document.getElementById('usersList');
     if (!usersList) return;
@@ -388,12 +361,10 @@ function renderUsers(users) {
     usersList.innerHTML = html;
 }
 
-// Toggle Follow/Unfollow
 async function toggleFollow(userId, button) {
     const isFollowing = button.classList.contains('following');
     
     if (isFollowing) {
-        // Unfollow
         const result = await apiDelete('users/unfollow/' + currentUser.id + '/' + userId);
         
         if (result.status === 200 || result.status === 201) {
@@ -405,7 +376,6 @@ async function toggleFollow(userId, button) {
             showToast('Error al dejar de seguir', 'error');
         }
     } else {
-        // Follow
         const result = await apiPost('users/follow/' + currentUser.id + '/' + userId, {});
         
         if (result.status === 200 || result.status === 201) {
@@ -419,7 +389,6 @@ async function toggleFollow(userId, button) {
     }
 }
 
-// Load Profile
 async function loadProfile() {
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) pageTitle.textContent = 'Mi Perfil';
@@ -430,17 +399,14 @@ async function loadProfile() {
     content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
     
     try {
-        // Get user data with avatar and description from API
         const userResult = await apiGet('users/' + currentUser.id);
         let userData = currentUser;
         if (userResult.status === 200 && userResult.data) {
             userData = userResult.data;
-            // Update session with latest data
             currentUser = { ...currentUser, ...userData };
             sessionStorage.setItem('bettr_user', JSON.stringify(currentUser));
         }
         
-        // Get user stats
         const statsResult = await apiGet('users/' + currentUser.id + '/stats');
         
         let stats = { followers: 0, following: 0, habits: 0 };
@@ -448,7 +414,6 @@ async function loadProfile() {
             stats = statsResult.data;
         }
         
-        // Generate avatar HTML - show image if exists, otherwise show initial
         const avatarLetter = userData.name ? userData.name.charAt(0).toUpperCase() : 'U';
         const avatarHtml = userData.avatar 
             ? `<img src="${userData.avatar}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">`
@@ -487,7 +452,6 @@ async function loadProfile() {
     }
 }
 
-// Show Followers
 async function showFollowers() {
     const content = document.getElementById('mainContent');
     if (!content) return;
@@ -535,7 +499,6 @@ async function showFollowers() {
     }
 }
 
-// Show Following
 async function showFollowing() {
     const content = document.getElementById('mainContent');
     if (!content) return;
@@ -583,12 +546,10 @@ async function showFollowing() {
     }
 }
 
-// Toggle Like
 async function toggleLike(habitId, button) {
     const isLiked = button.classList.contains('liked');
     
     if (isLiked) {
-        // Unlike
         const result = await apiDelete('habits/' + habitId + '/like/' + currentUser.id);
         
         if (result.status === 200) {
@@ -599,7 +560,6 @@ async function toggleLike(habitId, button) {
             }
         }
     } else {
-        // Like
         const result = await apiPost('habits/' + habitId + '/like/' + currentUser.id, {});
         
         if (result.status === 200 || result.status === 201) {
@@ -612,7 +572,6 @@ async function toggleLike(habitId, button) {
     }
 }
 
-// Modal Functions
 function openHabitModal() {
     const modal = document.getElementById('habitModal');
     if (modal) modal.classList.add('active');
@@ -625,12 +584,10 @@ function closeHabitModal() {
         const form = document.getElementById('habitForm');
         if (form) form.reset();
     }
-    // Reset image
     habitImageBase64 = '';
     removeHabitImage();
 }
 
-// Submit Habit
 const habitForm = document.getElementById('habitForm');
 if (habitForm) {
     habitForm.addEventListener('submit', async (e) => {
@@ -654,7 +611,6 @@ if (habitForm) {
             if (result.status === 200 || result.status === 201) {
                 showToast('¡Hábito compartido!');
                 closeHabitModal();
-                // Reset image
                 habitImageBase64 = '';
                 removeHabitImage();
                 loadFeed();
@@ -669,7 +625,6 @@ if (habitForm) {
     });
 }
 
-// Utility Functions
 function showLoading() {
     const overlay = document.getElementById('loadingOverlay');
     if (overlay) overlay.classList.add('active');
@@ -712,7 +667,6 @@ function getTimeAgo(dateString) {
     return Math.floor(diff / 604800) + 'sem';
 }
 
-// Close modal on outside click
 const habitModal = document.getElementById('habitModal');
 if (habitModal) {
     habitModal.addEventListener('click', (e) => {
@@ -721,10 +675,6 @@ if (habitModal) {
         }
     });
 }
-
-// ============================================
-// Image Upload Functions
-// ============================================
 
 function setupImageUpload() {
     const imageInput = document.getElementById('habitImageInput');
@@ -737,26 +687,21 @@ function handleImageUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
         showToast('La imagen debe ser menor de 10MB', 'error');
         return;
     }
     
-    // Convert to Base64
     const reader = new FileReader();
     reader.onload = function(event) {
         habitImageBase64 = event.target.result;
         
-        // Update preview
         const preview = document.getElementById('habitImagePreview');
         preview.innerHTML = `<img src="${habitImageBase64}" alt="Preview">`;
         
-        // Show remove button
         const removeBtn = document.getElementById('removeImageBtn');
         if (removeBtn) removeBtn.style.display = 'block';
         
-        // Update hidden input
         const hiddenInput = document.getElementById('habitImageBase64');
         if (hiddenInput) hiddenInput.value = habitImageBase64;
     };
@@ -769,7 +714,6 @@ function handleImageUpload(e) {
 function removeHabitImage() {
     habitImageBase64 = '';
     
-    // Reset preview
     const preview = document.getElementById('habitImagePreview');
     if (preview) {
         preview.innerHTML = `
@@ -780,22 +724,15 @@ function removeHabitImage() {
         `;
     }
     
-    // Hide remove button
     const removeBtn = document.getElementById('removeImageBtn');
     if (removeBtn) removeBtn.style.display = 'none';
     
-    // Reset file input
     const imageInput = document.getElementById('habitImageInput');
     if (imageInput) imageInput.value = '';
     
-    // Reset hidden input
     const hiddenInput = document.getElementById('habitImageBase64');
     if (hiddenInput) hiddenInput.value = '';
 }
-
-// ============================================
-// Camera Functions
-// ============================================
 
 async function openCamera() {
     const cameraModal = document.getElementById('cameraModal');
@@ -828,7 +765,6 @@ function closeCamera() {
         cameraModal.style.display = 'none';
     }
     
-    // Stop camera stream
     if (cameraStream) {
         cameraStream.getTracks().forEach(track => track.stop());
         cameraStream = null;
@@ -846,32 +782,25 @@ function takePhoto() {
     
     if (!video || !canvas) return;
     
-    // Set canvas dimensions to match video
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
-    // Draw video frame to canvas
     const context = canvas.getContext('2d');
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Convert to Base64
     habitImageBase64 = canvas.toDataURL('image/jpeg', 0.85);
     
-    // Update preview
     const preview = document.getElementById('habitImagePreview');
     if (preview) {
         preview.innerHTML = `<img src="${habitImageBase64}" alt="Preview">`;
     }
     
-    // Show remove button
     const removeBtn = document.getElementById('removeImageBtn');
     if (removeBtn) removeBtn.style.display = 'block';
     
-    // Update hidden input
     const hiddenInput = document.getElementById('habitImageBase64');
     if (hiddenInput) hiddenInput.value = habitImageBase64;
     
-    // Close camera
     closeCamera();
     
     showToast('¡Foto capturada!');

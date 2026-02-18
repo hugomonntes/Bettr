@@ -1,13 +1,5 @@
-/**
- * Bettr Main JavaScript
- * Global utility functions
- */
-
-// API Configuration
-
 const API_BASE_URL = 'https://bettr-g5yv.onrender.com/rest';
 
-// Check if user is logged in
 function requireAuth() {
     const user = sessionStorage.getItem('bettr_user');
     if (!user) {
@@ -17,19 +9,16 @@ function requireAuth() {
     return true;
 }
 
-// Get current user
 function getCurrentUser() {
     const userStr = sessionStorage.getItem('bettr_user');
     return userStr ? JSON.parse(userStr) : null;
 }
 
-// Get user initials
 function getUserInitials(name) {
     if (!name) return 'U';
     return name.charAt(0).toUpperCase();
 }
 
-// Format date
 function formatDate(dateString) {
     if (!dateString) return 'Ahora';
     
@@ -45,7 +34,6 @@ function formatDate(dateString) {
     return date.toLocaleDateString('es-ES');
 }
 
-// Debounce function
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -58,7 +46,6 @@ function debounce(func, wait) {
     };
 }
 
-// Local storage helpers
 const storage = {
     set: (key, value) => {
         try {
@@ -85,9 +72,7 @@ const storage = {
     }
 };
 
-// Initialize app
 document.addEventListener('DOMContentLoaded', () => {
-    // Add any global initialization here
     console.log('Bettr App initialized');
 });
 
