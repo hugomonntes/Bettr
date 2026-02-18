@@ -165,8 +165,12 @@ if (loginForm) {
             console.log('Login result:', result);
             
             if (result.status === 200 && result.data && result.data.id) {
-                // Login successful - store user
-                sessionStorage.setItem('bettr_user', JSON.stringify(result.data));
+                // Get full user data with avatar and description
+                const userDataResult = await apiGet('users/' + result.data.id);
+                const userData = userDataResult.status === 200 && userDataResult.data ? userDataResult.data : result.data;
+                
+                // Store user in session
+                sessionStorage.setItem('bettr_user', JSON.stringify(userData));
                 sessionStorage.setItem('bettr_password', password);
                 
                 showToast('¡Bienvenido a Bettr!');
@@ -234,10 +238,29 @@ if (registerForm) {
             console.log('Register result:', result);
             
             if (result.status === 201 || result.status === 200) {
-                showToast('¡Cuenta creada exitosamente!');
-                setTimeout(() => {
-                    window.location.href = 'completar_perfil.php';
-                }, 1500);
+                // Auto login after registration to get user data
+                const loginResult = await apiGet('users/' + username + '/' + passwordHash);
+                
+                if (loginResult.status === 200 && loginResult.data && loginResult.data.id) {
+                    // Get full user data with avatar and description
+                    const userDataResult = await apiGet('users/' + loginResult.data.id);
+                    const userData = userDataResult.status === 200 && userDataResult.data ? userDataResult.data : loginResult.data;
+                    
+                    // Store user in session
+                    sessionStorage.setItem('bettr_user', JSON.stringify(userData));
+                    sessionStorage.setItem('bettr_password', password);
+                    
+                    showToast('¡Cuenta creada! Completa tu perfil');
+                    setTimeout(() => {
+                        window.location.href = 'completar_perfil.php';
+                    }, 1500);
+                } else {
+                    // If auto-login fails, redirect to login
+                    showToast('¡Cuenta creada! Inicia sesión');
+                    setTimeout(() => {
+                        window.location.href = 'login.php';
+                    }, 1500);
+                }
             } else if (result.status === 500 && result.data && result.data.message) {
                 showError('Error: ' + result.data.message);
             } else {

@@ -388,3 +388,14 @@
     background: rgba(0, 0, 0, 0.9);
 }
 
+/* Profile Description */
+.profile-description {
+    color: var(--text-grey);
+    font-size: 0.95rem;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    line-height: 1.5;
+}
+

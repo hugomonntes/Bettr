@@ -36,9 +36,16 @@ function loadUserFromSession() {
 function updateUserUI() {
     if (!currentUser) return;
     
-    const firstLetter = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
     const avatarEl = document.getElementById('userAvatar');
-    if (avatarEl) avatarEl.textContent = firstLetter;
+    if (avatarEl) {
+        // Show image if avatar exists, otherwise show initial
+        if (currentUser.avatar) {
+            avatarEl.innerHTML = `<img src="${currentUser.avatar}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">`;
+        } else {
+            const firstLetter = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+            avatarEl.textContent = firstLetter;
+        }
+    }
     
     const nameEl = document.getElementById('userName');
     if (nameEl) nameEl.textContent = currentUser.name || 'Usuario';
@@ -423,6 +430,16 @@ async function loadProfile() {
     content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
     
     try {
+        // Get user data with avatar and description from API
+        const userResult = await apiGet('users/' + currentUser.id);
+        let userData = currentUser;
+        if (userResult.status === 200 && userResult.data) {
+            userData = userResult.data;
+            // Update session with latest data
+            currentUser = { ...currentUser, ...userData };
+            sessionStorage.setItem('bettr_user', JSON.stringify(currentUser));
+        }
+        
         // Get user stats
         const statsResult = await apiGet('users/' + currentUser.id + '/stats');
         
@@ -431,15 +448,20 @@ async function loadProfile() {
             stats = statsResult.data;
         }
         
-        const avatarLetter = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+        // Generate avatar HTML - show image if exists, otherwise show initial
+        const avatarLetter = userData.name ? userData.name.charAt(0).toUpperCase() : 'U';
+        const avatarHtml = userData.avatar 
+            ? `<img src="${userData.avatar}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;">`
+            : avatarLetter;
         
         content.innerHTML = `
             <div class="card">
                 <div class="profile-header">
-                    <div class="profile-avatar-large">${avatarLetter}</div>
-                    <h2 class="profile-name">${currentUser.name || 'Usuario'}</h2>
-                    <p class="profile-username">@${currentUser.username || 'user'}</p>
-                    <p class="profile-username">${currentUser.email || ''}</p>
+                    <div class="profile-avatar-large">${avatarHtml}</div>
+                    <h2 class="profile-name">${userData.name || 'Usuario'}</h2>
+                    <p class="profile-username">@${userData.username || 'user'}</p>
+                    <p class="profile-username">${userData.email || ''}</p>
+                    ${userData.description ? `<p class="profile-description">${userData.description}</p>` : ''}
                     <div class="profile-stats">
                         <div class="profile-stat" onclick="showFollowers()">
                             <div class="profile-stat-value">${stats.followers || 0}</div>
