@@ -1,3 +1,7 @@
+<?php
+// Report only serious errors
+error_reporting(E_ERROR | E_PARSE);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>

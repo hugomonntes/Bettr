@@ -6,14 +6,17 @@
  * Esto evita CORS y centraliza la comunicación con el backend
  */
 
+// Report only serious errors
+error_reporting(E_ERROR | E_PARSE);
+
 // Incluir la clase API Client
 require_once __DIR__ . '/../app/services/ApiClient.php';
 
 // Configurar headers
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Accept');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Accept, X-HTTP-Method-Override');
 
 // Manejar OPTIONS preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -21,8 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Obtener método y endpoint
+// Handle X-HTTP-Method-Override header
 $method = $_SERVER['REQUEST_METHOD'];
+if (isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])) {
+    $method = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']);
+}
 $endpoint = $_GET['endpoint'] ?? '';
 
 // Obtener datos del body (para POST/PUT)
@@ -51,7 +57,7 @@ try {
             break;
             
         case 'DELETE':
-            $result = $api->delete($endpoint);
+            $result = $api->deleteWithBody($endpoint, $data);
             break;
             
         default:

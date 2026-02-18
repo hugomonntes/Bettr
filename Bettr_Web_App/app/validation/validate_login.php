@@ -1,5 +1,8 @@
 <?php
-    require_once __DIR__ . '/../../public/DAO/Conection.php';
+// Report only serious errors
+error_reporting(E_ERROR | E_PARSE);
+
+require_once __DIR__ . '/../../public/DAO/Conection.php';
     require_once __DIR__ . '/../../public/DAO/UsersDAO.php';
     ob_start(); // TODO eliminar, solo pruebas no pasar a produccion
     $conection = new Conection();

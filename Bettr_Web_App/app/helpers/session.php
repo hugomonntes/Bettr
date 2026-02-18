@@ -4,6 +4,9 @@
  * Handles user session management
  */
 
+// Report only serious errors
+error_reporting(E_ERROR | E_PARSE);
+
 // Start session if not started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

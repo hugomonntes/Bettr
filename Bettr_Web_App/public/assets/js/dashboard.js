@@ -1,5 +1,3 @@
-
-
 /**
  * Bettr Dashboard - JavaScript
  * Uses PHP proxy to avoid CORS issues
@@ -143,6 +141,34 @@ async function apiPost(endpoint, data) {
     }
 }
 
+async function apiDelete(endpoint) {
+    let url = PROXY_URL + encodeURIComponent(endpoint);
+    
+    console.log('API DELETE:', url);
+    
+    try {
+        // Use POST with custom header to override method, as DELETE with body is not well supported
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-HTTP-Method-Override': 'DELETE'
+            }
+        });
+        
+        const data = await response.json();
+        console.log('API Response:', response.status, data);
+        
+        return {
+            status: response.status,
+            data: data
+        };
+    } catch (error) {
+        console.error('API Error:', error);
+        return { status: 0, data: { message: 'Error de conexión: ' + error.message } };
+    }
+}
+
 // Load Feed
 async function loadFeed() {
     const pageTitle = document.getElementById('pageTitle');
@@ -202,7 +228,7 @@ function renderFeed(habits) {
                         <div class="card-username">@${habit.username || 'usuario'}</div>
                         <div class="card-time">${timeAgo}</div>
                     </div>
-                    <span class="points-badge">+10 pts</span>
+                    <span class="habit-type-badge">${habit.habit_type || 'Hábito'}</span>
                 </div>
                 
                 <div class="post-image">
@@ -210,11 +236,11 @@ function renderFeed(habits) {
                 </div>
                 
                 <div class="post-actions">
-                    <span class="post-action" onclick="toggleLike(this)">
+                    <span class="post-action like-btn" data-habit-id="${habit.id}" onclick="toggleLike(${habit.id}, this)">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
-                        Me gusta
+                        <span class="like-count">${habit.likes_count || 0}</span>
                     </span>
                     <span class="post-action">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -243,11 +269,10 @@ async function loadMyHabits() {
     content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
     
     try {
-        const result = await apiGet('habits/feed/' + currentUser.id);
+        const result = await apiGet('habits/user/' + currentUser.id);
         
         if (result.status === 200 && result.data) {
-            const myHabits = result.data.filter(h => h.user_id === currentUser.id);
-            renderFeed(myHabits);
+            renderFeed(result.data);
         } else {
             content.innerHTML = '<div class="empty-state"><p>No tienes hábitos aún</p></div>';
         }
@@ -295,6 +320,13 @@ async function searchUsers(query) {
         if (result.status === 200 && result.data) {
             // Filter out current user
             const users = result.data.filter(u => u.id !== currentUser.id);
+            
+            // Get following status for each user
+            for (let user of users) {
+                const followStatus = await apiGet('users/isfollowing/' + currentUser.id + '/' + user.id);
+                user.isFollowing = followStatus.data && followStatus.data.following === true;
+            }
+            
             renderUsers(users);
         } else {
             usersList.innerHTML = '<div class="empty-state"><p>No se encontraron usuarios</p></div>';
@@ -317,6 +349,8 @@ function renderUsers(users) {
     let html = '';
     users.forEach(user => {
         const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+        const followBtnText = user.isFollowing ? 'Siguiendo' : 'Seguir';
+        const followBtnClass = user.isFollowing ? 'btn btn-secondary following' : 'btn btn-primary';
         
         html += `
             <div class="user-item">
@@ -325,7 +359,7 @@ function renderUsers(users) {
                     <div class="user-item-name">${user.name || 'Usuario'}</div>
                     <div class="user-item-username">@${user.username || 'user'}</div>
                 </div>
-                <button class="btn btn-secondary" onclick="followUser(${user.id})">Seguir</button>
+                <button class="${followBtnClass}" onclick="toggleFollow(${user.id}, this)">${followBtnText}</button>
             </div>
         `;
     });
@@ -333,57 +367,213 @@ function renderUsers(users) {
     usersList.innerHTML = html;
 }
 
-// Follow User
-async function followUser(userId) {
-    try {
+// Toggle Follow/Unfollow
+async function toggleFollow(userId, button) {
+    const isFollowing = button.classList.contains('following');
+    
+    if (isFollowing) {
+        // Unfollow
+        const result = await apiDelete('users/unfollow/' + currentUser.id + '/' + userId);
+        
+        if (result.status === 200 || result.status === 201) {
+            button.textContent = 'Seguir';
+            button.classList.remove('btn-secondary', 'following');
+            button.classList.add('btn-primary');
+            showToast('Has dejado de seguir a este usuario');
+        } else {
+            showToast('Error al dejar de seguir', 'error');
+        }
+    } else {
+        // Follow
         const result = await apiPost('users/follow/' + currentUser.id + '/' + userId, {});
         
         if (result.status === 200 || result.status === 201) {
+            button.textContent = 'Siguiendo';
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-secondary', 'following');
             showToast('¡Ahora sigues a este usuario!');
         } else {
             showToast('Error al seguir usuario', 'error');
         }
-    } catch (error) {
-        showToast('Error de conexión', 'error');
     }
 }
 
 // Load Profile
-function loadProfile() {
+async function loadProfile() {
     const pageTitle = document.getElementById('pageTitle');
     if (pageTitle) pageTitle.textContent = 'Mi Perfil';
     
     const content = document.getElementById('mainContent');
     if (!content) return;
     
-    const avatarLetter = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+    content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
     
-    content.innerHTML = `
-        <div class="card">
-            <div class="profile-header">
-                <div class="profile-avatar-large">${avatarLetter}</div>
-                <h2 class="profile-name">${currentUser.name || 'Usuario'}</h2>
-                <p class="profile-username">@${currentUser.username || 'user'}</p>
-                <p class="profile-username">${currentUser.email || ''}</p>
-                <div class="profile-stats">
-                    <div class="profile-stat">
-                        <div class="profile-stat-value">0</div>
-                        <div class="profile-stat-label">Seguidores</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-value">0</div>
-                        <div class="profile-stat-label">Siguiendo</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-value">0</div>
-                        <div class="profile-stat-label">Hábitos</div>
+    try {
+        // Get user stats
+        const statsResult = await apiGet('users/' + currentUser.id + '/stats');
+        
+        let stats = { followers: 0, following: 0, habits: 0 };
+        if (statsResult.status === 200 && statsResult.data) {
+            stats = statsResult.data;
+        }
+        
+        const avatarLetter = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+        
+        content.innerHTML = `
+            <div class="card">
+                <div class="profile-header">
+                    <div class="profile-avatar-large">${avatarLetter}</div>
+                    <h2 class="profile-name">${currentUser.name || 'Usuario'}</h2>
+                    <p class="profile-username">@${currentUser.username || 'user'}</p>
+                    <p class="profile-username">${currentUser.email || ''}</p>
+                    <div class="profile-stats">
+                        <div class="profile-stat" onclick="showFollowers()">
+                            <div class="profile-stat-value">${stats.followers || 0}</div>
+                            <div class="profile-stat-label">Seguidores</div>
+                        </div>
+                        <div class="profile-stat" onclick="showFollowing()">
+                            <div class="profile-stat-value">${stats.following || 0}</div>
+                            <div class="profile-stat-label">Siguiendo</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">${stats.habits || 0}</div>
+                            <div class="profile-stat-label">Hábitos</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            
+            <button class="btn btn-primary btn-full" onclick="logout()">Cerrar Sesión</button>
+        `;
+    } catch (error) {
+        console.error('Profile error:', error);
+        content.innerHTML = '<div class="empty-state"><p>Error al cargar el perfil</p></div>';
+    }
+}
+
+// Show Followers
+async function showFollowers() {
+    const content = document.getElementById('mainContent');
+    if (!content) return;
+    
+    content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
+    
+    try {
+        const result = await apiGet('users/' + currentUser.id + '/followers');
         
-        <button class="btn btn-primary btn-full" onclick="logout()">Cerrar Sesión</button>
-    `;
+        if (result.status === 200 && result.data) {
+            const users = result.data;
+            
+            if (users.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <h3 class="empty-state-title">Sin seguidores aún</h3>
+                        <p class="empty-state-text">¡Comparte tu perfil para conseguir seguidores!</p>
+                        <button class="btn btn-primary" onclick="loadProfile()">Volver al perfil</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<button class="btn btn-secondary" style="margin-bottom: 16px;" onclick="loadProfile()">← Volver</button>';
+            
+            users.forEach(user => {
+                const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+                html += `
+                    <div class="user-item">
+                        <div class="user-item-avatar">${avatarLetter}</div>
+                        <div class="user-item-info">
+                            <div class="user-item-name">${user.name || 'Usuario'}</div>
+                            <div class="user-item-username">@${user.username || 'user'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        } else {
+            content.innerHTML = '<div class="empty-state"><p>Error al cargar seguidores</p></div>';
+        }
+    } catch (error) {
+        content.innerHTML = '<div class="empty-state"><p>Error al cargar seguidores</p></div>';
+    }
+}
+
+// Show Following
+async function showFollowing() {
+    const content = document.getElementById('mainContent');
+    if (!content) return;
+    
+    content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
+    
+    try {
+        const result = await apiGet('users/' + currentUser.id + '/following');
+        
+        if (result.status === 200 && result.data) {
+            const users = result.data;
+            
+            if (users.length === 0) {
+                content.innerHTML = `
+                    <div class="empty-state">
+                        <h3 class="empty-state-title">No sigues a nadie</h3>
+                        <p class="empty-state-text">¡Descubre nuevos usuarios en la pestaña Descubrir!</p>
+                        <button class="btn btn-primary" onclick="loadProfile()">Volver al perfil</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<button class="btn btn-secondary" style="margin-bottom: 16px;" onclick="loadProfile()">← Volver</button>';
+            
+            users.forEach(user => {
+                const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+                html += `
+                    <div class="user-item">
+                        <div class="user-item-avatar">${avatarLetter}</div>
+                        <div class="user-item-info">
+                            <div class="user-item-name">${user.name || 'Usuario'}</div>
+                            <div class="user-item-username">@${user.username || 'user'}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        } else {
+            content.innerHTML = '<div class="empty-state"><p>Error al cargar siguiendo</p></div>';
+        }
+    } catch (error) {
+        content.innerHTML = '<div class="empty-state"><p>Error al cargar siguiendo</p></div>';
+    }
+}
+
+// Toggle Like
+async function toggleLike(habitId, button) {
+    const isLiked = button.classList.contains('liked');
+    
+    if (isLiked) {
+        // Unlike
+        const result = await apiDelete('habits/' + habitId + '/like/' + currentUser.id);
+        
+        if (result.status === 200) {
+            button.classList.remove('liked');
+            const likeCount = button.querySelector('.like-count');
+            if (likeCount) {
+                likeCount.textContent = Math.max(0, parseInt(likeCount.textContent) - 1);
+            }
+        }
+    } else {
+        // Like
+        const result = await apiPost('habits/' + habitId + '/like/' + currentUser.id, {});
+        
+        if (result.status === 200 || result.status === 201) {
+            button.classList.add('liked');
+            const likeCount = button.querySelector('.like-count');
+            if (likeCount) {
+                likeCount.textContent = parseInt(likeCount.textContent) + 1;
+            }
+        }
+    }
 }
 
 // Modal Functions
@@ -435,11 +625,6 @@ if (habitForm) {
             hideLoading();
         }
     });
-}
-
-// Like toggle
-function toggleLike(element) {
-    if (element) element.classList.toggle('liked');
 }
 
 // Utility Functions
@@ -494,5 +679,4 @@ if (habitModal) {
         }
     });
 }
-
 

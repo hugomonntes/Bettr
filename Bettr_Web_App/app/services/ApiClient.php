@@ -6,6 +6,9 @@
  * Usa cURL para comunicar con el servidor backend
  */
 
+// Report only serious errors
+error_reporting(E_ERROR | E_PARSE);
+
 class ApiClient
 {
     // URL base del servidor donde está la API
@@ -71,7 +74,16 @@ class ApiClient
             
         } elseif ($method === 'DELETE') {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+            
+            if ($data) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            }
+            
+            $headers = [
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ];
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             
         } else {
             // GET
@@ -84,7 +96,7 @@ class ApiClient
         $error = curl_error($ch);
         
         // Cerrar la conexión
-        curl_close($ch);
+        // curl_close($ch); // Not needed in PHP 8.0+, deprecated in 8.5
         
         // Log para debugging
         error_log("API Request - Method: $method, URL: $url, HTTP Code: $httpCode");
@@ -136,6 +148,12 @@ class ApiClient
     public function delete($endpoint)
     {
         return $this->request('DELETE', $endpoint);
+    }
+    
+    // Method to make custom DELETE request with body support
+    public function deleteWithBody($endpoint, $data = [])
+    {
+        return $this->request('DELETE', $endpoint, $data);
     }
 }
 

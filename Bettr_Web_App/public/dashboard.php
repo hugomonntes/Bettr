@@ -1,6 +1,9 @@
 <?php
 // Check if user is logged in
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+
+// Report only serious errors
+error_reporting(E_ERROR | E_PARSE);
 ?>
 <!DOCTYPE html>
 <html lang="es">
