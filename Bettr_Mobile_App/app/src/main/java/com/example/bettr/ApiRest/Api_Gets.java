@@ -109,6 +109,7 @@ public class Api_Gets {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         lista.add(new Habit(
                                 obj.optString("username", "Usuario"),
+                                obj.optString("user_avatar", ""), // Añadido el avatar del usuario
                                 obj.optString("image_url", ""),
                                 obj.optString("description", ""),
                                 obj.optString("habit_type", "Hábito"),
@@ -165,6 +166,7 @@ public class Api_Gets {
                 }
                 callback.onResult(users);
             } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error searching users: " + e.getMessage());
                 callback.onResult(users);
             } finally {
                 if (connection != null) {
@@ -198,6 +200,7 @@ public class Api_Gets {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         lista.add(new Habit(
                                 obj.optString("username", "Usuario"),
+                                obj.optString("user_avatar", ""), // Añadido el avatar del usuario
                                 obj.optString("image_url", ""),
                                 obj.optString("description", ""),
                                 obj.optString("habit_type", "Hábito"),
@@ -208,6 +211,7 @@ public class Api_Gets {
                 }
                 callback.onResult(lista);
             } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error fetching habits: " + e.getMessage());
                 callback.onResult(lista);
             } finally {
                 if (connection != null) {

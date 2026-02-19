@@ -40,21 +40,37 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
         holder.tvLikes.setText(String.valueOf(habit.getLikes()));
         holder.tvStreak.setText("🔥 " + habit.getStreak());
 
-        String imageData = habit.getImageUrl();
-        if (imageData != null && !imageData.isEmpty()) {
-            try {
-                byte[] decodedString = Base64.decode(imageData, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                if (decodedByte != null) {
-                    holder.ivPostImage.setImageBitmap(decodedByte);
-                } else {
-                    holder.ivPostImage.setImageResource(R.drawable.logobettr);
-                }
-            } catch (Exception e) {
+        // Mostrar avatar del usuario
+        if (habit.getUserAvatar() != null && !habit.getUserAvatar().isEmpty()) {
+            Bitmap avatar = decodeBase64(habit.getUserAvatar());
+            if (avatar != null) {
+                holder.ivProfilePost.setImageBitmap(avatar);
+            } else {
+                holder.ivProfilePost.setImageResource(R.drawable.logobettr);
+            }
+        } else {
+            holder.ivProfilePost.setImageResource(R.drawable.logobettr);
+        }
+
+        // Mostrar imagen del hábito (post)
+        if (habit.getImageUrl() != null && !habit.getImageUrl().isEmpty()) {
+            Bitmap postImage = decodeBase64(habit.getImageUrl());
+            if (postImage != null) {
+                holder.ivPostImage.setImageBitmap(postImage);
+            } else {
                 holder.ivPostImage.setImageResource(R.drawable.logobettr);
             }
         } else {
             holder.ivPostImage.setImageResource(R.drawable.logobettr);
+        }
+    }
+
+    private Bitmap decodeBase64(String input) {
+        try {
+            byte[] decodedString = Base64.decode(input, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        } catch (Exception e) {
+            return null;
         }
     }
 

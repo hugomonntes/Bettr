@@ -80,11 +80,11 @@ public class FeedFragment extends Fragment {
     }
 
     private void setupDummyData() {
-        listaHabitos.clear();
-        listaHabitos.add(new Habit("Diego Costa", "", "Todos unos matados, putos perroflas", "Entrenamiento Futbol • 2h", 234, 45));
-        listaHabitos.add(new Habit("Carlos Italiani", "", "Embaraja", "Cartas • 22h", 120, 12));
-        listaHabitos.add(new Habit("Iago Doval", "", "Costa espabila", "Clase • 5min", 1120, 12));
-        adapter = new AdapterFeed(listaHabitos);
-        rvFeed.setAdapter(adapter);
+//        listaHabitos.clear();
+//        listaHabitos.add(new Habit("Diego Costa", "", "Todos unos matados, putos perroflas", "Entrenamiento Futbol • 2h", 234, 45));
+//        listaHabitos.add(new Habit("Carlos Italiani", "", "Embaraja", "Cartas • 22h", 120, 12));
+//        listaHabitos.add(new Habit("Iago Doval", "", "Costa espabila", "Clase • 5min", 1120, 12));
+//        adapter = new AdapterFeed(listaHabitos);
+//        rvFeed.setAdapter(adapter);
     }
 }
