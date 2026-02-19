@@ -18,12 +18,14 @@ import com.example.bettr.Fragments.FeedFragment;
 import com.example.bettr.Fragments.HabitsFragment;
 import com.example.bettr.Fragments.ProfileFragment;
 import com.example.bettr.Fragments.SocialFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Feed extends AppCompatActivity {
 
     private FrameLayout btnHome, btnHabits, btnCamera, btnSocial, btnProfile;
     private ImageView ivHome, ivHabits, ivCamera, ivSocial, ivProfile;
     private FrameLayout loadingOverlay;
+    private FloatingActionButton fabAddHabit;
     private int colorActive = Color.parseColor("#FACC15");
     private int colorInactive = Color.parseColor("#9CA3AF");
 
@@ -42,6 +44,11 @@ public class Feed extends AppCompatActivity {
         });
 
         initNav();
+        
+        fabAddHabit = findViewById(R.id.fab_add_habit);
+        fabAddHabit.setOnClickListener(v -> {
+            loadFragment(new CameraFragment());
+        });
         
         if (savedInstanceState == null) {
             navigateToHome();
@@ -105,9 +112,10 @@ public class Feed extends AppCompatActivity {
         }
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bettr.Adapters.AdapterFeed;
 import com.example.bettr.ApiRest.Api_Gets;
+import com.example.bettr.ApiRest.Api_Inserts;
 import com.example.bettr.Feed;
 import com.example.bettr.Publicaciones.Habit;
 import com.example.bettr.R;
@@ -27,6 +28,7 @@ public class FeedFragment extends Fragment {
     private AdapterFeed adapter;
     private final ArrayList<Habit> listaHabitos = new ArrayList<>();
     private Api_Gets apiGets;
+    private Api_Inserts apiInserts;
     private int myUserId;
 
     @Nullable
@@ -35,6 +37,7 @@ public class FeedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
         apiGets = new Api_Gets();
+        apiInserts = new Api_Inserts();
         rvFeed = view.findViewById(R.id.rvFeed);
         rvFeed.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -69,8 +72,23 @@ public class FeedFragment extends Fragment {
                     if (habits != null && !habits.isEmpty()) {
                         listaHabitos.clear();
                         listaHabitos.addAll(habits);
-                        adapter = new AdapterFeed(listaHabitos);
+                        adapter = new AdapterFeed(listaHabitos, myUserId, apiInserts, () -> loadPosts());
                         rvFeed.setAdapter(adapter);
+                        
+                        // Check like status for each habit
+                        for (Habit habit : listaHabitos) {
+                            final int habitPosition = listaHabitos.indexOf(habit);
+                            apiGets.checkIfLiked(habit.getId(), myUserId, liked -> {
+                                if (isAdded() && getActivity() != null) {
+                                    getActivity().runOnUiThread(() -> {
+                                        habit.setLiked(liked);
+                                        if (adapter != null && habitPosition >= 0) {
+                                            adapter.notifyItemChanged(habitPosition);
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     } else {
                         setupDummyData();
                     }
@@ -80,11 +98,5 @@ public class FeedFragment extends Fragment {
     }
 
     private void setupDummyData() {
-//        listaHabitos.clear();
-//        listaHabitos.add(new Habit("Diego Costa", "", "Todos unos matados, putos perroflas", "Entrenamiento Futbol • 2h", 234, 45));
-//        listaHabitos.add(new Habit("Carlos Italiani", "", "Embaraja", "Cartas • 22h", 120, 12));
-//        listaHabitos.add(new Habit("Iago Doval", "", "Costa espabila", "Clase • 5min", 1120, 12));
-//        adapter = new AdapterFeed(listaHabitos);
-//        rvFeed.setAdapter(adapter);
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.example.bettr.ApiRest.Api_Inserts;
 import com.example.bettr.Dao.User;
 import com.example.bettr.Feed;
 import com.example.bettr.R;
+import com.example.bettr.UserSession;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -31,6 +33,7 @@ public class SocialFragment extends Fragment {
     private ArrayList<User> allUsersList = new ArrayList<>();
     private Api_Gets apiGets;
     private Api_Inserts apiInserts;
+    private UserSession session;
     private int myUserId;
     private TextInputEditText etSearch;
 
@@ -41,6 +44,7 @@ public class SocialFragment extends Fragment {
 
         apiGets = new Api_Gets();
         apiInserts = new Api_Inserts();
+        session = new UserSession(requireContext());
         
         SharedPreferences prefs = requireActivity().getSharedPreferences("BettrPrefs", Context.MODE_PRIVATE);
         myUserId = prefs.getInt("userId", -1);
@@ -104,7 +108,6 @@ public class SocialFragment extends Fragment {
                 allUsersList.add(u);
             }
         }
-        // Creamos el adaptador pasando el listener que ahora maneja la posición
         adapter = new AdapterUsers(allUsersList, (user, position) -> {
             followUser(user, position);
         });
@@ -127,8 +130,8 @@ public class SocialFragment extends Fragment {
                         ((Feed) getActivity()).hideLoading();
                     }
                     if (success) {
-                        // Actualizamos el estado localmente para que el botón cambie
                         userToFollow.setFollowing(true);
+                        session.addFollowing(userToFollow.getId());
                         if (adapter != null) {
                             adapter.notifyItemChanged(position);
                         }

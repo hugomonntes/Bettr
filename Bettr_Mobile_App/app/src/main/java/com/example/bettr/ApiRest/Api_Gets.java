@@ -22,12 +22,24 @@ public class Api_Gets {
         void onResult(boolean success, int userId);
     }
 
+    public interface UserCallback {
+        void onResult(User user);
+    }
+
+    public interface StatsCallback {
+        void onResult(int followers, int following, int habits);
+    }
+
     public interface HabitsCallback {
         void onResult(ArrayList<Habit> habits);
     }
 
     public interface UsersCallback {
         void onResult(ArrayList<User> users);
+    }
+
+    public interface BooleanCallback {
+        void onResult(boolean result);
     }
 
     public void getUser(String username, String passwordHash, ApiCallback callback) {
@@ -108,13 +120,15 @@ public class Api_Gets {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         lista.add(new Habit(
+                                obj.optInt("id", 0),
                                 obj.optString("username", "Usuario"),
-                                obj.optString("user_avatar", ""), // Añadido el avatar del usuario
+                                obj.optString("user_avatar", ""),
                                 obj.optString("image_url", ""),
                                 obj.optString("description", ""),
-                                obj.optString("habit_type", "Hábito"),
+                                obj.optString("habit_type", "Otro"),
                                 obj.optInt("likes_count", 0),
-                                obj.optInt("streak_count", 0)
+                                obj.optInt("streak_count", 0),
+                                obj.optString("created_at", "")
                         ));
                     }
                 }
@@ -199,13 +213,15 @@ public class Api_Gets {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         lista.add(new Habit(
+                                obj.optInt("id", 0),
                                 obj.optString("username", "Usuario"),
-                                obj.optString("user_avatar", ""), // Añadido el avatar del usuario
+                                obj.optString("user_avatar", ""),
                                 obj.optString("image_url", ""),
                                 obj.optString("description", ""),
-                                obj.optString("habit_type", "Hábito"),
+                                obj.optString("habit_type", "Otro"),
                                 obj.optInt("likes_count", 0),
-                                obj.optInt("streak_count", 0)
+                                obj.optInt("streak_count", 0),
+                                obj.optString("created_at", "")
                         ));
                     }
                 }
@@ -213,6 +229,294 @@ public class Api_Gets {
             } catch (IOException | JSONException e) {
                 Log.e(TAG, "Error fetching habits: " + e.getMessage());
                 callback.onResult(lista);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Get user by ID
+    public void getUserById(int userId, UserCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/" + userId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONObject obj = new JSONObject(response.toString());
+                    User user = new User(
+                            obj.optInt("id", 0),
+                            obj.optString("name", ""),
+                            obj.optString("username", ""),
+                            obj.optString("avatar", "")
+                    );
+                    // Add additional fields
+                    user.setEmail(obj.optString("email", ""));
+                    user.setDescription(obj.optString("description", ""));
+                    callback.onResult(user);
+                } else {
+                    callback.onResult(null);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error getting user by ID: " + e.getMessage());
+                callback.onResult(null);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Get user statistics (followers, following, habits count)
+    public void getUserStats(int userId, StatsCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/" + userId + "/stats");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONObject obj = new JSONObject(response.toString());
+                    int followers = obj.optInt("followers", 0);
+                    int following = obj.optInt("following", 0);
+                    int habits = obj.optInt("habits", 0);
+                    callback.onResult(followers, following, habits);
+                } else {
+                    callback.onResult(0, 0, 0);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error getting user stats: " + e.getMessage());
+                callback.onResult(0, 0, 0);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Get habits by user ID (for My Habits section)
+    public void getHabitsByUserId(int userId, HabitsCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            ArrayList<Habit> lista = new ArrayList<>();
+            try {
+                URL url = new URL(BASE_URL + "/habits/user/" + userId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONArray jsonArray = new JSONArray(response.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        lista.add(new Habit(
+                                obj.optInt("id", 0),
+                                obj.optString("username", "Usuario"),
+                                obj.optString("user_avatar", ""),
+                                obj.optString("image_url", ""),
+                                obj.optString("description", ""),
+                                obj.optString("habit_type", "Hábito"),
+                                obj.optInt("likes_count", 0),
+                                obj.optInt("streak_count", 0),
+                                obj.optString("created_at", "")
+                        ));
+                    }
+                }
+                callback.onResult(lista);
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error getting user habits: " + e.getMessage());
+                callback.onResult(lista);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Check if user liked a habit
+    public void checkIfLiked(int habitId, int userId, BooleanCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/habits/" + habitId + "/isliked/" + userId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONObject obj = new JSONObject(response.toString());
+                    boolean liked = obj.optBoolean("liked", false);
+                    callback.onResult(liked);
+                } else {
+                    callback.onResult(false);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error checking like status: " + e.getMessage());
+                callback.onResult(false);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Check if user is following another user
+    public void checkIfFollowing(int followerId, int followingId, BooleanCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/isfollowing/" + followerId + "/" + followingId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONObject obj = new JSONObject(response.toString());
+                    boolean following = obj.optBoolean("following", false);
+                    callback.onResult(following);
+                } else {
+                    callback.onResult(false);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error checking follow status: " + e.getMessage());
+                callback.onResult(false);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Get followers list
+    public void getFollowers(int userId, UsersCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            ArrayList<User> users = new ArrayList<>();
+            try {
+                URL url = new URL(BASE_URL + "/users/" + userId + "/followers");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONArray jsonArray = new JSONArray(response.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        users.add(new User(
+                                obj.optInt("id", 0),
+                                obj.optString("name", ""),
+                                obj.optString("username", ""),
+                                obj.optString("avatar", "")
+                        ));
+                    }
+                }
+                callback.onResult(users);
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error getting followers: " + e.getMessage());
+                callback.onResult(users);
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    // Get following list
+    public void getFollowing(int userId, UsersCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            ArrayList<User> users = new ArrayList<>();
+            try {
+                URL url = new URL(BASE_URL + "/users/" + userId + "/following");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Accept", "application/json");
+
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        response.append(line);
+                    }
+                    in.close();
+
+                    JSONArray jsonArray = new JSONArray(response.toString());
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        users.add(new User(
+                                obj.optInt("id", 0),
+                                obj.optString("name", ""),
+                                obj.optString("username", ""),
+                                obj.optString("avatar", "")
+                        ));
+                    }
+                }
+                callback.onResult(users);
+            } catch (IOException | JSONException e) {
+                Log.e(TAG, "Error getting following: " + e.getMessage());
+                callback.onResult(users);
             } finally {
                 if (connection != null) {
                     connection.disconnect();

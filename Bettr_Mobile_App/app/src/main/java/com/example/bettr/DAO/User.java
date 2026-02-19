@@ -5,6 +5,8 @@ public class User {
     private String name;
     private String username;
     private String avatarUrl;
+    private String email;
+    private String description;
     private boolean isFollowing;
 
     public User(int id, String name, String username, String avatarUrl) {
@@ -19,7 +21,12 @@ public class User {
     public String getName() { return name; }
     public String getUsername() { return username; }
     public String getAvatarUrl() { return avatarUrl; }
+    public String getEmail() { return email; }
+    public String getDescription() { return description; }
     
     public boolean isFollowing() { return isFollowing; }
     public void setFollowing(boolean following) { isFollowing = following; }
+    
+    public void setEmail(String email) { this.email = email; }
+    public void setDescription(String description) { this.description = description; }
 }

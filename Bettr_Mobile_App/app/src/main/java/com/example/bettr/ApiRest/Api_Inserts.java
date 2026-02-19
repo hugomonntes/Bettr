@@ -36,15 +36,12 @@ public class Api_Inserts {
                 json.put("image_url", imageUrl);
                 json.put("habit_type", habitType);
 
-                Log.d(TAG, "Enviando Hábito: " + json.toString());
-
                 try (OutputStream os = connection.getOutputStream()) {
                     byte[] input = json.toString().getBytes(StandardCharsets.UTF_8);
                     os.write(input, 0, input.length);
                 }
 
                 int responseCode = connection.getResponseCode();
-                Log.d(TAG, "Response Code: " + responseCode);
 
                 if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
                     if (callback != null) {
@@ -57,7 +54,6 @@ public class Api_Inserts {
                         while ((line = br.readLine()) != null) {
                             response.append(line.trim());
                         }
-                        Log.e(TAG, "Error del Servidor: " + response.toString());
                     }
                     if (callback != null) {
                         callback.onResult(false);
@@ -65,7 +61,6 @@ public class Api_Inserts {
                 }
 
             } catch (IOException | JSONException e) {
-                Log.e(TAG, "Error de red/JSON: " + e.getMessage());
                 if (callback != null) {
                     callback.onResult(false);
                 }
@@ -167,6 +162,89 @@ public class Api_Inserts {
                 }
 
             } catch (IOException | JSONException e) {
+                if (callback != null) {
+                    callback.onResult(false);
+                }
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    public void likeHabit(int habitId, int userId, ApiInsertCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/habits/" + habitId + "/like/" + userId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setDoOutput(true);
+
+                int responseCode = connection.getResponseCode();
+                if (callback != null) {
+                    callback.onResult(responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED);
+                }
+
+            } catch (IOException e) {
+                if (callback != null) {
+                    callback.onResult(false);
+                }
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    public void unlikeHabit(int habitId, int userId, ApiInsertCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/habits/" + habitId + "/like/" + userId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setRequestProperty("X-HTTP-Method-Override", "DELETE");
+                connection.setDoOutput(true);
+
+                int responseCode = connection.getResponseCode();
+                if (callback != null) {
+                    callback.onResult(responseCode == HttpURLConnection.HTTP_OK);
+                }
+
+            } catch (IOException e) {
+                if (callback != null) {
+                    callback.onResult(false);
+                }
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    public void unfollowUser(int followerId, int followingId, ApiInsertCallback callback) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(BASE_URL + "/users/unfollow/" + followerId + "/" + followingId);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Accept", "application/json");
+                connection.setRequestProperty("X-HTTP-Method-Override", "DELETE");
+                connection.setDoOutput(true);
+
+                int responseCode = connection.getResponseCode();
+                if (callback != null) {
+                    callback.onResult(responseCode == HttpURLConnection.HTTP_OK);
+                }
+
+            } catch (IOException e) {
                 if (callback != null) {
                     callback.onResult(false);
                 }

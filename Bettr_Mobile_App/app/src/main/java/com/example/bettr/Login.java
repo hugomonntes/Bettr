@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bettr.ApiRest.Api_Gets;
+import com.example.bettr.UserSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -82,9 +83,10 @@ public class Login extends AppCompatActivity {
                 loadingOverlay.setVisibility(View.GONE);
             }
             if (success) {
-                // Guardar ID de usuario para usarlo en toda la app
-                SharedPreferences prefs = getSharedPreferences("BettrPrefs", Context.MODE_PRIVATE);
-                prefs.edit().putInt("userId", userId).apply();
+                // Guardar datos del usuario usando UserSession
+                UserSession session = new UserSession(Login.this);
+                session.setUserId(userId);
+                session.setUsername(username);
 
                 Intent intent = new Intent(Login.this, Feed.class);
                 startActivity(intent);

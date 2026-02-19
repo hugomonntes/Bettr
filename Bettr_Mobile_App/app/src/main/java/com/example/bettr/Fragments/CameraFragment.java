@@ -12,10 +12,13 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -34,10 +37,30 @@ public class CameraFragment extends Fragment {
 
     private ImageView ivPreview;
     private EditText etDescription;
+    private AutoCompleteTextView spinnerHabitType;
     private Button btnCamera, btnGallery, btnPost;
     private Bitmap selectedBitmap;
     private Api_Inserts apiInserts;
     private FrameLayout loadingOverlay;
+
+    // Habit types matching the web app
+    private final String[] habitTypes = {
+            "Ejercicio",
+            "Lectura",
+            "Meditación",
+            "Estudio",
+            "Saludable",
+            "Otro"
+    };
+
+    private final String[] habitTypeEmojis = {
+            "💪 Ejercicio",
+            "📚 Lectura",
+            "🧘 Meditación",
+            "📖 Estudio",
+            "🥗 Comida Saludable",
+            "⭐ Otro"
+    };
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -74,10 +97,20 @@ public class CameraFragment extends Fragment {
         apiInserts = new Api_Inserts();
         ivPreview = view.findViewById(R.id.ivPreview);
         etDescription = view.findViewById(R.id.etDescription);
+        spinnerHabitType = view.findViewById(R.id.spinnerHabitType);
         btnCamera = view.findViewById(R.id.btnCamera);
         btnGallery = view.findViewById(R.id.btnGallery);
         btnPost = view.findViewById(R.id.btnPost);
         loadingOverlay = view.findViewById(R.id.camera_loading_overlay);
+
+        // Setup habit type dropdown
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                habitTypeEmojis
+        );
+        spinnerHabitType.setAdapter(adapter);
+        spinnerHabitType.setText(habitTypeEmojis[0], false);
 
         if (btnCamera != null) {
             btnCamera.setOnClickListener(v -> {
@@ -102,12 +135,24 @@ public class CameraFragment extends Fragment {
     }
 
     private void postHabit() {
-        if (etDescription == null) {
+        if (etDescription == null || spinnerHabitType == null) {
             return;
         }
         
         String description = etDescription.getText().toString().trim();
+        String selectedType = spinnerHabitType.getText().toString();
+        
+        // Get plain habit type without emoji
+        String habitType = selectedType;
+        for (int i = 0; i < habitTypeEmojis.length; i++) {
+            if (selectedType.equals(habitTypeEmojis[i])) {
+                habitType = habitTypes[i];
+                break;
+            }
+        }
+        
         if (selectedBitmap == null || description.isEmpty()) {
+            Toast.makeText(getContext(), "Añade una imagen y descripción", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -123,14 +168,23 @@ public class CameraFragment extends Fragment {
 
         String imageBase64 = encodeImageToBase64(selectedBitmap);
 
-        apiInserts.addHabit(userId, description, imageBase64, "Deporte", success -> {
+        apiInserts.addHabit(userId, description, imageBase64, habitType, success -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     hideLoading();
                     if (success) {
+                        Toast.makeText(getContext(), "¡Hábito compartido!", Toast.LENGTH_SHORT).show();
+                        // Clear form
+                        etDescription.setText("");
+                        ivPreview.setImageResource(android.R.drawable.ic_menu_camera);
+                        selectedBitmap = null;
+                        
+                        // Navigate to home
                         if (getActivity() instanceof Feed) {
                             ((Feed) getActivity()).navigateToHome();
                         }
+                    } else {
+                        Toast.makeText(getContext(), "Error al compartir hábito", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

@@ -19,41 +19,64 @@
         <!-- Header del Post -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivProfilePost"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/logobettr"
             app:shapeAppearanceOverlay="@style/CircleImage"
+            app:strokeColor="#FACC15"
+            app:strokeWidth="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Username -->
         <TextView
             android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:text="Diego Costa"
-            android:textColor="@color/white"
-            android:textSize="15sp"
+            android:layout_marginEnd="8dp"
+            android:text="Usuario"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvPostInfo"
             app:layout_constraintStart_toEndOf="@+id/ivProfilePost"
             app:layout_constraintTop_toTopOf="@+id/ivProfilePost"
             app:layout_constraintVertical_chainStyle="packed" />
 
+        <!-- Habit Type Badge -->
+        <TextView
+            android:id="@+id/tvHabitType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_habit_type_badge"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="💪 Ejercicio"
+            android:textColor="#FACC15"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvUserName"
+            app:layout_constraintStart_toEndOf="@+id/tvUserName"
+            app:layout_constraintTop_toTopOf="@+id/tvUserName" />
+
+        <!-- Time info -->
         <TextView
             android:id="@+id/tvPostInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="• Entrenamiento Futbol • 1h"
+            android:text="• hace 1h"
             android:textColor="#9CA3AF"
-            android:textSize="11sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/ivProfilePost"
             app:layout_constraintStart_toStartOf="@+id/tvUserName"
             app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
+        <!-- Streak Badge -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvStreakCount"
             android:layout_width="wrap_content"
@@ -89,11 +112,12 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvPostImage"
             android:layout_width="0dp"
-            android:layout_height="380dp"
+            android:layout_height="0dp"
             android:layout_marginTop="14dp"
             android:layout_marginHorizontal="12dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
+            app:layout_constraintDimensionRatio="4:3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivProfilePost">
@@ -119,35 +143,37 @@
 
             <ImageView
                 android:id="@+id/ivLike"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:src="@android:drawable/btn_star_big_off"
-                app:tint="@color/white" />
+                app:tint="#FFFFFF" />
 
             <TextView
                 android:id="@+id/tvLikes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="234"
-                android:textColor="@color/white"
+                android:layout_marginStart="8dp"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/ivComment"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_marginStart="24dp"
                 android:src="@android:drawable/stat_notify_chat"
-                app:tint="@color/white" />
+                app:tint="#FFFFFF" />
 
             <TextView
                 android:id="@+id/tvComments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="18"
-                android:textColor="@color/white"
+                android:layout_marginStart="8dp"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <View
@@ -157,10 +183,10 @@
 
             <ImageView
                 android:id="@+id/ivShare"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:src="@android:drawable/ic_menu_share"
-                app:tint="@color/white" />
+                app:tint="#FFFFFF" />
 
         </LinearLayout>
 
@@ -169,10 +195,10 @@
             android:id="@+id/tvDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:lineSpacingExtra="2dp"
+            android:layout_marginTop="12dp"
+            android:lineSpacingExtra="3dp"
             android:paddingHorizontal="20dp"
-            android:text="Que bueno soy, los demas son unos matados perroflas"
+            android:text="Descripción del hábito..."
             android:textColor="#E5E7EB"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
