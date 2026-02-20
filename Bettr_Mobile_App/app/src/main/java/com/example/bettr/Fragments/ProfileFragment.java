@@ -37,7 +37,6 @@ public class ProfileFragment extends Fragment {
     private Api_Gets apiGets;
     private UserSession session;
     private int myUserId;
-    private User currentUser;
 
     @Nullable
     @Override
@@ -61,8 +60,11 @@ public class ProfileFragment extends Fragment {
         loadingOverlay = view.findViewById(R.id.loading_overlay);
         btnLogout = view.findViewById(R.id.btnLogout);
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("BettrPrefs", Context.MODE_PRIVATE);
-        myUserId = prefs.getInt("userId", -1);
+        // Obtener userId de la sesión
+        myUserId = session.getUserId();
+
+        // Primero cargar datos desde la sesión local (más rápido)
+        loadUserDataFromSession();
 
         layoutFollowers.setOnClickListener(v -> {
             loadFragment(FollowersFragment.newInstance(myUserId, "followers"));
@@ -75,7 +77,8 @@ public class ProfileFragment extends Fragment {
         btnLogout.setOnClickListener(v -> logout());
 
         if (myUserId != -1) {
-            loadProfileData();
+            // Cargar estadísticas desde la API
+            loadStatsFromAPI();
         }
 
         return view;
@@ -84,73 +87,59 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // Recargar datos al volver al fragment
+        loadUserDataFromSession();
         if (myUserId != -1) {
-            loadProfileData();
+            loadStatsFromAPI();
         }
     }
 
-    private void loadProfileData() {
-        showLoading();
+    /**
+     * Cargar datos del usuario desde UserSession (datos guardados localmente)
+     */
+    private void loadUserDataFromSession() {
+        String name = session.getUserName();
+        String username = session.getUsername();
+        String email = session.getUserEmail();
+        String bio = session.getUserBio();
+        String avatar = session.getUserAvatar();
 
-        apiGets.getUserById(myUserId, user -> {
-            if (isAdded() && getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    if (user != null) {
-                        currentUser = user;
-                        updateUserUI(user);
-                        
-                        session.setUserName(user.getName() != null ? user.getName() : "");
-                        session.setUserEmail(user.getEmail() != null ? user.getEmail() : "");
-                        session.setUserAvatar(user.getAvatarUrl() != null ? user.getAvatarUrl() : "");
-                        session.setUserBio(user.getDescription() != null ? user.getDescription() : "");
-                    }
-                });
-            }
-        });
-
-        apiGets.getUserStats(myUserId, (followers, following, habits) -> {
-            if (isAdded() && getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    updateStatsUI(followers, following, habits);
-                    hideLoading();
-                });
-            }
-        });
-    }
-
-    private void updateUserUI(User user) {
-        if (user.getName() != null && !user.getName().isEmpty()) {
-            tvName.setText(user.getName());
-            tvAvatarLetter.setText(user.getName().substring(0, 1).toUpperCase());
+        // Mostrar nombre
+        if (name != null && !name.isEmpty()) {
+            tvName.setText(name);
+            tvAvatarLetter.setText(name.substring(0, 1).toUpperCase());
         } else {
             tvName.setText("Usuario");
             tvAvatarLetter.setText("U");
         }
 
-        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
-            tvUsername.setText("@" + user.getUsername());
+        // Mostrar username
+        if (username != null && !username.isEmpty()) {
+            tvUsername.setText("@" + username);
         } else {
             tvUsername.setText("@usuario");
         }
 
-        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-            tvEmail.setText(user.getEmail());
+        // Mostrar email
+        if (email != null && !email.isEmpty()) {
+            tvEmail.setText(email);
             tvEmail.setVisibility(View.VISIBLE);
         } else {
             tvEmail.setVisibility(View.GONE);
         }
 
-        if (user.getDescription() != null && !user.getDescription().isEmpty()) {
-            tvBio.setText(user.getDescription());
+        // Mostrar bio
+        if (bio != null && !bio.isEmpty()) {
+            tvBio.setText(bio);
             tvBio.setVisibility(View.VISIBLE);
         } else {
             tvBio.setVisibility(View.GONE);
         }
 
         // Cargar avatar desde Base64
-        if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+        if (avatar != null && !avatar.isEmpty()) {
             try {
-                byte[] decodedString = Base64.decode(user.getAvatarUrl(), Base64.DEFAULT);
+                byte[] decodedString = Base64.decode(avatar, Base64.DEFAULT);
                 Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 if (decodedBitmap != null) {
                     ivAvatar.setImageBitmap(decodedBitmap);
@@ -164,6 +153,22 @@ public class ProfileFragment extends Fragment {
         } else {
             tvAvatarLetter.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Cargar estadísticas desde la API (followers, following, habits)
+     */
+    private void loadStatsFromAPI() {
+        showLoading();
+
+        apiGets.getUserStats(myUserId, (followers, following, habits) -> {
+            if (isAdded() && getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    updateStatsUI(followers, following, habits);
+                    hideLoading();
+                });
+            }
+        });
     }
 
     private void updateStatsUI(int followers, int following, int habits) {

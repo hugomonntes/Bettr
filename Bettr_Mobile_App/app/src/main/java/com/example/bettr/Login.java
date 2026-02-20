@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bettr.ApiRest.Api_Gets;
+import com.example.bettr.Dao.User;
 import com.example.bettr.UserSession;
 
 import java.security.MessageDigest;
@@ -84,22 +85,46 @@ public class Login extends AppCompatActivity {
         String passwordHash = hashPassword(password);
 
         apiGets.getUser(username, passwordHash, (success, userId) -> runOnUiThread(() -> {
-            hideLoading();
             if (success && userId > 0) {
-                // Guardar datos del usuario usando UserSession
-                UserSession session = new UserSession(Login.this);
-                session.setUserId(userId);
-                session.setUsername(username);
+                // Cargar datos completos del usuario desde la API
+                loadUserDataAndLogin(userId, username);
+            } else {
+                hideLoading();
+                Toast.makeText(Login.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+            }
+        }));
+    }
+
+    private void loadUserDataAndLogin(int userId, String username) {
+        apiGets.getUserById(userId, user -> {
+            runOnUiThread(() -> {
+                hideLoading();
                 
-                Toast.makeText(Login.this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
+                if (user != null) {
+                    // Guardar todos los datos del usuario en la sesión
+                    UserSession session = new UserSession(Login.this);
+                    session.saveUserData(
+                        userId,
+                        username,
+                        user.getName() != null ? user.getName() : "",
+                        user.getEmail() != null ? user.getEmail() : "",
+                        user.getAvatarUrl() != null ? user.getAvatarUrl() : "",
+                        user.getDescription() != null ? user.getDescription() : ""
+                    );
+                    
+                    Toast.makeText(Login.this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Si no se pueden obtener datos, guardar solo lo básico
+                    UserSession session = new UserSession(Login.this);
+                    session.setUserId(userId);
+                    session.setUsername(username);
+                }
                 
                 Intent intent = new Intent(Login.this, Feed.class);
                 startActivity(intent);
                 finish();
-            } else {
-                Toast.makeText(Login.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-            }
-        }));
+            });
+        });
     }
 
     private void showLoading() {
