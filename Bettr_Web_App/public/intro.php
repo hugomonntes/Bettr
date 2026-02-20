@@ -13,7 +13,7 @@ error_reporting(E_ERROR | E_PARSE);
     <div class="hero-container">
         <div class="hero-content">
             <div class="app-logo">
-                <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr">
+                <img src="Doc\Resources\img_docs\LogoBettr.png" alt="Bettr">
             </div>
             
             <p class="app-name">BETTR</p>

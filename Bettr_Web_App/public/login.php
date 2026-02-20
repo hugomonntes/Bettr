@@ -13,19 +13,15 @@ error_reporting(E_ERROR | E_PARSE);
 <body>
     <div class="auth-page">
         <div class="auth-container">
-            <!-- Logo Card -->
             <div class="auth-logo-card">
-                <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr" class="auth-logo">
+                <img src="Doc\Resources\img_docs\LogoBettr.png" alt="Bettr" class="auth-logo">
             </div>
             
-            <!-- Title -->
             <h1 class="auth-title">Bienvenido de nuevo</h1>
             <p class="auth-subtitle">Inicia sesión para continuar</p>
             
-            <!-- Error Message -->
             <div id="errorMessage" class="auth-error"></div>
             
-            <!-- Login Form -->
             <form id="loginForm" class="auth-form">
                 <div class="auth-form-group">
                     <label for="username">Usuario</label>
@@ -56,19 +52,16 @@ error_reporting(E_ERROR | E_PARSE);
                 <button type="submit" class="auth-btn" id="loginBtn">Iniciar Sesión</button>
             </form>
             
-            <!-- Register Link -->
             <p class="auth-link">
                 ¿No tienes cuenta? <a href="registro.php">Regístrate</a>
             </p>
         </div>
     </div>
     
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
     
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
     
     <script src="assets/js/auth.js"></script>

@@ -13,19 +13,15 @@ error_reporting(E_ERROR | E_PARSE);
 <body>
     <div class="auth-page">
         <div class="auth-container">
-            <!-- Logo Card -->
             <div class="auth-logo-card">
-                <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr" class="auth-logo">
+                <img src="Doc\Resources\img_docs\LogoBettr.png" alt="Bettr" class="auth-logo">
             </div>
             
-            <!-- Title -->
             <h1 class="auth-title">Crear Cuenta</h1>
             <p class="auth-subtitle">Únete a Bettr hoy</p>
             
-            <!-- Error Message -->
             <div id="errorMessage" class="auth-error"></div>
             
-            <!-- Register Form -->
             <form id="registerForm" class="auth-form">
                 <div class="auth-form-group">
                     <label for="name">Nombre Completo</label>
@@ -98,19 +94,16 @@ error_reporting(E_ERROR | E_PARSE);
                 <button type="submit" class="auth-btn" id="registerBtn">Crear Cuenta</button>
             </form>
             
-            <!-- Login Link -->
             <p class="auth-link">
                 ¿Ya tienes cuenta? <a href="login.php">Inicia Sesión</a>
             </p>
         </div>
     </div>
     
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
     
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
     
     <script src="assets/js/auth.js"></script>
@@ -128,7 +121,6 @@ error_reporting(E_ERROR | E_PARSE);
             }
         }
         
-        // Password strength checker
         document.getElementById('password').addEventListener('input', function(e) {
             const password = e.target.value;
             const strengthBar = document.getElementById('strengthBar');
