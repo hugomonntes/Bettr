@@ -45,7 +45,6 @@ public class Feed extends AppCompatActivity {
 
         initNav();
         
-        fabAddHabit = findViewById(R.id.fab_add_habit);
         fabAddHabit.setOnClickListener(v -> {
             loadFragment(new CameraFragment());
         });

@@ -43,19 +43,6 @@
     </FrameLayout>
 
     <!-- Floating Action Button for creating habits -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_habit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#FACC15"
-        app:tint="#1C1F22"
-        app:fabSize="normal"
-        app:elevation="8dp"
-        app:layout_constraintBottom_toTopOf="@id/cvBottomNav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvBottomNav"
