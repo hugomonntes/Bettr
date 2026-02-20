@@ -1,8 +1,6 @@
 <?php
-// Check if user is logged in
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 
-// Report only serious errors
 error_reporting(E_ERROR | E_PARSE);
 ?>
 <!DOCTYPE html>
@@ -15,7 +13,6 @@ error_reporting(E_ERROR | E_PARSE);
     <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
 <body>
-    <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-logo">
             <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr" style="width:40px;height:40px;border-radius:12px;">
@@ -74,20 +71,15 @@ error_reporting(E_ERROR | E_PARSE);
         </div>
     </aside>
     
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Topbar -->
         <header class="topbar">
             <h1 class="topbar-title" id="pageTitle">Inicio</h1>
         </header>
         
-        <!-- Content Area -->
         <div class="content" id="mainContent">
-            <!-- Feed will be loaded here -->
         </div>
     </main>
     
-    <!-- Habit Modal -->
     <div class="modal-overlay" id="habitModal">
         <div class="modal">
             <div class="modal-header">
@@ -99,7 +91,6 @@ error_reporting(E_ERROR | E_PARSE);
                 </button>
             </div>
             <form id="habitForm">
-                <!-- Image Upload -->
                 <div class="form-group">
                     <label class="form-label">Foto del Hábito</label>
                     <div class="image-upload-container">
@@ -132,7 +123,6 @@ error_reporting(E_ERROR | E_PARSE);
                     <input type="hidden" id="habitImageBase64" value="">
                 </div>
                 
-                <!-- Camera Modal -->
                 <div class="modal-overlay" id="cameraModal" style="display: none;">
                     <div class="modal">
                         <div class="modal-header">
@@ -177,12 +167,10 @@ error_reporting(E_ERROR | E_PARSE);
         </div>
     </div>
     
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
     
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
     
     <script src="assets/js/dashboard.js"></script>

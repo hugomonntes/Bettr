@@ -89,42 +89,37 @@ error_reporting(E_ERROR | E_PARSE);
         .skip-link a:hover {
             text-decoration: underline;
         }
+
+        #form-input {
+            resize: none;
+        }
+
     </style>
 </head>
 <body>
     <div class="auth-page">
         <div class="auth-container profile-setup-container">
-            <!-- Logo Card -->
             <div class="auth-logo-card">
-                <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr" class="auth-logo">
+                <img src="" alt="Bettr" class="auth-logo">
             </div>
             
-            <!-- Title -->
             <h1 class="auth-title">¡Bienvenido a Bettr!</h1>
             <p class="auth-subtitle">Completa tu perfil para personalizar tu experiencia</p>
             
-            <!-- Error Message -->
             <div id="errorMessage" class="auth-error"></div>
             
-            <!-- Profile Form -->
             <form id="profileForm" class="auth-form">
-                <!-- Avatar Upload -->
                 <div class="avatar-upload">
                     <div class="avatar-preview" id="avatarPreview" onclick="document.getElementById('avatarInput').click()">
                         <span id="avatarLetter">U</span>
                     </div>
                     <label for="avatarInput" class="avatar-upload-label">Cambiar foto de perfil</label>
                     <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-                    <p class="form-hint">JPG, PNG o GIF. Máximo 5MB.</p>
                 </div>
                 
-                <!-- Description -->
                 <div class="auth-form-group">
                     <label for="description">Descripción</label>
                     <div class="input-icon-wrapper">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
                         <textarea id="description" name="description" class="form-input" rows="4" placeholder="Cuéntanos sobre ti... ¿Cuáles son tus objetivos?"></textarea>
                     </div>
                 </div>
@@ -132,20 +127,17 @@ error_reporting(E_ERROR | E_PARSE);
                 <button type="submit" class="auth-btn" id="saveBtn">Guardar y Continuar</button>
             </form>
             
-            <!-- Skip Link -->
             <p class="skip-link">
                 <a href="dashboard.php">Omitir por ahora</a>
             </p>
         </div>
     </div>
     
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
     
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
+    <div class="toast" id="toast"></div>    
     
     <script src="assets/js/completar_perfil.js"></script>
 </body>

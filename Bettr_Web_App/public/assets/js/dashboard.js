@@ -425,7 +425,6 @@ async function loadProfile() {
                     <div class="profile-avatar-large">${avatarHtml}</div>
                     <h2 class="profile-name">${userData.name || 'Usuario'}</h2>
                     <p class="profile-username">@${userData.username || 'user'}</p>
-                    <p class="profile-username">${userData.email || ''}</p>
                     ${userData.description ? `<p class="profile-description">${userData.description}</p>` : ''}
                     <div class="profile-stats">
                         <div class="profile-stat" onclick="showFollowers()">
@@ -449,100 +448,6 @@ async function loadProfile() {
     } catch (error) {
         console.error('Profile error:', error);
         content.innerHTML = '<div class="empty-state"><p>Error al cargar el perfil</p></div>';
-    }
-}
-
-async function showFollowers() {
-    const content = document.getElementById('mainContent');
-    if (!content) return;
-    
-    content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
-    
-    try {
-        const result = await apiGet('users/' + currentUser.id + '/followers');
-        
-        if (result.status === 200 && result.data) {
-            const users = result.data;
-            
-            if (users.length === 0) {
-                content.innerHTML = `
-                    <div class="empty-state">
-                        <h3 class="empty-state-title">Sin seguidores aún</h3>
-                        <p class="empty-state-text">¡Comparte tu perfil para conseguir seguidores!</p>
-                        <button class="btn btn-primary" onclick="loadProfile()">Volver al perfil</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '<button class="btn btn-secondary" style="margin-bottom: 16px;" onclick="loadProfile()">← Volver</button>';
-            
-            users.forEach(user => {
-                const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-                html += `
-                    <div class="user-item">
-                        <div class="user-item-avatar">${avatarLetter}</div>
-                        <div class="user-item-info">
-                            <div class="user-item-name">${user.name || 'Usuario'}</div>
-                            <div class="user-item-username">@${user.username || 'user'}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            content.innerHTML = html;
-        } else {
-            content.innerHTML = '<div class="empty-state"><p>Error al cargar seguidores</p></div>';
-        }
-    } catch (error) {
-        content.innerHTML = '<div class="empty-state"><p>Error al cargar seguidores</p></div>';
-    }
-}
-
-async function showFollowing() {
-    const content = document.getElementById('mainContent');
-    if (!content) return;
-    
-    content.innerHTML = '<div class="loading-spinner" style="margin:40px auto;"></div>';
-    
-    try {
-        const result = await apiGet('users/' + currentUser.id + '/following');
-        
-        if (result.status === 200 && result.data) {
-            const users = result.data;
-            
-            if (users.length === 0) {
-                content.innerHTML = `
-                    <div class="empty-state">
-                        <h3 class="empty-state-title">No sigues a nadie</h3>
-                        <p class="empty-state-text">¡Descubre nuevos usuarios en la pestaña Descubrir!</p>
-                        <button class="btn btn-primary" onclick="loadProfile()">Volver al perfil</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '<button class="btn btn-secondary" style="margin-bottom: 16px;" onclick="loadProfile()">← Volver</button>';
-            
-            users.forEach(user => {
-                const avatarLetter = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-                html += `
-                    <div class="user-item">
-                        <div class="user-item-avatar">${avatarLetter}</div>
-                        <div class="user-item-info">
-                            <div class="user-item-name">${user.name || 'Usuario'}</div>
-                            <div class="user-item-username">@${user.username || 'user'}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            content.innerHTML = html;
-        } else {
-            content.innerHTML = '<div class="empty-state"><p>Error al cargar siguiendo</p></div>';
-        }
-    } catch (error) {
-        content.innerHTML = '<div class="empty-state"><p>Error al cargar siguiendo</p></div>';
     }
 }
 

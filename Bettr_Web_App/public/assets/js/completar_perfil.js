@@ -39,14 +39,10 @@ function setupAvatarUpload() {
 function handleAvatarChange(e) {
     const file = e.target.files[0];
     if (!file) return;
-    
-    if (file.size > 5 * 1024 * 1024) {
-        showError('La imagen debe ser menor de 5MB');
-        return;
-    }
+
     
     if (!file.type.match(/image\/(jpeg|jpg|png|gif)/)) {
-        showError('Solo se permiten imágenes JPG, PNG o GIF');
+        showError('Solo se permiten imágenes');
         return;
     }
     
