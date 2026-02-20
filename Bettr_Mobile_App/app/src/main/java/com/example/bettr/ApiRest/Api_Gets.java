@@ -237,7 +237,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Get user by ID
     public void getUserById(int userId, UserCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
@@ -263,7 +262,6 @@ public class Api_Gets {
                             obj.optString("username", ""),
                             obj.optString("avatar", "")
                     );
-                    // Add additional fields
                     user.setEmail(obj.optString("email", ""));
                     user.setDescription(obj.optString("description", ""));
                     callback.onResult(user);
@@ -281,7 +279,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Get user statistics (followers, following, habits count)
     public void getUserStats(int userId, StatsCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
@@ -319,7 +316,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Get habits by user ID (for My Habits section)
     public void getHabitsByUserId(int userId, HabitsCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
@@ -367,7 +363,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Check if user liked a habit
     public void checkIfLiked(int habitId, int userId, BooleanCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
@@ -403,7 +398,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Check if user is following another user
     public void checkIfFollowing(int followerId, int followingId, BooleanCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
@@ -439,7 +433,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Get followers list
     public void getFollowers(int userId, UsersCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;
@@ -482,7 +475,6 @@ public class Api_Gets {
         }).start();
     }
 
-    // Get following list
     public void getFollowing(int userId, UsersCallback callback) {
         new Thread(() -> {
             HttpURLConnection connection = null;

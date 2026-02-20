@@ -147,12 +147,17 @@ public class ProfileFragment extends Fragment {
             tvBio.setVisibility(View.GONE);
         }
 
+        // Cargar avatar desde Base64
         if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
             try {
                 byte[] decodedString = Base64.decode(user.getAvatarUrl(), Base64.DEFAULT);
                 Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                ivAvatar.setImageBitmap(decodedBitmap);
-                tvAvatarLetter.setVisibility(View.GONE);
+                if (decodedBitmap != null) {
+                    ivAvatar.setImageBitmap(decodedBitmap);
+                    tvAvatarLetter.setVisibility(View.GONE);
+                } else {
+                    tvAvatarLetter.setVisibility(View.VISIBLE);
+                }
             } catch (Exception e) {
                 tvAvatarLetter.setVisibility(View.VISIBLE);
             }

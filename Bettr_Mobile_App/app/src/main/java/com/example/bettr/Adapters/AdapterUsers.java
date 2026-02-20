@@ -1,6 +1,9 @@
 package com.example.bettr.Adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,15 +46,24 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> 
         holder.tvUserName.setText("@" + user.getUsername());
         holder.tvFullName.setText(user.getName());
         
-        holder.ivAvatar.setImageResource(R.drawable.logobettr);
+        if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+            Bitmap avatar = decodeBase64(user.getAvatarUrl());
+            if (avatar != null) {
+                holder.ivAvatar.setImageBitmap(avatar);
+            } else {
+                holder.ivAvatar.setImageResource(R.drawable.logobettr);
+            }
+        } else {
+            holder.ivAvatar.setImageResource(R.drawable.logobettr);
+        }
 
         if (user.isFollowing()) {
             holder.btnFollow.setText("Siguiendo");
-            holder.btnFollow.setBackgroundColor(Color.parseColor("#374151")); // Gris oscuro
+            holder.btnFollow.setBackgroundColor(Color.parseColor("#374151"));
             holder.btnFollow.setTextColor(Color.WHITE);
         } else {
             holder.btnFollow.setText("Seguir");
-            holder.btnFollow.setBackgroundColor(Color.parseColor("#FACC15")); // Amarillo Bettr
+            holder.btnFollow.setBackgroundColor(Color.parseColor("#FACC15"));
             holder.btnFollow.setTextColor(Color.parseColor("#1C1F22"));
         }
 
@@ -60,6 +72,15 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.ViewHolder> 
                 listener.onFollowClick(user, position);
             }
         });
+    }
+
+    private Bitmap decodeBase64(String input) {
+        try {
+            byte[] decodedString = Base64.decode(input, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

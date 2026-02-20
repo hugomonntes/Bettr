@@ -63,9 +63,6 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
             holder.tvDescription.setVisibility(View.GONE);
         }
         
-        holder.tvLikes.setText(String.valueOf(habit.getLikes()));
-        holder.tvStreak.setText("🔥 " + habit.getStreak());
-
         if (habit.getUserAvatar() != null && !habit.getUserAvatar().isEmpty()) {
             Bitmap avatar = decodeBase64(habit.getUserAvatar());
             if (avatar != null) {
@@ -88,60 +85,6 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
         } else {
             holder.cvPostImage.setVisibility(View.GONE);
         }
-        
-        if (habit.getStreak() > 0) {
-            holder.cvStreakCount.setVisibility(View.VISIBLE);
-        } else {
-            holder.cvStreakCount.setVisibility(View.GONE);
-        }
-
-        // Like button state
-        if (habit.isLiked()) {
-            holder.ivLike.setImageResource(android.R.drawable.btn_star_big_on);
-            holder.ivLike.setColorFilter(0xFFFACC15);
-        } else {
-            holder.ivLike.setImageResource(android.R.drawable.btn_star_big_off);
-            holder.ivLike.setColorFilter(0xFFFFFFFF);
-        }
-
-        // Like click listener
-        holder.ivLike.setOnClickListener(v -> {
-            int currentLikes = habit.getLikes();
-            boolean currentlyLiked = habit.isLiked();
-            
-            // Toggle locally first for instant feedback
-            habit.setLiked(!currentlyLiked);
-            habit.setLikes(currentlyLiked ? currentLikes - 1 : currentLikes + 1);
-            
-            // Update UI
-            holder.tvLikes.setText(String.valueOf(habit.getLikes()));
-            if (habit.isLiked()) {
-                holder.ivLike.setImageResource(android.R.drawable.btn_star_big_on);
-                holder.ivLike.setColorFilter(0xFFFACC15);
-            } else {
-                holder.ivLike.setImageResource(android.R.drawable.btn_star_big_off);
-                holder.ivLike.setColorFilter(0xFFFFFFFF);
-            }
-
-            // Call API
-            if (currentlyLiked) {
-                apiInserts.unlikeHabit(habit.getId(), userId, success -> {
-                    if (!success) {
-                        // Revert on failure
-                        habit.setLiked(true);
-                        habit.setLikes(currentLikes);
-                    }
-                });
-            } else {
-                apiInserts.likeHabit(habit.getId(), userId, success -> {
-                    if (!success) {
-                        // Revert on failure
-                        habit.setLiked(false);
-                        habit.setLikes(currentLikes);
-                    }
-                });
-            }
-        });
     }
 
     private String getHabitEmoji(String habitType) {
@@ -192,26 +135,19 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tvUserName, tvPostInfo, tvDescription, tvLikes, tvStreak, tvHabitType, tvComments;
-        ImageView ivPostImage, ivProfilePost, ivLike, ivComment, ivShare;
-        View cvPostImage, cvStreakCount;
+        TextView tvUserName, tvPostInfo, tvDescription, tvHabitType;
+        ImageView ivPostImage, ivProfilePost;
+        View cvPostImage;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvUserName = itemView.findViewById(R.id.tvUserName);
             tvPostInfo = itemView.findViewById(R.id.tvPostInfo);
             tvDescription = itemView.findViewById(R.id.tvDescription);
-            tvLikes = itemView.findViewById(R.id.tvLikes);
-            tvStreak = itemView.findViewById(R.id.tvStreak);
             tvHabitType = itemView.findViewById(R.id.tvHabitType);
-            tvComments = itemView.findViewById(R.id.tvComments);
             ivPostImage = itemView.findViewById(R.id.ivPostImage);
             ivProfilePost = itemView.findViewById(R.id.ivProfilePost);
-            ivLike = itemView.findViewById(R.id.ivLike);
-            ivComment = itemView.findViewById(R.id.ivComment);
-            ivShare = itemView.findViewById(R.id.ivShare);
             cvPostImage = itemView.findViewById(R.id.cvPostImage);
-            cvStreakCount = itemView.findViewById(R.id.cvStreakCount);
         }
     }
 }

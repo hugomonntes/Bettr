@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,30 +70,48 @@ public class Login extends AppCompatActivity {
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString();
 
-        if (username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa tu nombre de usuario", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (loadingOverlay != null) {
-            loadingOverlay.setVisibility(View.VISIBLE);
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa tu contraseña", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        showLoading();
         String passwordHash = hashPassword(password);
 
         apiGets.getUser(username, passwordHash, (success, userId) -> runOnUiThread(() -> {
-            if (loadingOverlay != null) {
-                loadingOverlay.setVisibility(View.GONE);
-            }
-            if (success) {
+            hideLoading();
+            if (success && userId > 0) {
                 // Guardar datos del usuario usando UserSession
                 UserSession session = new UserSession(Login.this);
                 session.setUserId(userId);
                 session.setUsername(username);
-
+                
+                Toast.makeText(Login.this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
+                
                 Intent intent = new Intent(Login.this, Feed.class);
                 startActivity(intent);
                 finish();
+            } else {
+                Toast.makeText(Login.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
             }
         }));
+    }
+
+    private void showLoading() {
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoading() {
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
     private String hashPassword(String password) {
@@ -113,3 +132,4 @@ public class Login extends AppCompatActivity {
         }
     }
 }
+

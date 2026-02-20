@@ -43,7 +43,6 @@ public class AdapterFollowers extends RecyclerView.Adapter<AdapterFollowers.View
         User user = users.get(position);
         
         holder.tvUserName.setText("@" + user.getUsername());
-        
         holder.tvFullName.setText(user.getName());
         
         if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
@@ -89,10 +88,9 @@ public class AdapterFollowers extends RecyclerView.Adapter<AdapterFollowers.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivAvatar = itemView.findViewById(R.id.ivUserAvatar);
-            tvUserName = itemView.findViewById(R.id.tvUserName);
-            tvFullName = itemView.findViewById(R.id.tvFullName);
+            ivAvatar = itemView.findViewById(R.id.ivAvatar);
+            tvUserName = itemView.findViewById(R.id.tvUsername);
+            tvFullName = itemView.findViewById(R.id.tvName);
         }
     }
 }
-

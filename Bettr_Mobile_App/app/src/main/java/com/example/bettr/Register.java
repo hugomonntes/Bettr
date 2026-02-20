@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bettr.ApiRest.Api_Inserts;
+import com.example.bettr.ApiRest.Api_Gets;
+import com.example.bettr.UserSession;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 public class Register extends AppCompatActivity {
     private EditText etName, etUsername, etEmail, etPassword, etConfirmPassword;
     private Api_Inserts apiInserts;
+    private Api_Gets apiGets;
     private FrameLayout loadingOverlay;
 
     @Override
@@ -31,6 +35,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         apiInserts = new Api_Inserts();
+        apiGets = new Api_Gets();
         loadingOverlay = findViewById(R.id.loading_overlay);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
@@ -69,34 +74,85 @@ public class Register extends AppCompatActivity {
         String password = etPassword.getText().toString();
         String confirmPassword = etConfirmPassword.getText().toString();
 
-        if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        // Validation
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa tu nombre", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!password.equals(confirmPassword)) {
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa un nombre de usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (username.length() < 3) {
+            Toast.makeText(this, "El nombre de usuario debe tener al menos 3 caracteres", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa tu correo electrónico", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Por favor ingresa un correo electrónico válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Por favor ingresa una contraseña", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (password.length() < 6) {
+            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             return;
         }
 
         showLoading();
         String passwordHash = hashPassword(password);
 
-        apiGetsInserts(name, username, email, passwordHash);
-    }
-
-    private void apiGetsInserts(String name, String username, String email, String passwordHash) {
         apiInserts.insertUsuario(name, username, email, passwordHash, success -> {
-            runOnUiThread(() -> {
-                hideLoading();
-                if (success) {
-                    Intent intent = new Intent(Register.this, CompleteProfile.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
+            if (success) {
+                // After successful registration, get the user ID by logging in
+                apiGets.getUser(username, passwordHash, (loginSuccess, userId) -> {
+                    runOnUiThread(() -> {
+                        hideLoading();
+                        if (loginSuccess && userId > 0) {
+                            // Save user session
+                            UserSession session = new UserSession(Register.this);
+                            session.setUserId(userId);
+                            session.setUsername(username);
+                            session.setUserName(name);
+                            session.setUserEmail(email);
+                            
+                            Toast.makeText(Register.this, "¡Cuenta creada!", Toast.LENGTH_SHORT).show();
+                            
+                            // Go to complete profile
+                            Intent intent = new Intent(Register.this, CompleteProfile.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(Register.this, "Cuenta creada. Por favor inicia sesión.", Toast.LENGTH_LONG).show();
+                            // Go to login
+                            Intent intent = new Intent(Register.this, Login.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                });
+            } else {
+                runOnUiThread(() -> {
+                    hideLoading();
+                    Toast.makeText(Register.this, "Error al crear cuenta. El usuario o correo ya existe.", Toast.LENGTH_LONG).show();
+                });
+            }
         });
     }
 
@@ -133,3 +189,4 @@ public class Register extends AppCompatActivity {
         }
     }
 }
+

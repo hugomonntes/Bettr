@@ -2,32 +2,29 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginHorizontal="12dp"
+    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="8dp"
     app:cardBackgroundColor="#1A1A1A"
-    app:cardCornerRadius="24dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp">
+        android:padding="12dp">
 
-        <!-- Header del Post -->
+        <!-- Avatar del usuario -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivProfilePost"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:scaleType="centerCrop"
             android:src="@drawable/logobettr"
             app:shapeAppearanceOverlay="@style/CircleImage"
-            app:strokeColor="#FACC15"
-            app:strokeWidth="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,11 +33,10 @@
             android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="10dp"
             android:text="Usuario"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvPostInfo"
             app:layout_constraintStart_toEndOf="@+id/ivProfilePost"
@@ -52,13 +48,12 @@
             android:id="@+id/tvHabitType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_habit_type_badge"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
+            android:layout_marginStart="6dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
             android:text="💪 Ejercicio"
             android:textColor="#FACC15"
-            android:textSize="12sp"
+            android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tvUserName"
             app:layout_constraintStart_toEndOf="@+id/tvUserName"
@@ -70,52 +65,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="• hace 1h"
-            android:textColor="#9CA3AF"
+            android:textColor="#6B7280"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/ivProfilePost"
             app:layout_constraintStart_toStartOf="@+id/tvUserName"
             app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
-
-        <!-- Streak Badge -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cvStreakCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:cardBackgroundColor="#FACC15"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/ivProfilePost"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ivProfilePost">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="4dp">
-
-                <TextView
-                    android:id="@+id/tvStreak"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔥 45"
-                    android:textColor="#1C1F22"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
         <!-- Imagen Principal -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvPostImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginHorizontal="12dp"
-            app:cardCornerRadius="20dp"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:layout_constraintDimensionRatio="4:3"
             app:layout_constraintEnd_toEndOf="parent"
@@ -131,79 +93,19 @@
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Acciones -->
-        <LinearLayout
-            android:id="@+id/llActions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/cvPostImage">
-
-            <ImageView
-                android:id="@+id/ivLike"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@android:drawable/btn_star_big_off"
-                app:tint="#FFFFFF" />
-
-            <TextView
-                android:id="@+id/tvLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/ivComment"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:layout_marginStart="24dp"
-                android:src="@android:drawable/stat_notify_chat"
-                app:tint="#FFFFFF" />
-
-            <TextView
-                android:id="@+id/tvComments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/ivShare"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@android:drawable/ic_menu_share"
-                app:tint="#FFFFFF" />
-
-        </LinearLayout>
 
         <!-- Descripción -->
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:lineSpacingExtra="3dp"
-            android:paddingHorizontal="20dp"
+            android:lineSpacingExtra="2dp"
             android:text="Descripción del hábito..."
-            android:textColor="#E5E7EB"
+            android:textColor="#D1D5DB"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/llActions" />
+            app:layout_constraintTop_toBottomOf="@+id/cvPostImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

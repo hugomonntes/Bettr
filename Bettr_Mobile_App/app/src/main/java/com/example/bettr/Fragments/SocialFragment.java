@@ -3,9 +3,12 @@ package com.example.bettr.Fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +39,8 @@ public class SocialFragment extends Fragment {
     private UserSession session;
     private int myUserId;
     private TextInputEditText etSearch;
+    private FrameLayout loadingOverlay;
+    private View emptyState;
 
     @Nullable
     @Override
@@ -53,7 +58,27 @@ public class SocialFragment extends Fragment {
         rvUsers.setLayoutManager(new LinearLayoutManager(getContext()));
 
         etSearch = view.findViewById(R.id.etSearch);
-        TextInputLayout tilSearch = view.findViewById(R.id.tilSearch);
+        tilSearch = view.findViewById(R.id.tilSearch);
+        loadingOverlay = view.findViewById(R.id.loading_overlay);
+        emptyState = view.findViewById(R.id.emptyState);
+
+        // Setup search with debounce
+        if (etSearch != null) {
+            etSearch.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    // Debounce search
+                    etSearch.removeCallbacks(searchRunnable);
+                    etSearch.postDelayed(searchRunnable, 500);
+                }
+            });
+        }
 
         if (tilSearch != null) {
             tilSearch.setEndIconOnClickListener(v -> {
@@ -67,17 +92,23 @@ public class SocialFragment extends Fragment {
         return view;
     }
 
-    private void loadInitialUsers() {
-        if (getActivity() instanceof Feed) {
-            ((Feed) getActivity()).showLoading();
+    private final Runnable searchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (etSearch != null) {
+                String query = etSearch.getText().toString().trim();
+                searchUsers(query);
+            }
         }
+    };
+
+    private void loadInitialUsers() {
+        showLoading();
         
         apiGets.searchUsers("", users -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    if (getActivity() instanceof Feed) {
-                        ((Feed) getActivity()).hideLoading();
-                    }
+                    hideLoading();
                     updateList(users);
                 });
             }
@@ -85,16 +116,12 @@ public class SocialFragment extends Fragment {
     }
 
     private void searchUsers(String query) {
-        if (getActivity() instanceof Feed) {
-            ((Feed) getActivity()).showLoading();
-        }
+        showLoading();
         
         apiGets.searchUsers(query, users -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    if (getActivity() instanceof Feed) {
-                        ((Feed) getActivity()).hideLoading();
-                    }
+                    hideLoading();
                     updateList(users);
                 });
             }
@@ -103,41 +130,93 @@ public class SocialFragment extends Fragment {
 
     private void updateList(ArrayList<User> users) {
         allUsersList.clear();
-        for (User u : users) {
-            if (u.getId() != myUserId) {
-                allUsersList.add(u);
+        if (users != null) {
+            for (User u : users) {
+                if (u.getId() != myUserId) {
+                    allUsersList.add(u);
+                }
             }
         }
-        adapter = new AdapterUsers(allUsersList, (user, position) -> {
-            followUser(user, position);
-        });
-        rvUsers.setAdapter(adapter);
+        
+        if (allUsersList.isEmpty()) {
+            showEmptyState();
+        } else {
+            hideEmptyState();
+            adapter = new AdapterUsers(allUsersList, (user, position) -> {
+                followUser(user, position);
+            });
+            rvUsers.setAdapter(adapter);
+        }
     }
 
     private void followUser(User userToFollow, int position) {
-        if (myUserId == -1 || userToFollow.isFollowing()) {
+        if (myUserId == -1) {
+            Toast.makeText(getContext(), "Error: Usuario no identificado", Toast.LENGTH_SHORT).show();
             return;
         }
         
+        showLoading();
+        
+        if (userToFollow.isFollowing()) {
+            apiInserts.unfollowUser(myUserId, userToFollow.getId(), success -> {
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        hideLoading();
+                        if (success) {
+                            userToFollow.setFollowing(false);
+                            session.removeFollowing(userToFollow.getId());
+                            if (adapter != null) {
+                                adapter.notifyItemChanged(position);
+                            }
+                            Toast.makeText(getContext(), "Has dejado de seguir a @" + userToFollow.getUsername(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error al dejar de seguir", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        } else {
+            apiInserts.followUser(myUserId, userToFollow.getId(), success -> {
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        hideLoading();
+                        if (success) {
+                            userToFollow.setFollowing(true);
+                            session.addFollowing(userToFollow.getId());
+                            if (adapter != null) {
+                                adapter.notifyItemChanged(position);
+                            }
+                            Toast.makeText(getContext(), "¡Ahora sigues a @" + userToFollow.getUsername(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Error al seguir usuario", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void showLoading() {
         if (getActivity() instanceof Feed) {
             ((Feed) getActivity()).showLoading();
         }
-        
-        apiInserts.followUser(myUserId, userToFollow.getId(), success -> {
-            if (isAdded() && getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    if (getActivity() instanceof Feed) {
-                        ((Feed) getActivity()).hideLoading();
-                    }
-                    if (success) {
-                        userToFollow.setFollowing(true);
-                        session.addFollowing(userToFollow.getId());
-                        if (adapter != null) {
-                            adapter.notifyItemChanged(position);
-                        }
-                    }
-                });
-            }
-        });
     }
+
+    private void hideLoading() {
+        if (getActivity() instanceof Feed) {
+            ((Feed) getActivity()).hideLoading();
+        }
+    }
+
+    private void showEmptyState() {
+        if (rvUsers != null) rvUsers.setVisibility(View.GONE);
+        if (emptyState != null) emptyState.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyState() {
+        if (rvUsers != null) rvUsers.setVisibility(View.VISIBLE);
+        if (emptyState != null) emptyState.setVisibility(View.GONE);
+    }
+
+    private TextInputLayout tilSearch;
 }

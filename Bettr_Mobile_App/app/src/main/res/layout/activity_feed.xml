@@ -23,7 +23,7 @@
         android:id="@+id/loading_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000"
+        android:background="#99121212"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
@@ -42,19 +42,17 @@
             app:trackThickness="4dp" />
     </FrameLayout>
 
-    <!-- Floating Action Button for creating habits -->
-
+    <!-- Bottom Navigation - Diseño limpio -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvBottomNav"
         android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        app:cardBackgroundColor="#2A2E33"
-        app:cardCornerRadius="32dp"
-        app:cardElevation="16dp"
-        app:strokeWidth="1.2dp"
-        app:strokeColor="#3F444D"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardBackgroundColor="#1E1E1E"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -62,8 +60,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="5">
+            android:orientation="horizontal">
 
             <FrameLayout
                 android:id="@+id/btn_nav_home"
@@ -75,8 +72,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless">
                 <ImageView
                     android:id="@+id/iv_home_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@android:drawable/ic_menu_slideshow"
                     app:tint="#FACC15" />
@@ -94,11 +91,11 @@
 
                 <ImageView
                     android:id="@+id/iv_habits_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@android:drawable/ic_menu_view"
-                    app:tint="#9CA3AF" />
+                    app:tint="#6B7280" />
             </FrameLayout>
 
             <FrameLayout
@@ -111,11 +108,11 @@
                 android:background="?attr/selectableItemBackgroundBorderless">
                 <ImageView
                     android:id="@+id/iv_camera_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="#9CA3AF" />
+                    app:tint="#6B7280" />
             </FrameLayout>
 
             <FrameLayout
@@ -128,11 +125,11 @@
                 android:background="?attr/selectableItemBackgroundBorderless">
                 <ImageView
                     android:id="@+id/iv_social_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@android:drawable/ic_menu_share"
-                    app:tint="#9CA3AF" />
+                    app:tint="#6B7280" />
             </FrameLayout>
 
             <FrameLayout
@@ -145,11 +142,11 @@
                 android:background="?attr/selectableItemBackgroundBorderless">
                 <ImageView
                     android:id="@+id/iv_profile_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@android:drawable/ic_menu_myplaces"
-                    app:tint="#9CA3AF" />
+                    app:tint="#6B7280" />
             </FrameLayout>
 
         </LinearLayout>
