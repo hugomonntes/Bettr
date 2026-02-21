@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView tvUsername, tvEmail, tvBio, tvFollowers, tvFollowing, tvHabitsCount, tvAvatarLetter;
+    private TextView tvName, tvUsername, tvEmail, tvBio, tvFollowers, tvFollowing, tvHabitsCount, tvAvatarLetter;
     private ImageView ivAvatar;
     private View layoutFollowers, layoutFollowing;
     private FrameLayout loadingOverlay;
@@ -46,6 +46,7 @@ public class ProfileFragment extends Fragment {
         apiGets = new Api_Gets();
         session = new UserSession(requireContext());
         
+        tvName = view.findViewById(R.id.tvName);
         tvUsername = view.findViewById(R.id.tvUsername);
         tvEmail = view.findViewById(R.id.tvEmail);
         tvBio = view.findViewById(R.id.tvBio);
@@ -112,25 +113,32 @@ public class ProfileFragment extends Fragment {
                             user.getDescription() != null ? user.getDescription() : ""
                         );
                         
-                        if (user.getName() != null && !user.getName().isEmpty()) {
-                            tvUsername.setText(user.getName());
-                            tvAvatarLetter.setText(user.getName().substring(0, 1).toUpperCase());
-                        } else {
-                            tvUsername.setText("Usuario");
-                            tvAvatarLetter.setText("U");
+                        if (tvName != null) {
+                            if (user.getName() != null && !user.getName().isEmpty()) {
+                                tvName.setText(user.getName());
+                                tvName.setVisibility(View.VISIBLE);
+                                if (user.getName().length() > 0) {
+                                    tvAvatarLetter.setText(user.getName().substring(0, 1).toUpperCase());
+                                }
+                            } else {
+                                tvName.setText("Usuario");
+                                tvName.setVisibility(View.VISIBLE);
+                                tvAvatarLetter.setText("U");
+                            }
                         }
 
-                        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-                            tvEmail.setText(user.getEmail());
-                            tvEmail.setVisibility(View.VISIBLE);
-                        } else {
-                            tvEmail.setVisibility(View.GONE);
+                        if (tvUsername != null) {
+                            if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+                                tvUsername.setText("@" + user.getUsername());
+                            } else {
+                                tvUsername.setText("@usuario");
+                            }
                         }
 
                         if (user.getDescription() != null && !user.getDescription().isEmpty()) {
                             tvBio.setText(user.getDescription());
                             tvBio.setVisibility(View.VISIBLE);
-                        } else {
+                        } else if (tvBio != null) {
                             tvBio.setVisibility(View.GONE);
                         }
 
