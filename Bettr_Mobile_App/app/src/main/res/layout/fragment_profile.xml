@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Profile Header Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +26,6 @@
                 android:gravity="center_horizontal"
                 android:padding="24dp">
 
-                <!-- Avatar with gradient background -->
                 <FrameLayout
                     android:layout_width="120dp"
                     android:layout_height="120dp">
@@ -45,7 +43,6 @@
                             android:scaleType="centerCrop"
                             android:background="@drawable/ic_launcher_background"/>
 
-                        <!-- Avatar Letter Fallback -->
                         <TextView
                             android:id="@+id/tvAvatarLetter"
                             android:layout_width="match_parent"
@@ -59,7 +56,6 @@
                     </com.google.android.material.card.MaterialCardView>
                 </FrameLayout>
 
-                <!-- Name (prominent) -->
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
@@ -67,20 +63,21 @@
                     android:layout_marginTop="16dp"
                     android:text="Usuario"
                     android:textColor="#FFFFFF"
-                    android:textSize="28sp"
-                    android:textStyle="bold"/>
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
-                <!-- Username (smaller, secondary) -->
                 <TextView
                     android:id="@+id/tvUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@username"
+                    android:layout_marginTop="8dp"
+                    android:text="username"
                     android:textColor="#FACC15"
-                    android:textSize="16sp"/>
+                    android:textSize="28sp"
+                    android:textStyle="bold|italic"
+                    android:letterSpacing="0.05" />
 
-                <!-- Email -->
                 <TextView
                     android:id="@+id/tvEmail"
                     android:layout_width="wrap_content"
@@ -91,7 +88,6 @@
                     android:textSize="14sp"
                     android:visibility="gone"/>
 
-                <!-- Bio/Description -->
                 <TextView
                     android:id="@+id/tvBio"
                     android:layout_width="match_parent"
@@ -105,7 +101,6 @@
                     android:visibility="gone"
                     android:paddingHorizontal="8dp"/>
 
-                <!-- Divider -->
                 <View
                     android:layout_width="80dp"
                     android:layout_height="1dp"
@@ -113,14 +108,12 @@
                     android:layout_marginBottom="20dp"
                     android:background="#3A3F47"/>
 
-                <!-- Stats Row - Clickable -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center">
 
-                    <!-- Followers -->
                     <LinearLayout
                         android:id="@+id/layoutFollowers"
                         android:layout_width="0dp"
@@ -150,7 +143,6 @@
                             android:textSize="12sp"/>
                     </LinearLayout>
 
-                    <!-- Following -->
                     <LinearLayout
                         android:id="@+id/layoutFollowing"
                         android:layout_width="0dp"
@@ -180,7 +172,6 @@
                             android:textSize="12sp"/>
                     </LinearLayout>
 
-                    <!-- Habits -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -210,7 +201,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Loading Indicator -->
         <FrameLayout
             android:id="@+id/loading_overlay"
             android:layout_width="match_parent"
@@ -226,9 +216,6 @@
                 app:trackThickness="4dp"/>
         </FrameLayout>
 
-        <!-- Spacer -->
-
-        <!-- Logout Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"

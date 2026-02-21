@@ -1,4 +1,4 @@
-package Bettr;
+¡package Bettr;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -72,6 +72,38 @@ public class UsersManager {
                             return Response.ok(found).build();
                         } else {
                             return Response.status(Response.Status.UNAUTHORIZED).build();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    // 2.1. OBTENER USUARIO POR ID
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserById(@PathParam("id") int id) {
+        try {
+            Class.forName("org.postgresql.Driver");
+            try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
+                String query = "SELECT id, name, username, email, description, avatar FROM users WHERE id = ?";
+                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                    pstmt.setInt(1, id);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        if (rs.next()) {
+                            Users u = new Users();
+                            u.setId(rs.getInt("id"));
+                            u.setName(rs.getString("name"));
+                            u.setUsername(rs.getString("username"));
+                            u.setEmail(rs.getString("email"));
+                            u.setDescription(rs.getString("description"));
+                            u.setAvatar(rs.getString("avatar"));
+                            return Response.ok(u).build();
+                        } else {
+                            return Response.status(Response.Status.NOT_FOUND).build();
                         }
                     }
                 }

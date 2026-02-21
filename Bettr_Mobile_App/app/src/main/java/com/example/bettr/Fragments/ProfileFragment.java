@@ -13,23 +13,23 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.bettr.ApiRest.Api_Gets;
-import com.example.bettr.Dao.User;
 import com.example.bettr.Feed;
 import com.example.bettr.Intro;
 import com.example.bettr.R;
 import com.example.bettr.UserSession;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
+
 public class ProfileFragment extends Fragment {
 
-    private TextView tvName, tvUsername, tvEmail, tvBio, tvFollowers, tvFollowing, tvHabitsCount, tvAvatarLetter;
+    private TextView tvUsername, tvEmail, tvBio, tvFollowers, tvFollowing, tvHabitsCount, tvAvatarLetter;
     private ImageView ivAvatar;
     private View layoutFollowers, layoutFollowing;
     private FrameLayout loadingOverlay;
@@ -46,7 +46,6 @@ public class ProfileFragment extends Fragment {
         apiGets = new Api_Gets();
         session = new UserSession(requireContext());
         
-        tvName = view.findViewById(R.id.tvName);
         tvUsername = view.findViewById(R.id.tvUsername);
         tvEmail = view.findViewById(R.id.tvEmail);
         tvBio = view.findViewById(R.id.tvBio);
@@ -60,25 +59,29 @@ public class ProfileFragment extends Fragment {
         loadingOverlay = view.findViewById(R.id.loading_overlay);
         btnLogout = view.findViewById(R.id.btnLogout);
 
-        // Obtener userId de la sesión
         myUserId = session.getUserId();
 
-        // Primero cargar datos desde la sesión local (más rápido)
-        loadUserDataFromSession();
-
-        layoutFollowers.setOnClickListener(v -> {
-            loadFragment(FollowersFragment.newInstance(myUserId, "followers"));
-        });
-
-        layoutFollowing.setOnClickListener(v -> {
-            loadFragment(FollowersFragment.newInstance(myUserId, "following"));
-        });
-
-        btnLogout.setOnClickListener(v -> logout());
-
         if (myUserId != -1) {
-            // Cargar estadísticas desde la API
+            loadUserDataFromAPI();
             loadStatsFromAPI();
+        }
+
+        if (layoutFollowers != null) {
+            layoutFollowers.setOnClickListener(v -> {
+                loadFragment(FollowersFragment.newInstance(myUserId, "followers"));
+            });
+        }
+
+        if (layoutFollowing != null) {
+            layoutFollowing.setOnClickListener(v -> {
+                loadFragment(FollowersFragment.newInstance(myUserId, "following"));
+            });
+        }
+
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
+                logout();
+            });
         }
 
         return view;
@@ -87,94 +90,93 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Recargar datos al volver al fragment
-        loadUserDataFromSession();
         if (myUserId != -1) {
+            loadUserDataFromAPI();
             loadStatsFromAPI();
         }
     }
 
-    /**
-     * Cargar datos del usuario desde UserSession (datos guardados localmente)
-     */
-    private void loadUserDataFromSession() {
-        String name = session.getUserName();
-        String username = session.getUsername();
-        String email = session.getUserEmail();
-        String bio = session.getUserBio();
-        String avatar = session.getUserAvatar();
-
-        // Mostrar nombre
-        if (name != null && !name.isEmpty()) {
-            tvName.setText(name);
-            tvAvatarLetter.setText(name.substring(0, 1).toUpperCase());
-        } else {
-            tvName.setText("Usuario");
-            tvAvatarLetter.setText("U");
-        }
-
-        // Mostrar username
-        if (username != null && !username.isEmpty()) {
-            tvUsername.setText("@" + username);
-        } else {
-            tvUsername.setText("@usuario");
-        }
-
-        // Mostrar email
-        if (email != null && !email.isEmpty()) {
-            tvEmail.setText(email);
-            tvEmail.setVisibility(View.VISIBLE);
-        } else {
-            tvEmail.setVisibility(View.GONE);
-        }
-
-        // Mostrar bio
-        if (bio != null && !bio.isEmpty()) {
-            tvBio.setText(bio);
-            tvBio.setVisibility(View.VISIBLE);
-        } else {
-            tvBio.setVisibility(View.GONE);
-        }
-
-        // Cargar avatar desde Base64
-        if (avatar != null && !avatar.isEmpty()) {
-            try {
-                byte[] decodedString = Base64.decode(avatar, Base64.DEFAULT);
-                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                if (decodedBitmap != null) {
-                    ivAvatar.setImageBitmap(decodedBitmap);
-                    tvAvatarLetter.setVisibility(View.GONE);
-                } else {
-                    tvAvatarLetter.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
-                tvAvatarLetter.setVisibility(View.VISIBLE);
-            }
-        } else {
-            tvAvatarLetter.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * Cargar estadísticas desde la API (followers, following, habits)
-     */
-    private void loadStatsFromAPI() {
+    private void loadUserDataFromAPI() {
         showLoading();
 
-        apiGets.getUserStats(myUserId, (followers, following, habits) -> {
+        apiGets.getUserById(myUserId, user -> {
             if (isAdded() && getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    updateStatsUI(followers, following, habits);
+                    if (user != null) {
+                        session.saveUserData(
+                            myUserId,
+                            user.getUsername() != null ? user.getUsername() : "",
+                            user.getName() != null ? user.getName() : "",
+                            user.getEmail() != null ? user.getEmail() : "",
+                            user.getAvatarUrl() != null ? user.getAvatarUrl() : "",
+                            user.getDescription() != null ? user.getDescription() : ""
+                        );
+                        
+                        if (user.getName() != null && !user.getName().isEmpty()) {
+                            tvUsername.setText(user.getName());
+                            tvAvatarLetter.setText(user.getName().substring(0, 1).toUpperCase());
+                        } else {
+                            tvUsername.setText("Usuario");
+                            tvAvatarLetter.setText("U");
+                        }
+
+                        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+                            tvEmail.setText(user.getEmail());
+                            tvEmail.setVisibility(View.VISIBLE);
+                        } else {
+                            tvEmail.setVisibility(View.GONE);
+                        }
+
+                        if (user.getDescription() != null && !user.getDescription().isEmpty()) {
+                            tvBio.setText(user.getDescription());
+                            tvBio.setVisibility(View.VISIBLE);
+                        } else {
+                            tvBio.setVisibility(View.GONE);
+                        }
+
+                        if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+                            try {
+                                byte[] decodedString = Base64.decode(user.getAvatarUrl(), Base64.DEFAULT);
+                                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                if (decodedBitmap != null) {
+                                    ivAvatar.setImageBitmap(decodedBitmap);
+                                    tvAvatarLetter.setVisibility(View.GONE);
+                                } else {
+                                    tvAvatarLetter.setVisibility(View.VISIBLE);
+                                }
+                            } catch (Exception e) {
+                                tvAvatarLetter.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            tvAvatarLetter.setVisibility(View.VISIBLE);
+                        }
+                    }
                     hideLoading();
                 });
             }
         });
     }
 
+    private void loadStatsFromAPI() {
+        apiGets.getUserStats(myUserId, (followers, following, habits) -> {
+            if (isAdded() && getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    updateStatsUI(followers, following, habits);
+                });
+            }
+        });
+    }
+
     private void updateStatsUI(int followers, int following, int habits) {
-        tvFollowers.setText(String.valueOf(followers));
-        tvFollowing.setText(String.valueOf(following));
-        tvHabitsCount.setText(String.valueOf(habits));
+        if (tvFollowers != null) {
+            tvFollowers.setText(String.valueOf(followers));
+        }
+        if (tvFollowing != null) {
+            tvFollowing.setText(String.valueOf(following));
+        }
+        if (tvHabitsCount != null) {
+            tvHabitsCount.setText(String.valueOf(habits));
+        }
     }
 
     private void showLoading() {
