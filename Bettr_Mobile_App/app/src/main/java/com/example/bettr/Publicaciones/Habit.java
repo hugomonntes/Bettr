@@ -3,8 +3,8 @@ package com.example.bettr.Publicaciones;
 public class Habit {
     private int id;
     private String nombreUsuario;
-    private String userAvatar; // Base64 del avatar del usuario
-    private String imageUrl;   // Base64 de la imagen del post
+    private String userAvatar;
+    private String imageUrl;
     private int likes;
     private String descripcion;
     private String info;
@@ -13,7 +13,6 @@ public class Habit {
     private String createdAt;
     private boolean isLiked;
 
-    // Constructor original para compatibilidad
     public Habit(String nombreUsuario, String userAvatar, String imageUrl, String descripcion, String info, int likes, int streak) {
         this.nombreUsuario = nombreUsuario;
         this.userAvatar = userAvatar;
@@ -24,7 +23,6 @@ public class Habit {
         this.streak = streak;
     }
 
-    // Nuevo constructor con todos los campos
     public Habit(int id, String nombreUsuario, String userAvatar, String imageUrl, String descripcion, String habitType, int likes, int streak, String createdAt) {
         this.id = id;
         this.nombreUsuario = nombreUsuario;

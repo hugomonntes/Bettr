@@ -43,7 +43,6 @@ public class CameraFragment extends Fragment {
     private Api_Inserts apiInserts;
     private FrameLayout loadingOverlay;
 
-    // Habit types matching the web app
     private final String[] habitTypes = {
             "Ejercicio",
             "Lectura",
@@ -54,12 +53,12 @@ public class CameraFragment extends Fragment {
     };
 
     private final String[] habitTypeEmojis = {
-            "💪 Ejercicio",
-            "📚 Lectura",
-            "🧘 Meditación",
-            "📖 Estudio",
-            "🥗 Comida Saludable",
-            "⭐ Otro"
+            "Ejercicio",
+            "Lectura",
+            "Meditación",
+            "Estudio",
+            "Comida Saludable",
+            "Otro"
     };
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
@@ -174,12 +173,10 @@ public class CameraFragment extends Fragment {
                     hideLoading();
                     if (success) {
                         Toast.makeText(getContext(), "¡Hábito compartido!", Toast.LENGTH_SHORT).show();
-                        // Clear form
                         etDescription.setText("");
                         ivPreview.setImageResource(android.R.drawable.ic_menu_camera);
                         selectedBitmap = null;
                         
-                        // Navigate to home
                         if (getActivity() instanceof Feed) {
                             ((Feed) getActivity()).navigateToHome();
                         }
