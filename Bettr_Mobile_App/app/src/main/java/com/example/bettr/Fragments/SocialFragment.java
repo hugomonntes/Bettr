@@ -62,7 +62,6 @@ public class SocialFragment extends Fragment {
         loadingOverlay = view.findViewById(R.id.loading_overlay);
         emptyState = view.findViewById(R.id.emptyState);
 
-        // Setup search with debounce
         if (etSearch != null) {
             etSearch.addTextChangedListener(new TextWatcher() {
                 @Override
