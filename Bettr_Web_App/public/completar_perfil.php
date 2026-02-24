@@ -100,7 +100,7 @@ error_reporting(E_ERROR | E_PARSE);
     <div class="auth-page">
         <div class="auth-container profile-setup-container">
             <div class="auth-logo-card">
-                <img src="" alt="Bettr" class="auth-logo">
+                <img src="LogoBettr.png" alt="Bettr" class="auth-logo">
             </div>
             
             <h1 class="auth-title">¡Bienvenido a Bettr!</h1>

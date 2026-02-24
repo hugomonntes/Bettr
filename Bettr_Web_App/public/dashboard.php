@@ -15,7 +15,7 @@ error_reporting(E_ERROR | E_PARSE);
 <body>
     <aside class="sidebar">
         <div class="sidebar-logo">
-            <img src="https://i.imgur.com/YcR0J8h.png" alt="Bettr" style="width:40px;height:40px;border-radius:12px;">
+            <img src="LogoBettr.png" alt="Bettr" style="width:40px;height:40px;border-radius:12px;">
             <span>Bettr</span>
         </div>
         

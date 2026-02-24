@@ -14,7 +14,7 @@ error_reporting(E_ERROR | E_PARSE);
     <div class="auth-page">
         <div class="auth-container">
             <div class="auth-logo-card">
-                <img src="Doc\Resources\img_docs\LogoBettr.png" alt="Bettr" class="auth-logo">
+                <img src="LogoBettr.png" alt="Bettr" class="auth-logo">
             </div>
             
             <h1 class="auth-title">Crear Cuenta</h1>
