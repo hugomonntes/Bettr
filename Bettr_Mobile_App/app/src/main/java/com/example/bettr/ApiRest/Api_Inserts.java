@@ -1,4 +1,4 @@
-package com.example.bettr.ApiRest;
+package com.example.appmovil.ApiRest;
 
 import android.util.Log;
 import org.json.JSONException;

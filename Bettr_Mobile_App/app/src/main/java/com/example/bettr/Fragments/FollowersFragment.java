@@ -1,4 +1,4 @@
-package com.example.bettr.Fragments;
+package com.example.appmovil.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.example.bettr;
+package com.example.appmovil;
 
 import android.content.Context;
 import android.content.SharedPreferences;

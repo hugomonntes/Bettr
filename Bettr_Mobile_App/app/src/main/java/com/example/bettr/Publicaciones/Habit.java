@@ -1,4 +1,4 @@
-package com.example.bettr.Publicaciones;
+package com.example.appmovil.Publicaciones;
 
 public class Habit {
     private int id;

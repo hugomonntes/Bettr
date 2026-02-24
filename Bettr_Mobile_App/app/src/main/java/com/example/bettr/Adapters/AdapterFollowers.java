@@ -1,4 +1,4 @@
-package com.example.bettr.Adapters;
+package com.example.appmovil.Adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

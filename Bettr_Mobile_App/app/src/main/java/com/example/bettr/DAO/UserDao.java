@@ -1,4 +1,4 @@
-package com.example.bettr.Dao;
+package com.example.appmovil.Dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

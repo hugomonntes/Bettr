@@ -1,4 +1,4 @@
-package com.example.bettr.Fragments;
+package com.example.appmovil.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.bettr.ApiRest.Api_Gets;
-import com.example.bettr.Feed;
+import com.example.appmovil.Feed;
 import com.example.bettr.Intro;
 import com.example.bettr.R;
 import com.example.bettr.UserSession;

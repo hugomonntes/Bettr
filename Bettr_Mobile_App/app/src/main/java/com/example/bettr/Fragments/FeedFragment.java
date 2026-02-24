@@ -1,4 +1,4 @@
-package com.example.bettr.Fragments;
+package com.example.appmovil.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bettr.Adapters.AdapterFeed;
 import com.example.bettr.ApiRest.Api_Gets;
 import com.example.bettr.ApiRest.Api_Inserts;
-import com.example.bettr.Feed;
+import com.example.appmovil.Feed;
 import com.example.bettr.Publicaciones.Habit;
 import com.example.bettr.R;
 import com.example.bettr.UserSession;

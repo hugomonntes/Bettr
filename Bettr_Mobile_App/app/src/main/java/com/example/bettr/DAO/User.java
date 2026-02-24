@@ -1,4 +1,4 @@
-package com.example.bettr.Dao;
+package com.example.appmovil.Dao;
 
 public class User {
     private int id;
