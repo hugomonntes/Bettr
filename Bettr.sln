@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bettr_Desktop_App", "Bettr_Desktop_App", "{E6ED9215-B5DE-4E3D-8533-D1330892AE9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bettr_Desktop_App", "Bettr_Desktop_App\Bettr_Desktop_App\Bettr_Desktop_App.csproj", "{56FCE94F-9C34-CB14-4581-98BBED9CAB22}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56FCE94F-9C34-CB14-4581-98BBED9CAB22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56FCE94F-9C34-CB14-4581-98BBED9CAB22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56FCE94F-9C34-CB14-4581-98BBED9CAB22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56FCE94F-9C34-CB14-4581-98BBED9CAB22}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56FCE94F-9C34-CB14-4581-98BBED9CAB22} = {E6ED9215-B5DE-4E3D-8533-D1330892AE9E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCFFE1C5-5D5F-4BB8-8228-3CC7E964C108}
+	EndGlobalSection
+EndGlobal
