@@ -42,7 +42,7 @@
             // 
             // panelContainer
             // 
-            this.panelContainer.BackColor = System.Drawing.Color.White;
+            this.panelContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(46)))), ((int)(((byte)(51)))));
             this.panelContainer.Controls.Add(this.lblRegister);
             this.panelContainer.Controls.Add(this.btnLogin);
             this.panelContainer.Controls.Add(this.txtPassword);
@@ -62,15 +62,16 @@
             // picLogo
             // 
             this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picLogo.Location = new System.Drawing.Point(125, 20);
-            this.picLogo.Size = new System.Drawing.Size(150, 100);
+            this.picLogo.Location = new System.Drawing.Point(140, 30);
+            this.picLogo.Size = new System.Drawing.Size(120, 100);
 
             // 
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.Location = new System.Drawing.Point(60, 130);
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(60, 140);
             this.lblTitle.Text = "Bienvenido de nuevo";
 
             // 
@@ -78,73 +79,85 @@
             // 
             this.lblSubtitle.AutoSize = true;
             this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblSubtitle.ForeColor = System.Drawing.Color.Gray;
-            this.lblSubtitle.Location = new System.Drawing.Point(95, 170);
+            this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
+            this.lblSubtitle.Location = new System.Drawing.Point(110, 180);
             this.lblSubtitle.Text = "Inicia sesión para continuar";
 
             // 
             // lblError
             // 
             this.lblError.AutoSize = true;
-            this.lblError.ForeColor = System.Drawing.Color.Red;
-            this.lblError.Location = new System.Drawing.Point(60, 200);
+            this.lblError.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.lblError.Location = new System.Drawing.Point(60, 205);
             this.lblError.Size = new System.Drawing.Size(0, 13);
 
             // 
             // lblUsername
             // 
             this.lblUsername.AutoSize = true;
+            this.lblUsername.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
             this.lblUsername.Location = new System.Drawing.Point(60, 230);
-            this.lblUsername.Text = "Usuario";
+            this.lblUsername.Text = "USUARIO";
 
             // 
             // txtUsername
             // 
-            this.txtUsername.Location = new System.Drawing.Point(60, 250);
-            this.txtUsername.Size = new System.Drawing.Size(280, 25);
-            this.txtUsername.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(46)))), ((int)(((byte)(51)))));
+            this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtUsername.ForeColor = System.Drawing.Color.White;
+            this.txtUsername.Location = new System.Drawing.Point(60, 255);
+            this.txtUsername.Size = new System.Drawing.Size(280, 45);
+            this.txtUsername.Font = new System.Drawing.Font("Segoe UI", 12F);
 
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(60, 290);
-            this.lblPassword.Text = "Contraseña";
+            this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
+            this.lblPassword.Location = new System.Drawing.Point(60, 310);
+            this.lblPassword.Text = "CONTRASEÑA";
 
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(60, 310);
-            this.txtPassword.Size = new System.Drawing.Size(280, 25);
-            this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(46)))), ((int)(((byte)(51)))));
+            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPassword.ForeColor = System.Drawing.Color.White;
+            this.txtPassword.Location = new System.Drawing.Point(60, 335);
+            this.txtPassword.Size = new System.Drawing.Size(280, 45);
+            this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.txtPassword.UseSystemPasswordChar = true;
 
             // 
             // btnLogin
             // 
-            this.btnLogin.BackColor = System.Drawing.Color.FromArgb(34, 197, 94);
+            this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(204)))), ((int)(((byte)(21)))));
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.FlatAppearance.BorderSize = 0;
             this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(60, 360);
+            this.btnLogin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
+            this.btnLogin.Location = new System.Drawing.Point(60, 400);
             this.btnLogin.Size = new System.Drawing.Size(280, 45);
             this.btnLogin.Text = "Iniciar Sesión";
             this.btnLogin.UseVisualStyleBackColor = false;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
 
             // 
             // lblRegister
             // 
             this.lblRegister.AutoSize = true;
-            this.lblRegister.ForeColor = System.Drawing.Color.Gray;
-            this.lblRegister.Location = new System.Drawing.Point(95, 430);
+            this.lblRegister.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
+            this.lblRegister.Location = new System.Drawing.Point(95, 465);
             this.lblRegister.Text = "¿No tienes cuenta? Regístrate";
             this.lblRegister.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblRegister.Click += new System.EventHandler(this.lblRegister_Click);
 
             // 
             // Login
             // 
-            this.BackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
             this.ClientSize = new System.Drawing.Size(900, 700);
             this.Controls.Add(this.panelContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
