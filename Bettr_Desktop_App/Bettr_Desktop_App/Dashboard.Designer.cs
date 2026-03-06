@@ -18,10 +18,6 @@ namespace Bettr_Desktop_App
         private void InitializeComponent()
         {
             this.panelSidebar = new System.Windows.Forms.Panel();
-            this.panelMain = new System.Windows.Forms.Panel();
-            this.panelTopbar = new System.Windows.Forms.Panel();
-            this.lblPageTitle = new System.Windows.Forms.Label();
-            this.panelContent = new System.Windows.Forms.Panel();
             this.btnNavLogout = new System.Windows.Forms.Button();
             this.btnNewHabit = new System.Windows.Forms.Button();
             this.btnNavProfile = new System.Windows.Forms.Button();
@@ -34,12 +30,16 @@ namespace Bettr_Desktop_App
             this.picUserAvatar = new System.Windows.Forms.PictureBox();
             this.lblSidebarBrand = new System.Windows.Forms.Label();
             this.picSidebarLogo = new System.Windows.Forms.PictureBox();
+            this.panelMain = new System.Windows.Forms.Panel();
+            this.panelContent = new System.Windows.Forms.Panel();
+            this.panelTopbar = new System.Windows.Forms.Panel();
+            this.lblPageTitle = new System.Windows.Forms.Label();
             this.panelSidebar.SuspendLayout();
-            this.panelMain.SuspendLayout();
-            this.panelTopbar.SuspendLayout();
             this.panelUserInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picUserAvatar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSidebarLogo)).BeginInit();
+            this.panelMain.SuspendLayout();
+            this.panelTopbar.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSidebar
@@ -59,48 +59,6 @@ namespace Bettr_Desktop_App
             this.panelSidebar.Name = "panelSidebar";
             this.panelSidebar.Size = new System.Drawing.Size(260, 720);
             this.panelSidebar.TabIndex = 0;
-            // 
-            // panelMain
-            // 
-            this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
-            this.panelMain.Controls.Add(this.panelContent);
-            this.panelMain.Controls.Add(this.panelTopbar);
-            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelMain.Location = new System.Drawing.Point(260, 0);
-            this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(740, 720);
-            this.panelMain.TabIndex = 1;
-            // 
-            // panelTopbar
-            // 
-            this.panelTopbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
-            this.panelTopbar.Controls.Add(this.lblPageTitle);
-            this.panelTopbar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTopbar.Location = new System.Drawing.Point(0, 0);
-            this.panelTopbar.Name = "panelTopbar";
-            this.panelTopbar.Size = new System.Drawing.Size(740, 70);
-            this.panelTopbar.TabIndex = 0;
-            // 
-            // lblPageTitle
-            // 
-            this.lblPageTitle.AutoSize = true;
-            this.lblPageTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-            this.lblPageTitle.ForeColor = System.Drawing.Color.White;
-            this.lblPageTitle.Location = new System.Drawing.Point(30, 20);
-            this.lblPageTitle.Name = "lblPageTitle";
-            this.lblPageTitle.Size = new System.Drawing.Size(79, 32);
-            this.lblPageTitle.TabIndex = 0;
-            this.lblPageTitle.Text = "Inicio";
-            // 
-            // panelContent
-            // 
-            this.panelContent.AutoScroll = true;
-            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(0, 70);
-            this.panelContent.Name = "panelContent";
-            this.panelContent.Padding = new System.Windows.Forms.Padding(30);
-            this.panelContent.Size = new System.Drawing.Size(740, 650);
-            this.panelContent.TabIndex = 1;
             // 
             // btnNavLogout
             // 
@@ -126,9 +84,9 @@ namespace Bettr_Desktop_App
             this.btnNewHabit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNewHabit.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNewHabit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
-            this.btnNewHabit.Location = new System.Drawing.Point(20, 480);
+            this.btnNewHabit.Location = new System.Drawing.Point(0, 604);
             this.btnNewHabit.Name = "btnNewHabit";
-            this.btnNewHabit.Size = new System.Drawing.Size(220, 50);
+            this.btnNewHabit.Size = new System.Drawing.Size(260, 50);
             this.btnNewHabit.TabIndex = 7;
             this.btnNewHabit.Text = "+ Nuevo Hábito";
             this.btnNewHabit.UseVisualStyleBackColor = false;
@@ -141,7 +99,7 @@ namespace Bettr_Desktop_App
             this.btnNavProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavProfile.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNavProfile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
-            this.btnNavProfile.Location = new System.Drawing.Point(0, 390);
+            this.btnNavProfile.Location = new System.Drawing.Point(0, 250);
             this.btnNavProfile.Name = "btnNavProfile";
             this.btnNavProfile.Size = new System.Drawing.Size(260, 50);
             this.btnNavProfile.TabIndex = 6;
@@ -157,7 +115,7 @@ namespace Bettr_Desktop_App
             this.btnNavDiscover.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavDiscover.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNavDiscover.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
-            this.btnNavDiscover.Location = new System.Drawing.Point(0, 340);
+            this.btnNavDiscover.Location = new System.Drawing.Point(0, 200);
             this.btnNavDiscover.Name = "btnNavDiscover";
             this.btnNavDiscover.Size = new System.Drawing.Size(260, 50);
             this.btnNavDiscover.TabIndex = 5;
@@ -173,7 +131,7 @@ namespace Bettr_Desktop_App
             this.btnNavHabits.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavHabits.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNavHabits.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
-            this.btnNavHabits.Location = new System.Drawing.Point(0, 290);
+            this.btnNavHabits.Location = new System.Drawing.Point(0, 150);
             this.btnNavHabits.Name = "btnNavHabits";
             this.btnNavHabits.Size = new System.Drawing.Size(260, 50);
             this.btnNavHabits.TabIndex = 4;
@@ -189,7 +147,7 @@ namespace Bettr_Desktop_App
             this.btnNavHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavHome.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnNavHome.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
-            this.btnNavHome.Location = new System.Drawing.Point(0, 240);
+            this.btnNavHome.Location = new System.Drawing.Point(0, 100);
             this.btnNavHome.Name = "btnNavHome";
             this.btnNavHome.Size = new System.Drawing.Size(260, 50);
             this.btnNavHome.TabIndex = 3;
@@ -204,7 +162,7 @@ namespace Bettr_Desktop_App
             this.panelUserInfo.Controls.Add(this.lblUserName);
             this.panelUserInfo.Controls.Add(this.picUserAvatar);
             this.panelUserInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelUserInfo.Location = new System.Drawing.Point(0, 140);
+            this.panelUserInfo.Location = new System.Drawing.Point(0, 0);
             this.panelUserInfo.Name = "panelUserInfo";
             this.panelUserInfo.Size = new System.Drawing.Size(260, 100);
             this.panelUserInfo.TabIndex = 2;
@@ -260,6 +218,48 @@ namespace Bettr_Desktop_App
             this.picSidebarLogo.TabIndex = 0;
             this.picSidebarLogo.TabStop = false;
             // 
+            // panelMain
+            // 
+            this.panelMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
+            this.panelMain.Controls.Add(this.panelContent);
+            this.panelMain.Controls.Add(this.panelTopbar);
+            this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMain.Location = new System.Drawing.Point(260, 0);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(740, 720);
+            this.panelMain.TabIndex = 1;
+            // 
+            // panelContent
+            // 
+            this.panelContent.AutoScroll = true;
+            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContent.Location = new System.Drawing.Point(0, 70);
+            this.panelContent.Name = "panelContent";
+            this.panelContent.Padding = new System.Windows.Forms.Padding(30);
+            this.panelContent.Size = new System.Drawing.Size(740, 650);
+            this.panelContent.TabIndex = 1;
+            // 
+            // panelTopbar
+            // 
+            this.panelTopbar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
+            this.panelTopbar.Controls.Add(this.lblPageTitle);
+            this.panelTopbar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTopbar.Location = new System.Drawing.Point(0, 0);
+            this.panelTopbar.Name = "panelTopbar";
+            this.panelTopbar.Size = new System.Drawing.Size(740, 70);
+            this.panelTopbar.TabIndex = 0;
+            // 
+            // lblPageTitle
+            // 
+            this.lblPageTitle.AutoSize = true;
+            this.lblPageTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+            this.lblPageTitle.ForeColor = System.Drawing.Color.White;
+            this.lblPageTitle.Location = new System.Drawing.Point(30, 20);
+            this.lblPageTitle.Name = "lblPageTitle";
+            this.lblPageTitle.Size = new System.Drawing.Size(78, 32);
+            this.lblPageTitle.TabIndex = 0;
+            this.lblPageTitle.Text = "Inicio";
+            // 
             // Dashboard
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
@@ -272,13 +272,13 @@ namespace Bettr_Desktop_App
             this.Load += new System.EventHandler(this.Dashboard_Load);
             this.panelSidebar.ResumeLayout(false);
             this.panelSidebar.PerformLayout();
-            this.panelMain.ResumeLayout(false);
-            this.panelTopbar.ResumeLayout(false);
-            this.panelTopbar.PerformLayout();
             this.panelUserInfo.ResumeLayout(false);
             this.panelUserInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picUserAvatar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSidebarLogo)).EndInit();
+            this.panelMain.ResumeLayout(false);
+            this.panelTopbar.ResumeLayout(false);
+            this.panelTopbar.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -80,7 +80,7 @@
             this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(110, 130);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(180, 37);
+            this.lblTitle.Size = new System.Drawing.Size(179, 37);
             this.lblTitle.TabIndex = 1;
             this.lblTitle.Text = "Crear cuenta";
             // 
@@ -91,7 +91,7 @@
             this.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
             this.lblSubtitle.Location = new System.Drawing.Point(120, 170);
             this.lblSubtitle.Name = "lblSubtitle";
-            this.lblSubtitle.Size = new System.Drawing.Size(160, 19);
+            this.lblSubtitle.Size = new System.Drawing.Size(164, 19);
             this.lblSubtitle.TabIndex = 2;
             this.lblSubtitle.Text = "Regístrate para comenzar";
             // 
@@ -174,7 +174,7 @@
             this.lblConfirmPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
             this.lblConfirmPassword.Location = new System.Drawing.Point(60, 400);
             this.lblConfirmPassword.Name = "lblConfirmPassword";
-            this.lblConfirmPassword.Size = new System.Drawing.Size(150, 23);
+            this.lblConfirmPassword.Size = new System.Drawing.Size(280, 23);
             this.lblConfirmPassword.TabIndex = 10;
             this.lblConfirmPassword.Text = "CONFIRMAR CONTRASEÑA";
             // 
@@ -204,7 +204,6 @@
             this.btnRegister.Text = "Crear cuenta";
             this.btnRegister.UseVisualStyleBackColor = false;
             this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
-
             // 
             // lblBackToLogin
             // 
