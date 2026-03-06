@@ -1,1 +1,11 @@
 .env
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.pdb
+.idea/
+.vscode/
+*.log
