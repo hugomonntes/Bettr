@@ -10,13 +10,17 @@ namespace Bettr_Desktop_App.Api
     public class ApiService
     {
         private static readonly HttpClient client = new HttpClient();
-        private const string BaseUrl = "https://bettr-g5yv.onrender.com/api_rest/rest";
+        private const string BaseUrl = "https://bettr-g5yv.onrender.com/rest";
 
         public async Task<User> LoginAsync(string username, string passwordHash)
         {
             try
             {
-                string url = $"{BaseUrl}/users/{username}/{passwordHash}";
+                // Codificamos para evitar errores con caracteres especiales en la URL
+                string safeUser = Uri.EscapeDataString(username);
+                string safePass = Uri.EscapeDataString(passwordHash);
+
+                string url = $"{BaseUrl}/users/{safeUser}/{safePass}";
                 
                 HttpResponseMessage response = await client.GetAsync(url);
                 
