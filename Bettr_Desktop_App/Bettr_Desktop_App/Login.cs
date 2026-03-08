@@ -7,11 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Bettr_Desktop_App.Api;
+using Bettr_Desktop_App.Models;
 
 namespace Bettr_Desktop_App
 {
     public partial class Login : Form
     {
+        private readonly ApiService _apiService = new ApiService();
+
         [System.Runtime.InteropServices.DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
         (
@@ -47,11 +51,46 @@ namespace Bettr_Desktop_App
             this.Hide();
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private async void btnLogin_Click(object sender, EventArgs e)
         {
-            Dashboard dashboard = new Dashboard();
-            dashboard.Show();
-            this.Hide();
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text.Trim();
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Por favor, introduce el usuario y la contraseña.", "Error de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            btnLogin.Enabled = false;
+            btnLogin.Text = "Cargando...";
+
+            try
+            {
+                // En un entorno real, deberías hashear la contraseña aquí si la API lo requiere
+                // o enviarla por POST de forma segura.
+                User user = await _apiService.LoginAsync(username, password);
+
+                if (user != null)
+                {
+                    Dashboard dashboard = new Dashboard();
+                    dashboard.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Usuario o contraseña incorrectos.", "Login Fallido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al conectar con el servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnLogin.Enabled = true;
+                btnLogin.Text = "Iniciar Sesión";
+            }
         }
     }
 }
