@@ -10,14 +10,12 @@ namespace Bettr_Desktop_App.Api
     public class ApiService
     {
         private static readonly HttpClient client = new HttpClient();
-        private const string BaseUrl = "http://localhost:8080/api_rest/rest";
+        private const string BaseUrl = "https://bettr-g5yv.onrender.com/api_rest/rest";
 
         public async Task<User> LoginAsync(string username, string passwordHash)
         {
             try
             {
-                // The API endpoint for login as defined in UsersManager.java is:
-                // @GET @Path("/{username}/{password_hash}")
                 string url = $"{BaseUrl}/users/{username}/{passwordHash}";
                 
                 HttpResponseMessage response = await client.GetAsync(url);

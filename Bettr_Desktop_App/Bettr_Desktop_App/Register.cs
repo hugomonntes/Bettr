@@ -38,7 +38,6 @@ namespace Bettr_Desktop_App
             panelContainer.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, panelContainer.Width, panelContainer.Height, 30, 30));
             btnRegister.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnRegister.Width, btnRegister.Height, 20, 20));
 
-            // Rounded textboxes
             txtUsername.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtUsername.Width, txtUsername.Height, 15, 15));
             txtEmail.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtEmail.Width, txtEmail.Height, 15, 15));
             txtPassword.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtPassword.Width, txtPassword.Height, 15, 15));
@@ -80,8 +79,8 @@ namespace Bettr_Desktop_App
                 {
                     Username = username,
                     Email = email,
-                    Password_hash = password, // Debería hashearse en producción
-                    Name = username // Por defecto usamos el username como nombre
+                    Password_hash = password, // Deberia hashearse
+                    Name = username
                 };
 
                 bool success = await _apiService.RegisterAsync(newUser);

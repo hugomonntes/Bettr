@@ -30,16 +30,14 @@ namespace Bettr_Desktop_App
         public Login()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.None; // Make it cleaner
+            this.FormBorderStyle = FormBorderStyle.None;
         }
 
         private void Login_Load(object sender, EventArgs e)
         {
-            // Apply rounded corners to the main container and buttons
             panelContainer.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, panelContainer.Width, panelContainer.Height, 30, 30));
             btnLogin.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnLogin.Width, btnLogin.Height, 20, 20));
             
-            // Apply rounded corners to textboxes
             txtUsername.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtUsername.Width, txtUsername.Height, 15, 15));
             txtPassword.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtPassword.Width, txtPassword.Height, 15, 15));
         }
@@ -67,8 +65,6 @@ namespace Bettr_Desktop_App
 
             try
             {
-                // En un entorno real, deberías hashear la contraseña aquí si la API lo requiere
-                // o enviarla por POST de forma segura.
                 User user = await _apiService.LoginAsync(username, password);
 
                 if (user != null)
