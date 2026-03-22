@@ -25,6 +25,7 @@
         private void InitializeComponent()
         {
             this.panelContainer = new System.Windows.Forms.Panel();
+            this.lblClose = new System.Windows.Forms.Label();
             this.lblRegister = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
             this.txtPassword = new System.Windows.Forms.TextBox();
@@ -42,6 +43,7 @@
             // panelContainer
             // 
             this.panelContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(42)))), ((int)(((byte)(46)))), ((int)(((byte)(51)))));
+            this.panelContainer.Controls.Add(this.lblClose);
             this.panelContainer.Controls.Add(this.lblRegister);
             this.panelContainer.Controls.Add(this.btnLogin);
             this.panelContainer.Controls.Add(this.txtPassword);
@@ -57,6 +59,19 @@
             this.panelContainer.Size = new System.Drawing.Size(400, 520);
             this.panelContainer.TabIndex = 0;
             // 
+            // lblClose
+            // 
+            this.lblClose.AutoSize = true;
+            this.lblClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblClose.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.lblClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(213)))), ((int)(((byte)(219)))));
+            this.lblClose.Location = new System.Drawing.Point(370, 10);
+            this.lblClose.Name = "lblClose";
+            this.lblClose.Size = new System.Drawing.Size(20, 25);
+            this.lblClose.TabIndex = 0;
+            this.lblClose.Text = "X";
+            this.lblClose.Click += new System.EventHandler(this.lblClose_Click);
+            // 
             // lblRegister
             // 
             this.lblRegister.AutoSize = true;
@@ -65,7 +80,7 @@
             this.lblRegister.Location = new System.Drawing.Point(57, 461);
             this.lblRegister.Name = "lblRegister";
             this.lblRegister.Size = new System.Drawing.Size(153, 13);
-            this.lblRegister.TabIndex = 0;
+            this.lblRegister.TabIndex = 1;
             this.lblRegister.Text = "¿No tienes cuenta? Regístrate";
             this.lblRegister.Click += new System.EventHandler(this.lblRegister_Click);
             // 
@@ -198,6 +213,7 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblRegister;
+        private System.Windows.Forms.Label lblClose;
     }
 }
 
