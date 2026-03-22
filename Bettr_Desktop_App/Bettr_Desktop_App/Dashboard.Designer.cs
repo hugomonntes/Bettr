@@ -13,8 +13,6 @@ namespace Bettr_Desktop_App
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         private void InitializeComponent()
         {
             this.panelSidebar = new System.Windows.Forms.Panel();
@@ -28,6 +26,7 @@ namespace Bettr_Desktop_App
             this.lblUserHandle = new System.Windows.Forms.Label();
             this.lblUserName = new System.Windows.Forms.Label();
             this.picUserAvatar = new System.Windows.Forms.PictureBox();
+            this.lblAvatarInitial = new System.Windows.Forms.Label();
             this.lblSidebarBrand = new System.Windows.Forms.Label();
             this.picSidebarLogo = new System.Windows.Forms.PictureBox();
             this.panelMain = new System.Windows.Forms.Panel();
@@ -90,6 +89,7 @@ namespace Bettr_Desktop_App
             this.btnNewHabit.TabIndex = 7;
             this.btnNewHabit.Text = "+ Nuevo Hábito";
             this.btnNewHabit.UseVisualStyleBackColor = false;
+            this.btnNewHabit.Click += new System.EventHandler(this.btnNewHabit_Click);
             // 
             // btnNavProfile
             // 
@@ -106,6 +106,7 @@ namespace Bettr_Desktop_App
             this.btnNavProfile.Text = "      Perfil";
             this.btnNavProfile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavProfile.UseVisualStyleBackColor = true;
+            this.btnNavProfile.Click += new System.EventHandler(this.btnNavProfile_Click);
             // 
             // btnNavDiscover
             // 
@@ -122,6 +123,7 @@ namespace Bettr_Desktop_App
             this.btnNavDiscover.Text = "      Descubrir";
             this.btnNavDiscover.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavDiscover.UseVisualStyleBackColor = true;
+            this.btnNavDiscover.Click += new System.EventHandler(this.btnNavDiscover_Click);
             // 
             // btnNavHabits
             // 
@@ -138,6 +140,7 @@ namespace Bettr_Desktop_App
             this.btnNavHabits.Text = "      Mis Hábitos";
             this.btnNavHabits.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavHabits.UseVisualStyleBackColor = true;
+            this.btnNavHabits.Click += new System.EventHandler(this.btnNavHabits_Click);
             // 
             // btnNavHome
             // 
@@ -154,6 +157,7 @@ namespace Bettr_Desktop_App
             this.btnNavHome.Text = "      Inicio";
             this.btnNavHome.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavHome.UseVisualStyleBackColor = false;
+            this.btnNavHome.Click += new System.EventHandler(this.btnNavHome_Click);
             // 
             // panelUserInfo
             // 
@@ -161,6 +165,7 @@ namespace Bettr_Desktop_App
             this.panelUserInfo.Controls.Add(this.lblUserHandle);
             this.panelUserInfo.Controls.Add(this.lblUserName);
             this.panelUserInfo.Controls.Add(this.picUserAvatar);
+            this.panelUserInfo.Controls.Add(this.lblAvatarInitial);
             this.panelUserInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelUserInfo.Location = new System.Drawing.Point(0, 0);
             this.panelUserInfo.Name = "panelUserInfo";
@@ -197,6 +202,18 @@ namespace Bettr_Desktop_App
             this.picUserAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picUserAvatar.TabIndex = 0;
             this.picUserAvatar.TabStop = false;
+            // 
+            // lblAvatarInitial
+            // 
+            this.lblAvatarInitial.AutoSize = false;
+            this.lblAvatarInitial.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            this.lblAvatarInitial.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(31)))), ((int)(((byte)(34)))));
+            this.lblAvatarInitial.Location = new System.Drawing.Point(20, 28);
+            this.lblAvatarInitial.Name = "lblAvatarInitial";
+            this.lblAvatarInitial.Size = new System.Drawing.Size(44, 44);
+            this.lblAvatarInitial.TabIndex = 3;
+            this.lblAvatarInitial.Text = "U";
+            this.lblAvatarInitial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblSidebarBrand
             // 
@@ -280,10 +297,7 @@ namespace Bettr_Desktop_App
             this.panelTopbar.ResumeLayout(false);
             this.panelTopbar.PerformLayout();
             this.ResumeLayout(false);
-
         }
-
-        #endregion
 
         private System.Windows.Forms.Panel panelSidebar;
         private System.Windows.Forms.Panel panelMain;
@@ -296,6 +310,7 @@ namespace Bettr_Desktop_App
         private System.Windows.Forms.PictureBox picUserAvatar;
         private System.Windows.Forms.Label lblUserName;
         private System.Windows.Forms.Label lblUserHandle;
+        private System.Windows.Forms.Label lblAvatarInitial;
         private System.Windows.Forms.Button btnNavHome;
         private System.Windows.Forms.Button btnNavHabits;
         private System.Windows.Forms.Button btnNavDiscover;
