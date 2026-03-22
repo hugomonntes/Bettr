@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,15 +31,32 @@ namespace Bettr_Desktop_App
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
+            LoadIcon();
+        }
+
+        private void LoadIcon()
+        {
+            try
+            {
+                string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "app.ico");
+                if (System.IO.File.Exists(iconPath))
+                {
+                    this.Icon = new Icon(iconPath);
+                    picLogo.Image = Image.FromFile(iconPath);
+                }
+            }
+            catch { }
         }
 
         private void Login_Load(object sender, EventArgs e)
         {
             panelContainer.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, panelContainer.Width, panelContainer.Height, 30, 30));
             btnLogin.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnLogin.Width, btnLogin.Height, 20, 20));
-            
+
             txtUsername.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtUsername.Width, txtUsername.Height, 15, 15));
             txtPassword.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtPassword.Width, txtPassword.Height, 15, 15));
+            
+            LoadIcon();
         }
 
         private void lblRegister_Click(object sender, EventArgs e)
@@ -49,14 +66,21 @@ namespace Bettr_Desktop_App
             this.Hide();
         }
 
+        private void lblClose_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
 
+            lblError.Text = "";
+
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Por favor, introduce el usuario y la contraseña.", "Error de Login", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lblError.Text = "Por favor, completa todos los campos.";
                 return;
             }
 
@@ -69,18 +93,26 @@ namespace Bettr_Desktop_App
 
                 if (user != null)
                 {
-                    Dashboard dashboard = new Dashboard();
-                    dashboard.Show();
+                    if (string.IsNullOrEmpty(user.Description) && string.IsNullOrEmpty(user.Avatar))
+                    {
+                        CompleteProfile completeProfile = new CompleteProfile(user);
+                        completeProfile.Show();
+                    }
+                    else
+                    {
+                        Dashboard dashboard = new Dashboard();
+                        dashboard.Show();
+                    }
                     this.Hide();
                 }
                 else
                 {
-                    MessageBox.Show("Usuario o contraseña incorrectos.", "Login Fallido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblError.Text = "Usuario o contraseña incorrectos.";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al conectar con el servidor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblError.Text = $"Error al conectar: {ex.Message}";
             }
             finally
             {
