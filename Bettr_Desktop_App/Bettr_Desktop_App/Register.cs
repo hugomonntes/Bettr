@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bettr_Desktop_App.Api;
-using Bettr_Desktop_App.Models;
 
 namespace Bettr_Desktop_App
 {
@@ -31,6 +30,21 @@ namespace Bettr_Desktop_App
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
+            LoadIcon();
+        }
+
+        private void LoadIcon()
+        {
+            try
+            {
+                string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "app.ico");
+                if (System.IO.File.Exists(iconPath))
+                {
+                    this.Icon = new Icon(iconPath);
+                    picLogo.Image = Image.FromFile(iconPath);
+                }
+            }
+            catch { }
         }
 
         private void Register_Load(object sender, EventArgs e)
@@ -38,6 +52,7 @@ namespace Bettr_Desktop_App
             panelContainer.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, panelContainer.Width, panelContainer.Height, 30, 30));
             btnRegister.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnRegister.Width, btnRegister.Height, 20, 20));
 
+            txtName.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtName.Width, txtName.Height, 15, 15));
             txtUsername.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtUsername.Width, txtUsername.Height, 15, 15));
             txtEmail.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtEmail.Width, txtEmail.Height, 15, 15));
             txtPassword.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, txtPassword.Width, txtPassword.Height, 15, 15));
@@ -51,22 +66,81 @@ namespace Bettr_Desktop_App
             this.Hide();
         }
 
+        private void lblClose_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+            UpdatePasswordStrength();
+        }
+
+        private void UpdatePasswordStrength()
+        {
+            string password = txtPassword.Text;
+            int strength = 0;
+
+            if (password.Length >= 6) strength++;
+            if (password.Length >= 8) strength++;
+            if (System.Text.RegularExpressions.Regex.IsMatch(password, "[A-Z]")) strength++;
+            if (System.Text.RegularExpressions.Regex.IsMatch(password, "[0-9]")) strength++;
+            if (System.Text.RegularExpressions.Regex.IsMatch(password, "[^A-Za-z0-9]")) strength++;
+
+            if (string.IsNullOrEmpty(password))
+            {
+                progressPasswordStrength.Value = 0;
+                lblStrengthText.Text = "";
+                lblStrengthText.ForeColor = Color.FromArgb(156, 163, 175);
+            }
+            else if (strength <= 2)
+            {
+                progressPasswordStrength.Value = 33;
+                progressPasswordStrength.ForeColor = Color.FromArgb(239, 68, 68);
+                lblStrengthText.Text = "Contraseña débil";
+                lblStrengthText.ForeColor = Color.FromArgb(239, 68, 68);
+            }
+            else if (strength <= 3)
+            {
+                progressPasswordStrength.Value = 66;
+                progressPasswordStrength.ForeColor = Color.FromArgb(245, 158, 11);
+                lblStrengthText.Text = "Contraseña media";
+                lblStrengthText.ForeColor = Color.FromArgb(245, 158, 11);
+            }
+            else
+            {
+                progressPasswordStrength.Value = 100;
+                progressPasswordStrength.ForeColor = Color.FromArgb(16, 185, 129);
+                lblStrengthText.Text = "Contraseña fuerte";
+                lblStrengthText.ForeColor = Color.FromArgb(16, 185, 129);
+            }
+        }
+
         private async void btnRegister_Click(object sender, EventArgs e)
         {
+            string name = txtName.Text.Trim();
             string username = txtUsername.Text.Trim();
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text.Trim();
             string confirmPassword = txtConfirmPassword.Text.Trim();
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            lblError.Text = "";
+
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Por favor, completa todos los campos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lblError.Text = "Por favor, completa todos los campos.";
                 return;
             }
 
             if (password != confirmPassword)
             {
-                MessageBox.Show("Las contraseñas no coinciden.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lblError.Text = "Las contraseñas no coinciden.";
+                return;
+            }
+
+            if (password.Length < 6)
+            {
+                lblError.Text = "La contraseña debe tener al menos 6 caracteres.";
                 return;
             }
 
@@ -75,15 +149,7 @@ namespace Bettr_Desktop_App
 
             try
             {
-                User newUser = new User
-                {
-                    Username = username,
-                    Email = email,
-                    Password_hash = password, // Deberia hashearse
-                    Name = username
-                };
-
-                bool success = await _apiService.RegisterAsync(newUser);
+                bool success = await _apiService.RegisterAsync(name, username, email, password);
 
                 if (success)
                 {
@@ -92,12 +158,12 @@ namespace Bettr_Desktop_App
                 }
                 else
                 {
-                    MessageBox.Show("Error al registrar el usuario. El nombre de usuario o email podrían estar en uso.", "Error de Registro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblError.Text = "Error al registrar. El nombre de usuario o email podrían estar en uso.";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error de conexión: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                lblError.Text = $"Error de conexión: {ex.Message}";
             }
             finally
             {
