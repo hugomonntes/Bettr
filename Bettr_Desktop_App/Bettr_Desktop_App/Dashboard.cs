@@ -312,22 +312,89 @@ namespace Bettr_Desktop_App
                 profileCard.Controls.Add(nameLabel);
                 profileCard.Controls.Add(usernameLabel);
 
+                if (!string.IsNullOrEmpty(ApiService.CurrentUser.Description))
+                {
+                    Label descLabel = new Label
+                    {
+                        Text = ApiService.CurrentUser.Description,
+                        Font = new Font("Segoe UI", 10),
+                        ForeColor = Color.FromArgb(156, 163, 175),
+                        Location = new Point(30, 195),
+                        Size = new Size(profileCard.Width - 60, 60),
+                        AutoSize = false
+                    };
+                    profileCard.Controls.Add(descLabel);
+                }
+
+                Button editProfileBtn = new Button
+                {
+                    Text = "Editar Perfil",
+                    BackColor = Color.FromArgb(55, 59, 65),
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(30, 310),
+                    Size = new Size((panelContent.Width - 70) / 2, 40),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold)
+                };
+                editProfileBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, editProfileBtn.Width, editProfileBtn.Height, 15, 15));
+                editProfileBtn.FlatAppearance.BorderSize = 0;
+                editProfileBtn.Click += (s, e) => OpenEditProfileModal();
+
                 Button logoutBtn = new Button
                 {
                     Text = "Cerrar Sesión",
                     BackColor = Color.FromArgb(239, 68, 68),
                     ForeColor = Color.White,
                     FlatStyle = FlatStyle.Flat,
-                    Location = new Point(30, 320),
-                    Size = new Size(panelContent.Width - 60, 45),
-                    Font = new Font("Segoe UI", 11, FontStyle.Bold)
+                    Location = new Point(35 + editProfileBtn.Width, 310),
+                    Size = new Size((panelContent.Width - 70) / 2, 40),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold)
                 };
-                logoutBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, logoutBtn.Width, logoutBtn.Height, 20, 20));
+                logoutBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, logoutBtn.Width, logoutBtn.Height, 15, 15));
                 logoutBtn.FlatAppearance.BorderSize = 0;
                 logoutBtn.Click += btnLogout_Click;
 
+                Panel statsPanel = new Panel
+                {
+                    Location = new Point(30, 360),
+                    Size = new Size(panelContent.Width - 60, 60)
+                };
+
+                Button followersBtn = new Button
+                {
+                    Text = $"{stats["followers"]} Seguidores",
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(0, 0),
+                    Size = new Size((statsPanel.Width - 20) / 2, 50),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Tag = "followers"
+                };
+                followersBtn.FlatAppearance.BorderSize = 0;
+                followersBtn.Click += (s, e) => ShowFollowersFollowing("followers");
+
+                Button followingBtn = new Button
+                {
+                    Text = $"{stats["following"]} Siguiendo",
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(10 + followersBtn.Width, 0),
+                    Size = new Size((statsPanel.Width - 20) / 2, 50),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Tag = "following"
+                };
+                followingBtn.FlatAppearance.BorderSize = 0;
+                followingBtn.Click += (s, e) => ShowFollowersFollowing("following");
+
+                statsPanel.Controls.Add(followersBtn);
+                statsPanel.Controls.Add(followingBtn);
+
                 panelContent.Controls.Add(profileCard);
+                panelContent.Controls.Add(editProfileBtn);
                 panelContent.Controls.Add(logoutBtn);
+                panelContent.Controls.Add(statsPanel);
             }
             catch (Exception ex)
             {
@@ -399,13 +466,21 @@ namespace Bettr_Desktop_App
             panelContent.Controls.Add(emptyPanel);
         }
 
-        private void AddHabitCard(Habit habit, ref int yPos)
+        private async void AddHabitCard(Habit habit, ref int yPos)
         {
+            bool isLiked = await _apiService.IsLikedAsync(habit.Id, ApiService.CurrentUser.Id);
+
+            int cardHeight = 180;
+            if (!string.IsNullOrEmpty(habit.Image_url) && habit.Image_url.StartsWith("data:image"))
+            {
+                cardHeight = 330;
+            }
+
             Panel card = new Panel
             {
                 BackColor = Color.FromArgb(42, 46, 51),
                 Location = new Point(30, yPos),
-                Size = new Size(panelContent.Width - 60, 180),
+                Size = new Size(panelContent.Width - 60, cardHeight),
                 Name = "habitCard"
             };
             card.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, card.Width, card.Height, 20, 20));
@@ -431,12 +506,18 @@ namespace Bettr_Desktop_App
             };
             avatar.Controls.Add(avatarLabel);
 
-            Label usernameLabel = new Label
+            LinkLabel usernameLabel = new LinkLabel
             {
                 Text = "@" + (habit.Username ?? "usuario"),
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 ForeColor = Color.White,
-                Location = new Point(75, 22)
+                Location = new Point(75, 22),
+                AutoSize = true,
+                LinkBehavior = LinkBehavior.HoverUnderline
+            };
+            usernameLabel.LinkClicked += async (s, e) =>
+            {
+                await LoadOtherUserProfile(habit.User_id);
             };
 
             Label timeLabel = new Label
@@ -459,13 +540,33 @@ namespace Bettr_Desktop_App
             };
             typeLabel.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, 80, 25, 10, 10));
 
+            int imageY = 80;
+            if (!string.IsNullOrEmpty(habit.Image_url) && habit.Image_url.StartsWith("data:image"))
+            {
+                PictureBox habitImage = new PictureBox
+                {
+                    Location = new Point(20, 80),
+                    Size = new Size(card.Width - 40, 140),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BackColor = Color.FromArgb(55, 59, 65)
+                };
+                habitImage.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, habitImage.Width, habitImage.Height, 15, 15));
+                try
+                {
+                    habitImage.Image = Base64ToImage(habit.Image_url);
+                }
+                catch { }
+                card.Controls.Add(habitImage);
+                imageY = 230;
+            }
+
             Label descLabel = new Label
             {
                 Text = habit.Description ?? "Nuevo hábito completado!",
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.FromArgb(209, 213, 219),
-                Location = new Point(20, 80),
-                Size = new Size(card.Width - 40, 80),
+                Location = new Point(20, imageY),
+                Size = new Size(card.Width - 40, 40),
                 AutoSize = true
             };
 
@@ -473,13 +574,44 @@ namespace Bettr_Desktop_App
             {
                 Text = $"♥ {habit.Likes_count}",
                 BackColor = Color.Transparent,
-                ForeColor = Color.FromArgb(209, 213, 219),
                 FlatStyle = FlatStyle.Flat,
                 Location = new Point(20, card.Height - 40),
                 Size = new Size(60, 30),
-                Font = new Font("Segoe UI", 10)
+                Font = new Font("Segoe UI", 10),
+                Tag = new { HabitId = habit.Id, IsLiked = isLiked, LikesCount = habit.Likes_count }
             };
+            likeBtn.ForeColor = isLiked ? Color.FromArgb(239, 68, 68) : Color.FromArgb(209, 213, 219);
             likeBtn.FlatAppearance.BorderSize = 0;
+            likeBtn.Click += async (s, e) =>
+            {
+                var data = (dynamic)likeBtn.Tag;
+                bool currentlyLiked = data.IsLiked;
+                int currentLikes = data.LikesCount;
+
+                bool success;
+                if (currentlyLiked)
+                {
+                    success = await _apiService.UnlikeHabitAsync(habit.Id, ApiService.CurrentUser.Id);
+                    if (success)
+                    {
+                        likeBtn.Text = $"♥ {currentLikes - 1}";
+                        likeBtn.ForeColor = Color.FromArgb(209, 213, 219);
+                        data.IsLiked = false;
+                        data.LikesCount = currentLikes - 1;
+                    }
+                }
+                else
+                {
+                    success = await _apiService.LikeHabitAsync(habit.Id, ApiService.CurrentUser.Id);
+                    if (success)
+                    {
+                        likeBtn.Text = $"♥ {currentLikes + 1}";
+                        likeBtn.ForeColor = Color.FromArgb(239, 68, 68);
+                        data.IsLiked = true;
+                        data.LikesCount = currentLikes + 1;
+                    }
+                }
+            };
 
             card.Controls.Add(avatar);
             card.Controls.Add(usernameLabel);
@@ -667,8 +799,8 @@ namespace Bettr_Desktop_App
             Panel modal = new Panel
             {
                 BackColor = Color.FromArgb(42, 46, 51),
-                Size = new Size(450, 500),
-                Location = new Point((modalOverlay.Width - 450) / 2, (modalOverlay.Height - 500) / 2)
+                Size = new Size(450, 580),
+                Location = new Point((modalOverlay.Width - 450) / 2, (modalOverlay.Height - 580) / 2)
             };
             modal.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, modal.Width, modal.Height, 30, 30));
 
@@ -715,20 +847,73 @@ namespace Bettr_Desktop_App
             typeCombo.Items.AddRange(new string[] { "Ejercicio", "Lectura", "Meditación", "Estudio", "Comida Saludable", "Otro" });
             typeCombo.SelectedIndex = 0;
 
+            Label imageLabel = new Label
+            {
+                Text = "IMAGEN (opcional)",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = Color.FromArgb(209, 213, 219),
+                Location = new Point(30, 155)
+            };
+
+            Button selectImageBtn = new Button
+            {
+                Text = "Seleccionar Imagen",
+                BackColor = Color.FromArgb(55, 59, 65),
+                ForeColor = Color.White,
+                Location = new Point(30, 180),
+                Size = new Size(modal.Width - 60, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            selectImageBtn.FlatAppearance.BorderSize = 0;
+            selectImageBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, selectImageBtn.Width, selectImageBtn.Height, 10, 10));
+
+            PictureBox imagePreview = new PictureBox
+            {
+                Location = new Point(30, 225),
+                Size = new Size(modal.Width - 60, 100),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = Color.FromArgb(55, 59, 65),
+                Visible = false
+            };
+            imagePreview.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, imagePreview.Width, imagePreview.Height, 10, 10));
+
+            selectImageBtn.Click += (s, e) =>
+            {
+                using (OpenFileDialog openFile = new OpenFileDialog())
+                {
+                    openFile.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+                    if (openFile.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            byte[] imageBytes = File.ReadAllBytes(openFile.FileName);
+                            _habitImageBase64 = "data:image/jpeg;base64," + Convert.ToBase64String(imageBytes);
+                            imagePreview.Image = Image.FromFile(openFile.FileName);
+                            imagePreview.Visible = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error al cargar imagen: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            };
+
             Label descLabel = new Label
             {
                 Text = "DESCRIPCIÓN",
                 Font = new Font("Segoe UI", 9, FontStyle.Bold),
                 ForeColor = Color.FromArgb(209, 213, 219),
-                Location = new Point(30, 155)
+                Location = new Point(30, 340)
             };
 
             TextBox descText = new TextBox
             {
                 BackColor = Color.FromArgb(55, 59, 65),
                 ForeColor = Color.White,
-                Location = new Point(30, 180),
-                Size = new Size(modal.Width - 60, 100),
+                Location = new Point(30, 365),
+                Size = new Size(modal.Width - 60, 80),
                 Multiline = true,
                 BorderStyle = BorderStyle.None,
                 Font = new Font("Segoe UI", 11)
@@ -740,7 +925,7 @@ namespace Bettr_Desktop_App
                 Text = "Compartir",
                 BackColor = Color.FromArgb(250, 204, 21),
                 ForeColor = Color.FromArgb(28, 31, 34),
-                Location = new Point(30, modal.Height - 80),
+                Location = new Point(30, 465),
                 Size = new Size(modal.Width - 60, 45),
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 FlatStyle = FlatStyle.Flat,
@@ -788,12 +973,580 @@ namespace Bettr_Desktop_App
             modal.Controls.Add(closeLabel);
             modal.Controls.Add(typeLabel);
             modal.Controls.Add(typeCombo);
+            modal.Controls.Add(imageLabel);
+            modal.Controls.Add(selectImageBtn);
+            modal.Controls.Add(imagePreview);
             modal.Controls.Add(descLabel);
             modal.Controls.Add(descText);
             modal.Controls.Add(shareBtn);
 
             modalOverlay.Controls.Add(modal);
             modalOverlay.ShowDialog();
+        }
+
+        private async void ShowFollowersFollowing(string type)
+        {
+            Form modalOverlay = new Form
+            {
+                BackColor = Color.FromArgb(150, 0, 0, 0),
+                Size = this.Size,
+                StartPosition = FormStartPosition.Manual,
+                Location = this.Location,
+                FormBorderStyle = FormBorderStyle.None,
+                TopMost = true
+            };
+
+            Panel modal = new Panel
+            {
+                BackColor = Color.FromArgb(42, 46, 51),
+                Size = new Size(450, 500),
+                Location = new Point((modalOverlay.Width - 450) / 2, (modalOverlay.Height - 500) / 2)
+            };
+            modal.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, modal.Width, modal.Height, 30, 30));
+
+            string titleText = type == "followers" ? "Seguidores" : "Siguiendo";
+
+            Label titleLabel = new Label
+            {
+                Text = titleText,
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(30, 20)
+            };
+
+            Label closeLabel = new Label
+            {
+                Text = "X",
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = Color.FromArgb(209, 213, 219),
+                Location = new Point(modal.Width - 50, 15),
+                AutoSize = true,
+                Cursor = Cursors.Hand
+            };
+            closeLabel.Click += (s, e) =>
+            {
+                modalOverlay.Close();
+                modalOverlay.Dispose();
+            };
+
+            Panel listPanel = new Panel
+            {
+                Location = new Point(20, 70),
+                Size = new Size(modal.Width - 40, 380),
+                AutoScroll = true
+            };
+
+            modal.Controls.Add(titleLabel);
+            modal.Controls.Add(closeLabel);
+            modal.Controls.Add(listPanel);
+
+            modalOverlay.Controls.Add(modal);
+            modalOverlay.ShowDialog();
+
+            Label loadingLabel = new Label
+            {
+                Text = "Cargando...",
+                ForeColor = Color.FromArgb(209, 213, 219),
+                AutoSize = true,
+                Location = new Point(10, 10)
+            };
+            listPanel.Controls.Add(loadingLabel);
+
+            List<User> users = type == "followers" 
+                ? await _apiService.GetFollowersAsync(ApiService.CurrentUser.Id)
+                : await _apiService.GetFollowingAsync(ApiService.CurrentUser.Id);
+
+            listPanel.Controls.Clear();
+
+            if (users.Count == 0)
+            {
+                Label emptyLabel = new Label
+                {
+                    Text = type == "followers" ? "No tienes seguidores" : "No sigues a nadie",
+                    ForeColor = Color.FromArgb(156, 163, 175),
+                    AutoSize = true,
+                    Location = new Point(10, 10)
+                };
+                listPanel.Controls.Add(emptyLabel);
+            }
+            else
+            {
+                int yPos = 10;
+                foreach (var user in users)
+                {
+                    bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
+                    AddUserCard(user, isFollowing, ref yPos, listPanel);
+                }
+            }
+        }
+
+        private void AddUserCard(User user, bool isFollowing, ref int yPos, Panel parentPanel)
+        {
+            Panel userCard = new Panel
+            {
+                BackColor = Color.FromArgb(55, 59, 65),
+                Location = new Point(0, yPos),
+                Size = new Size(parentPanel.Width - 20, 70),
+                Name = "userCard"
+            };
+            userCard.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, userCard.Width, userCard.Height, 15, 15));
+
+            string avatarLetter = user.Name?[0].ToString().ToUpper() ?? "U";
+
+            PictureBox avatar = new PictureBox
+            {
+                Size = new Size(44, 44),
+                Location = new Point(15, 13),
+                BackColor = Color.FromArgb(102, 126, 234),
+                SizeMode = PictureBoxSizeMode.Zoom
+            };
+            avatar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, 44, 44, 22, 22));
+            Label avatarLabel = new Label
+            {
+                Text = avatarLetter,
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.White,
+                AutoSize = false,
+                Size = avatar.Size,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            avatar.Controls.Add(avatarLabel);
+
+            Label nameLabel = new Label
+            {
+                Text = user.Name ?? "Usuario",
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(70, 15)
+            };
+
+            Label usernameLabel = new Label
+            {
+                Text = "@" + (user.Username ?? "user"),
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Color.FromArgb(156, 163, 175),
+                Location = new Point(70, 38)
+            };
+
+            Button followBtn = new Button
+            {
+                Text = isFollowing ? "Siguiendo" : "Seguir",
+                Location = new Point(userCard.Width - 100, 18),
+                Size = new Size(85, 35),
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Tag = user.Id
+            };
+            followBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, 85, 35, 15, 15));
+
+            if (isFollowing)
+            {
+                followBtn.BackColor = Color.FromArgb(55, 59, 65);
+                followBtn.ForeColor = Color.White;
+            }
+            else
+            {
+                followBtn.BackColor = Color.FromArgb(250, 204, 21);
+                followBtn.ForeColor = Color.FromArgb(28, 31, 34);
+            }
+            followBtn.FlatStyle = FlatStyle.Flat;
+            followBtn.FlatAppearance.BorderSize = 0;
+            followBtn.Click += async (s, e) => await ToggleFollow(followBtn, user.Id);
+
+            userCard.Controls.Add(avatar);
+            userCard.Controls.Add(nameLabel);
+            userCard.Controls.Add(usernameLabel);
+            userCard.Controls.Add(followBtn);
+
+            parentPanel.Controls.Add(userCard);
+            yPos += userCard.Height + 10;
+        }
+
+        private async Task ToggleFollow(Button button, int userId)
+        {
+            bool isFollowing = button.Text == "Siguiendo";
+            bool success;
+
+            if (isFollowing)
+            {
+                success = await _apiService.UnfollowUserAsync(ApiService.CurrentUser.Id, userId);
+            }
+            else
+            {
+                success = await _apiService.FollowUserAsync(ApiService.CurrentUser.Id, userId);
+            }
+
+            if (success)
+            {
+                if (isFollowing)
+                {
+                    button.Text = "Seguir";
+                    button.BackColor = Color.FromArgb(250, 204, 21);
+                    button.ForeColor = Color.FromArgb(28, 31, 34);
+                }
+                else
+                {
+                    button.Text = "Siguiendo";
+                    button.BackColor = Color.FromArgb(55, 59, 65);
+                    button.ForeColor = Color.White;
+                }
+            }
+        }
+
+        private void OpenEditProfileModal()
+        {
+            Form modalOverlay = new Form
+            {
+                BackColor = Color.FromArgb(150, 0, 0, 0),
+                Size = this.Size,
+                StartPosition = FormStartPosition.Manual,
+                Location = this.Location,
+                FormBorderStyle = FormBorderStyle.None,
+                TopMost = true
+            };
+
+            Panel modal = new Panel
+            {
+                BackColor = Color.FromArgb(42, 46, 51),
+                Size = new Size(450, 400),
+                Location = new Point((modalOverlay.Width - 450) / 2, (modalOverlay.Height - 400) / 2)
+            };
+            modal.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, modal.Width, modal.Height, 30, 30));
+
+            Label titleLabel = new Label
+            {
+                Text = "Editar Perfil",
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                ForeColor = Color.White,
+                Location = new Point(30, 25)
+            };
+
+            Label closeLabel = new Label
+            {
+                Text = "X",
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = Color.FromArgb(209, 213, 219),
+                Location = new Point(modal.Width - 50, 20),
+                AutoSize = true,
+                Cursor = Cursors.Hand
+            };
+            closeLabel.Click += (s, e) =>
+            {
+                modalOverlay.Close();
+                modalOverlay.Dispose();
+            };
+
+            Label avatarLabelText = new Label
+            {
+                Text = "AVATAR",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = Color.FromArgb(209, 213, 219),
+                Location = new Point(30, 70)
+            };
+
+            Button selectAvatarBtn = new Button
+            {
+                Text = "Cambiar Avatar",
+                BackColor = Color.FromArgb(55, 59, 65),
+                ForeColor = Color.White,
+                Location = new Point(30, 95),
+                Size = new Size(modal.Width - 60, 35),
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 10)
+            };
+            selectAvatarBtn.FlatAppearance.BorderSize = 0;
+            selectAvatarBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, selectAvatarBtn.Width, selectAvatarBtn.Height, 10, 10));
+
+            string newAvatarBase64 = "";
+
+            selectAvatarBtn.Click += (s, e) =>
+            {
+                using (OpenFileDialog openFile = new OpenFileDialog())
+                {
+                    openFile.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+                    if (openFile.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            byte[] imageBytes = File.ReadAllBytes(openFile.FileName);
+                            newAvatarBase64 = "data:image/jpeg;base64," + Convert.ToBase64String(imageBytes);
+                            MessageBox.Show("Avatar seleccionado", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            };
+
+            Label descLabel = new Label
+            {
+                Text = "DESCRIPCIÓN",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                ForeColor = Color.FromArgb(209, 213, 219),
+                Location = new Point(30, 150)
+            };
+
+            TextBox descText = new TextBox
+            {
+                BackColor = Color.FromArgb(55, 59, 65),
+                ForeColor = Color.White,
+                Location = new Point(30, 175),
+                Size = new Size(modal.Width - 60, 80),
+                Multiline = true,
+                BorderStyle = BorderStyle.None,
+                Font = new Font("Segoe UI", 11),
+                Text = ApiService.CurrentUser.Description ?? ""
+            };
+            descText.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, descText.Width, descText.Height, 15, 15));
+
+            Button saveBtn = new Button
+            {
+                Text = "Guardar Cambios",
+                BackColor = Color.FromArgb(250, 204, 21),
+                ForeColor = Color.FromArgb(28, 31, 34),
+                Location = new Point(30, 280),
+                Size = new Size(modal.Width - 60, 45),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                FlatAppearance = { BorderSize = 0 }
+            };
+            saveBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, saveBtn.Width, saveBtn.Height, 20, 20));
+            saveBtn.Click += async (s, e) =>
+            {
+                saveBtn.Enabled = false;
+                saveBtn.Text = "Guardando...";
+
+                try
+                {
+                    string avatarToSave = string.IsNullOrEmpty(newAvatarBase64) 
+                        ? ApiService.CurrentUser.Avatar 
+                        : newAvatarBase64;
+
+                    bool success = await _apiService.UpdateProfileAsync(
+                        ApiService.CurrentUser.Id,
+                        descText.Text,
+                        avatarToSave
+                    );
+
+                    if (success)
+                    {
+                        MessageBox.Show("Perfil actualizado!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        modalOverlay.Close();
+                        modalOverlay.Dispose();
+                        _ = LoadProfile();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error al actualizar perfil.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    saveBtn.Enabled = true;
+                    saveBtn.Text = "Guardar Cambios";
+                }
+            };
+
+            modal.Controls.Add(titleLabel);
+            modal.Controls.Add(closeLabel);
+            modal.Controls.Add(avatarLabelText);
+            modal.Controls.Add(selectAvatarBtn);
+            modal.Controls.Add(descLabel);
+            modal.Controls.Add(descText);
+            modal.Controls.Add(saveBtn);
+
+            modalOverlay.Controls.Add(modal);
+            modalOverlay.ShowDialog();
+        }
+
+        private async Task LoadOtherUserProfile(int userId)
+        {
+            _currentPage = "otherprofile";
+            lblPageTitle.Text = "Perfil";
+            ClearButtonsHighlight();
+
+            panelContent.Controls.Clear();
+
+            Label loadingLabel = new Label
+            {
+                Text = "Cargando...",
+                ForeColor = Color.FromArgb(209, 213, 219),
+                AutoSize = true,
+                Location = new Point(30, 30),
+                Font = new Font("Segoe UI", 10)
+            };
+            panelContent.Controls.Add(loadingLabel);
+
+            try
+            {
+                User user = await _apiService.GetUserByIdAsync(userId);
+                if (user == null)
+                {
+                    panelContent.Controls.Clear();
+                    AddEmptyState("Error", "Usuario no encontrado");
+                    return;
+                }
+
+                Dictionary<string, int> stats = await _apiService.GetUserStatsAsync(userId);
+                bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, userId);
+
+                panelContent.Controls.Clear();
+
+                Panel profileCard = new Panel
+                {
+                    BackColor = Color.FromArgb(42, 46, 51),
+                    Location = new Point(30, 20),
+                    Size = new Size(panelContent.Width - 60, 280),
+                    Name = "profileCard"
+                };
+                profileCard.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, profileCard.Width, profileCard.Height, 20, 20));
+
+                PictureBox avatar = new PictureBox
+                {
+                    Size = new Size(100, 100),
+                    Location = new Point((profileCard.Width - 100) / 2, 30),
+                    BackColor = Color.FromArgb(102, 126, 234),
+                    SizeMode = PictureBoxSizeMode.Zoom
+                };
+                avatar.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, 100, 100, 50, 50));
+
+                if (!string.IsNullOrEmpty(user.Avatar) && user.Avatar.StartsWith("data:image"))
+                {
+                    avatar.Image = Base64ToImage(user.Avatar);
+                }
+                else
+                {
+                    Label avatarLetter = new Label
+                    {
+                        Text = user.Name?[0].ToString().ToUpper() ?? "U",
+                        Font = new Font("Segoe UI", 36, FontStyle.Bold),
+                        ForeColor = Color.White,
+                        AutoSize = false,
+                        Size = avatar.Size,
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+                    avatar.Controls.Add(avatarLetter);
+                }
+
+                Label nameLabel = new Label
+                {
+                    Text = user.Name ?? "Usuario",
+                    Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                    ForeColor = Color.White,
+                    AutoSize = true,
+                    Location = new Point((profileCard.Width - 200) / 2, 145)
+                };
+
+                Label usernameLabel = new Label
+                {
+                    Text = "@" + (user.Username ?? "user"),
+                    Font = new Font("Segoe UI", 11),
+                    ForeColor = Color.FromArgb(156, 163, 175),
+                    AutoSize = true,
+                    Location = new Point((profileCard.Width - 100) / 2, 170)
+                };
+
+                if (!string.IsNullOrEmpty(user.Description))
+                {
+                    Label descLabel = new Label
+                    {
+                        Text = user.Description,
+                        Font = new Font("Segoe UI", 10),
+                        ForeColor = Color.FromArgb(156, 163, 175),
+                        Location = new Point(30, 195),
+                        Size = new Size(profileCard.Width - 60, 50),
+                        AutoSize = false
+                    };
+                    profileCard.Controls.Add(descLabel);
+                }
+
+                int statsY = 230;
+                int statWidth = (profileCard.Width - 60) / 3;
+
+                AddStatItem(profileCard, stats["followers"].ToString(), "Seguidores", 30, statsY, statWidth);
+                AddStatItem(profileCard, stats["following"].ToString(), "Siguiendo", 30 + statWidth, statsY, statWidth);
+                AddStatItem(profileCard, stats["habits"].ToString(), "Hábitos", 30 + statWidth * 2, statsY, statWidth);
+
+                profileCard.Controls.Add(avatar);
+                profileCard.Controls.Add(nameLabel);
+                profileCard.Controls.Add(usernameLabel);
+
+                Button followBtn = new Button
+                {
+                    Text = isFollowing ? "Siguiendo" : "Seguir",
+                    BackColor = isFollowing ? Color.FromArgb(55, 59, 65) : Color.FromArgb(250, 204, 21),
+                    ForeColor = isFollowing ? Color.White : Color.FromArgb(28, 31, 34),
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(30, 315),
+                    Size = new Size(panelContent.Width - 60, 45),
+                    Font = new Font("Segoe UI", 11, FontStyle.Bold)
+                };
+                followBtn.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, followBtn.Width, followBtn.Height, 20, 20));
+                followBtn.FlatAppearance.BorderSize = 0;
+                followBtn.Click += async (s, e) =>
+                {
+                    bool success;
+                    if (isFollowing)
+                    {
+                        success = await _apiService.UnfollowUserAsync(ApiService.CurrentUser.Id, userId);
+                    }
+                    else
+                    {
+                        success = await _apiService.FollowUserAsync(ApiService.CurrentUser.Id, userId);
+                    }
+
+                    if (success)
+                    {
+                        isFollowing = !isFollowing;
+                        followBtn.Text = isFollowing ? "Siguiendo" : "Seguir";
+                        followBtn.BackColor = isFollowing ? Color.FromArgb(55, 59, 65) : Color.FromArgb(250, 204, 21);
+                        followBtn.ForeColor = isFollowing ? Color.White : Color.FromArgb(28, 31, 34);
+                    }
+                };
+
+                Label habitsTitle = new Label
+                {
+                    Text = "Hábitos de " + user.Name,
+                    Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                    ForeColor = Color.White,
+                    Location = new Point(30, 375)
+                };
+
+                panelContent.Controls.Add(profileCard);
+                panelContent.Controls.Add(followBtn);
+                panelContent.Controls.Add(habitsTitle);
+
+                List<Habit> userHabits = await _apiService.GetUserHabitsAsync(userId);
+                if (userHabits.Count == 0)
+                {
+                    Label noHabitsLabel = new Label
+                    {
+                        Text = "Este usuario no tiene hábitos todavía",
+                        Font = new Font("Segoe UI", 10),
+                        ForeColor = Color.FromArgb(156, 163, 175),
+                        Location = new Point(30, 410)
+                    };
+                    panelContent.Controls.Add(noHabitsLabel);
+                }
+                else
+                {
+                    int yPos = 440;
+                    foreach (var habit in userHabits)
+                    {
+                        AddHabitCard(habit, ref yPos);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                panelContent.Controls.Clear();
+                AddEmptyState("Error", $"Error al cargar perfil: {ex.Message}");
+            }
         }
     }
 }
