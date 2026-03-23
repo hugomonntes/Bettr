@@ -611,5 +611,67 @@ namespace Bettr_Desktop_App.Api
                 return $"{(int)diff.TotalDays}d";
             return $"{(int)(diff.TotalDays / 7)}sem";
         }
+
+        public async Task<List<User>> GetFollowersAsync(int userId)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/users/{userId}/followers";
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    return DeserializeJson<List<User>>(jsonResponse) ?? new List<User>();
+                }
+
+                return new List<User>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting followers: {ex.Message}");
+                return new List<User>();
+            }
+        }
+
+        public async Task<List<User>> GetFollowingAsync(int userId)
+        {
+            try
+            {
+                string url = $"{BaseUrl}/users/{userId}/following";
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                    return DeserializeJson<List<User>>(jsonResponse) ?? new List<User>();
+                }
+
+                return new List<User>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting following: {ex.Message}");
+                return new List<User>();
+            }
+        }
+
+        public async Task<bool> UpdateUserDescriptionAsync(int userId, string description)
+        {
+            try
+            {
+                var json = $"{{\"description\":\"{EscapeJsonString(description)}\"}}";
+                string url = $"{BaseUrl}/users/{userId}/description";
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync(url, content);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating description: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
