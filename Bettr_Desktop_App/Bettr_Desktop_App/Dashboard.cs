@@ -107,7 +107,7 @@ namespace Bettr_Desktop_App
 
         private async void Dashboard_Load(object sender, EventArgs e)
         {
-            panelContent.AutoScroll = false;
+            panelContent.AutoScroll = true;
             panelContent.HorizontalScroll.Enabled = false;
             panelContent.HorizontalScroll.Visible = false;
             panelContent.VerticalScroll.Enabled = false;
@@ -392,11 +392,9 @@ namespace Bettr_Desktop_App
                 };
 
                 int statsY = 210;
-                int statWidth = (profileCard.Width - 60) / 3;
+                int statWidth = profileCard.Width - 60;
 
-                AddStatItem(profileCard, stats["followers"].ToString(), "Seguidores", 30, statsY, statWidth);
-                AddStatItem(profileCard, stats["following"].ToString(), "Siguiendo", 30 + statWidth, statsY, statWidth);
-                AddStatItem(profileCard, stats["habits"].ToString(), "Hábitos", 30 + statWidth * 2, statsY, statWidth);
+                AddStatItem(profileCard, stats["habits"].ToString(), "Hábitos", 30, statsY, statWidth);
 
                 profileCard.Controls.Add(avatar);
                 profileCard.Controls.Add(nameLabel);
@@ -444,47 +442,9 @@ namespace Bettr_Desktop_App
                 logoutBtn.FlatAppearance.BorderSize = 0;
                 logoutBtn.Click += btnLogout_Click;
 
-                Panel statsPanel = new Panel
-                {
-                    Location = new Point(30, 360),
-                    Size = new Size(panelContent.Width - 60, 60)
-                };
-
-                Button followersBtn = new Button
-                {
-                    Text = $"{stats["followers"]} Seguidores",
-                    BackColor = Color.Transparent,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
-                    Location = new Point(0, 0),
-                    Size = new Size((statsPanel.Width - 20) / 2, 50),
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                    Tag = "followers"
-                };
-                followersBtn.FlatAppearance.BorderSize = 0;
-                followersBtn.Click += (s, e) => ShowFollowersFollowing("followers");
-
-                Button followingBtn = new Button
-                {
-                    Text = $"{stats["following"]} Siguiendo",
-                    BackColor = Color.Transparent,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
-                    Location = new Point(10 + followersBtn.Width, 0),
-                    Size = new Size((statsPanel.Width - 20) / 2, 50),
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                    Tag = "following"
-                };
-                followingBtn.FlatAppearance.BorderSize = 0;
-                followingBtn.Click += (s, e) => ShowFollowersFollowing("following");
-
-                statsPanel.Controls.Add(followersBtn);
-                statsPanel.Controls.Add(followingBtn);
-
                 panelContent.Controls.Add(profileCard);
                 panelContent.Controls.Add(editProfileBtn);
                 panelContent.Controls.Add(logoutBtn);
-                panelContent.Controls.Add(statsPanel);
             }
             catch (Exception ex)
             {
@@ -1125,7 +1085,7 @@ namespace Bettr_Desktop_App
             {
                 Location = new Point(20, 70),
                 Size = new Size(modal.Width - 40, 380),
-                AutoScroll = false,
+                AutoScroll = true,
                 HorizontalScroll = { Enabled = false, Visible = false },
                 VerticalScroll = { Enabled = false, Visible = false }
             };
