@@ -818,11 +818,12 @@ namespace Bettr_Desktop_App
         {
             Form modalOverlay = new Form
             {
-                BackColor = Color.FromArgb(150, 0, 0, 0),
+                BackColor = Color.Black,
                 Size = this.Size,
                 StartPosition = FormStartPosition.Manual,
                 Location = this.Location,
                 FormBorderStyle = FormBorderStyle.None,
+                Opacity = 0.9,
                 TopMost = true
             };
 
@@ -1018,11 +1019,12 @@ namespace Bettr_Desktop_App
         {
             Form modalOverlay = new Form
             {
-                BackColor = Color.FromArgb(150, 0, 0, 0),
+                BackColor = Color.Black,
                 Size = this.Size,
                 StartPosition = FormStartPosition.Manual,
                 Location = this.Location,
                 FormBorderStyle = FormBorderStyle.None,
+                Opacity = 0.9,
                 TopMost = true
             };
 
@@ -1195,11 +1197,12 @@ namespace Bettr_Desktop_App
         {
             Form modalOverlay = new Form
             {
-                BackColor = Color.FromArgb(150, 0, 0, 0),
+                BackColor = Color.Black,
                 Size = this.Size,
                 StartPosition = FormStartPosition.Manual,
                 Location = this.Location,
                 FormBorderStyle = FormBorderStyle.None,
+                Opacity = 0.9,
                 TopMost = true
             };
 
