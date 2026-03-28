@@ -311,15 +311,18 @@ namespace Bettr_Desktop_App
             try
             {
                 List<User> users = await _apiService.SearchUsersAsync(query);
-                if (users != null)
+                if (users != null && ApiService.CurrentUser != null)
                 {
-                    users = users.Where(u => u.Id != ApiService.CurrentUser.Id).ToList();
+                    users = users.Where(u => u != null && u.Id != ApiService.CurrentUser.Id).ToList();
 
                     int yPos = searchBoxHeight + 20;
                     foreach (var user in users)
                     {
-                        bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
-                        yPos = await AddUserCard(user, isFollowing, yPos);
+                        if (user != null)
+                        {
+                            bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
+                            yPos = await AddUserCard(user, isFollowing, yPos);
+                        }
                     }
                 }
             }
