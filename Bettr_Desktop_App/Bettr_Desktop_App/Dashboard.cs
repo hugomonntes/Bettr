@@ -31,21 +31,31 @@ namespace Bettr_Desktop_App
         public Dashboard()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.ControlBox = false;
             this.MaximizeBox = false;
             this.MinimizeBox = true;
+            this.Size = new Size(1200, 800);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = Color.FromArgb(28, 31, 34);
             CreateWindowControls();
             LoadIcon();
         }
 
         private void CreateWindowControls()
         {
+            Panel titleBar = new Panel
+            {
+                Size = new Size(this.Width, 40),
+                Location = new Point(0, 0),
+                BackColor = Color.FromArgb(28, 31, 34)
+            };
+
             Button btnMinimize = new Button
             {
                 Text = "─",
                 Size = new Size(50, 40),
-                Location = new Point(this.Width - 160, 0),
+                Location = new Point(this.Width - 110, 0),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(42, 46, 51),
                 ForeColor = Color.White,
@@ -58,7 +68,7 @@ namespace Bettr_Desktop_App
             {
                 Text = "✕",
                 Size = new Size(50, 40),
-                Location = new Point(this.Width - 60, 0),
+                Location = new Point(this.Width - 50, 0),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(239, 68, 68),
                 ForeColor = Color.White,
@@ -67,12 +77,14 @@ namespace Bettr_Desktop_App
             };
             btnClose.Click += (s, e) => Application.Exit();
 
-            this.Controls.Add(btnMinimize);
-            this.Controls.Add(btnClose);
+            titleBar.Controls.Add(btnMinimize);
+            titleBar.Controls.Add(btnClose);
+            this.Controls.Add(titleBar);
 
             this.Resize += (s, e) => {
-                btnMinimize.Location = new Point(this.Width - 160, 0);
-                btnClose.Location = new Point(this.Width - 60, 0);
+                titleBar.Size = new Size(this.Width, 40);
+                btnMinimize.Location = new Point(this.Width - 110, 0);
+                btnClose.Location = new Point(this.Width - 50, 0);
             };
         }
 
@@ -1122,8 +1134,7 @@ namespace Bettr_Desktop_App
                 Location = new Point(20, 70),
                 Size = new Size(modal.Width - 40, 380),
                 AutoScroll = true,
-                HorizontalScroll = { Enabled = false, Visible = false },
-                VerticalScroll = { Enabled = false, Visible = false }
+                HorizontalScroll = { Enabled = false, Visible = false }
             };
 
             modal.Controls.Add(titleLabel);
@@ -1133,40 +1144,69 @@ namespace Bettr_Desktop_App
             modalOverlay.Controls.Add(modal);
             modalOverlay.ShowDialog();
 
-            Label loadingLabel = new Label
+            try
             {
-                Text = "Cargando...",
-                ForeColor = Color.FromArgb(209, 213, 219),
-                AutoSize = true,
-                Location = new Point(10, 10)
-            };
-            listPanel.Controls.Add(loadingLabel);
-
-            List<User> users = type == "followers" 
-                ? await _apiService.GetFollowersAsync(ApiService.CurrentUser.Id)
-                : await _apiService.GetFollowingAsync(ApiService.CurrentUser.Id);
-
-            listPanel.Controls.Clear();
-
-            if (users.Count == 0)
-            {
-                Label emptyLabel = new Label
+                Label loadingLabel = new Label
                 {
-                    Text = type == "followers" ? "No tienes seguidores" : "No sigues a nadie",
-                    ForeColor = Color.FromArgb(156, 163, 175),
+                    Text = "Cargando...",
+                    ForeColor = Color.FromArgb(209, 213, 219),
                     AutoSize = true,
                     Location = new Point(10, 10)
                 };
-                listPanel.Controls.Add(emptyLabel);
-            }
-            else
-            {
-                int yPos = 10;
-                foreach (var user in users)
+                listPanel.Controls.Add(loadingLabel);
+
+                if (ApiService.CurrentUser == null)
                 {
-                    bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
-                    yPos = AddUserCard(user, isFollowing, yPos, listPanel);
+                    listPanel.Controls.Clear();
+                    Label errorLabel = new Label
+                    {
+                        Text = "Usuario no encontrado",
+                        ForeColor = Color.FromArgb(156, 163, 175),
+                        AutoSize = true,
+                        Location = new Point(10, 10)
+                    };
+                    listPanel.Controls.Add(errorLabel);
+                    return;
                 }
+
+                List<User> users = type == "followers" 
+                    ? await _apiService.GetFollowersAsync(ApiService.CurrentUser.Id)
+                    : await _apiService.GetFollowingAsync(ApiService.CurrentUser.Id);
+
+                listPanel.Controls.Clear();
+
+                if (users == null || users.Count == 0)
+                {
+                    Label emptyLabel = new Label
+                    {
+                        Text = type == "followers" ? "No tienes seguidores" : "No sigues a nadie",
+                        ForeColor = Color.FromArgb(156, 163, 175),
+                        AutoSize = true,
+                        Location = new Point(10, 10)
+                    };
+                    listPanel.Controls.Add(emptyLabel);
+                }
+                else
+                {
+                    int yPos = 10;
+                    foreach (var user in users)
+                    {
+                        bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
+                        yPos = AddUserCard(user, isFollowing, yPos, listPanel);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                listPanel.Controls.Clear();
+                Label errorLabel = new Label
+                {
+                    Text = "Error: " + ex.Message,
+                    ForeColor = Color.FromArgb(239, 68, 68),
+                    AutoSize = true,
+                    Location = new Point(10, 10)
+                };
+                listPanel.Controls.Add(errorLabel);
             }
         }
 
