@@ -41,7 +41,10 @@ namespace Bettr_Desktop_App
                 string iconPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "app.ico");
                 if (System.IO.File.Exists(iconPath))
                 {
-                    this.Icon = new Icon(iconPath);
+                    using (var fs = new System.IO.FileStream(iconPath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                    {
+                        this.Icon = new Icon(fs);
+                    }
                     picLogo.Image = Image.FromFile(iconPath);
                 }
             }
