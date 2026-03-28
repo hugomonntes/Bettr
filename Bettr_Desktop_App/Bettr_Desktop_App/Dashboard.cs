@@ -152,6 +152,11 @@ namespace Bettr_Desktop_App
 
             try
             {
+                if (ApiService.CurrentUser == null)
+                {
+                    AddEmptyState("Error", "Usuario no encontrado");
+                    return;
+                }
                 List<Habit> habits = await _apiService.GetFeedAsync(ApiService.CurrentUser.Id);
                 panelContent.Controls.Clear();
 
@@ -197,6 +202,11 @@ namespace Bettr_Desktop_App
 
             try
             {
+                if (ApiService.CurrentUser == null)
+                {
+                    AddEmptyState("Error", "Usuario no encontrado");
+                    return;
+                }
                 List<Habit> habits = await _apiService.GetUserHabitsAsync(ApiService.CurrentUser.Id);
                 panelContent.Controls.Clear();
 
@@ -542,7 +552,11 @@ namespace Bettr_Desktop_App
 
         private async Task<int> AddHabitCard(Habit habit, int yPos)
         {
-            bool isLiked = await _apiService.IsLikedAsync(habit.Id, ApiService.CurrentUser.Id);
+            bool isLiked = false;
+            if (ApiService.CurrentUser != null)
+            {
+                isLiked = await _apiService.IsLikedAsync(habit.Id, ApiService.CurrentUser.Id);
+            }
 
             int cardHeight = 180;
             if (!string.IsNullOrEmpty(habit.Image_url) && habit.Image_url.StartsWith("data:image"))
