@@ -1161,37 +1161,6 @@ namespace Bettr_Desktop_App
             return yPos + userCard.Height + 10;
         }
 
-        private async Task ToggleFollow(Button button, int userId)
-        {
-            bool isFollowing = button.Text == "Siguiendo";
-            bool success;
-
-            if (isFollowing)
-            {
-                success = await _apiService.UnfollowUserAsync(ApiService.CurrentUser.Id, userId);
-            }
-            else
-            {
-                success = await _apiService.FollowUserAsync(ApiService.CurrentUser.Id, userId);
-            }
-
-            if (success)
-            {
-                if (isFollowing)
-                {
-                    button.Text = "Seguir";
-                    button.BackColor = Color.FromArgb(250, 204, 21);
-                    button.ForeColor = Color.FromArgb(28, 31, 34);
-                }
-                else
-                {
-                    button.Text = "Siguiendo";
-                    button.BackColor = Color.FromArgb(55, 59, 65);
-                    button.ForeColor = Color.White;
-                }
-            }
-        }
-
         private void OpenEditProfileModal()
         {
             Form modalOverlay = new Form
