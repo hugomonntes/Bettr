@@ -1014,7 +1014,7 @@ namespace Bettr_Desktop_App
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("Error loading image: " + ex.Message);
+                            MessageBox.Show("No se pudo cargar la imagen: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -1068,18 +1068,19 @@ namespace Bettr_Desktop_App
 
                     if (success)
                     {
+                        MessageBox.Show("Tu habit ha sido publicado correctamente", "Perfecto", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         modalOverlay.Close();
                         modalOverlay.Dispose();
                         _ = LoadFeed();
                     }
                     else
                     {
-                        shareBtn.Text = "Error al compartir";
+                        MessageBox.Show("No se pudo publicar el habit. Intentalo de nuevo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    shareBtn.Text = "Error: " + ex.Message;
+                    MessageBox.Show("Ha ocurrido un error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
@@ -1448,18 +1449,19 @@ namespace Bettr_Desktop_App
 
                     if (success)
                     {
+                        MessageBox.Show("Tu perfil se ha actualizado correctamente", "Perfecto", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         modalOverlay.Close();
                         modalOverlay.Dispose();
                         _ = LoadProfile();
                     }
                     else
                     {
-                        saveBtn.Text = "Error al actualizar";
+                        MessageBox.Show("No se pudo actualizar el perfil. Intentalo de nuevo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    saveBtn.Text = "Error: " + ex.Message;
+                    MessageBox.Show("Ha ocurrido un error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
