@@ -1392,7 +1392,6 @@ namespace Bettr_Desktop_App
                     }
                 }
             };
-            };
 
             Label descLabel = new Label
             {
