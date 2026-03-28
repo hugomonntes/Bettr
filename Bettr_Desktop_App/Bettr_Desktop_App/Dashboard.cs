@@ -32,6 +32,9 @@ namespace Bettr_Desktop_App
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+            this.MaximizeBox = false;
+            this.MinimizeBox = true;
             CreateWindowControls();
             LoadIcon();
         }
@@ -41,8 +44,8 @@ namespace Bettr_Desktop_App
             Button btnMinimize = new Button
             {
                 Text = "─",
-                Size = new Size(40, 30),
-                Location = new Point(this.Width - 140, 0),
+                Size = new Size(50, 40),
+                Location = new Point(this.Width - 160, 0),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(42, 46, 51),
                 ForeColor = Color.White,
@@ -51,26 +54,10 @@ namespace Bettr_Desktop_App
             };
             btnMinimize.Click += (s, e) => this.WindowState = FormWindowState.Minimized;
 
-            Button btnMaximize = new Button
-            {
-                Text = this.WindowState == FormWindowState.Maximized ? "❐" : "□",
-                Size = new Size(40, 30),
-                Location = new Point(this.Width - 100, 0),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(42, 46, 51),
-                ForeColor = Color.White,
-                FlatAppearance = { BorderSize = 0 },
-                Cursor = Cursors.Hand
-            };
-            btnMaximize.Click += (s, e) => {
-                this.WindowState = this.WindowState == FormWindowState.Maximized ? FormWindowState.Normal : FormWindowState.Maximized;
-                btnMaximize.Text = this.WindowState == FormWindowState.Maximized ? "❐" : "□";
-            };
-
             Button btnClose = new Button
             {
                 Text = "✕",
-                Size = new Size(40, 30),
+                Size = new Size(50, 40),
                 Location = new Point(this.Width - 60, 0),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(239, 68, 68),
@@ -81,12 +68,10 @@ namespace Bettr_Desktop_App
             btnClose.Click += (s, e) => Application.Exit();
 
             this.Controls.Add(btnMinimize);
-            this.Controls.Add(btnMaximize);
             this.Controls.Add(btnClose);
 
             this.Resize += (s, e) => {
-                btnMinimize.Location = new Point(this.Width - 140, 0);
-                btnMaximize.Location = new Point(this.Width - 100, 0);
+                btnMinimize.Location = new Point(this.Width - 160, 0);
                 btnClose.Location = new Point(this.Width - 60, 0);
             };
         }
@@ -250,12 +235,11 @@ namespace Bettr_Desktop_App
                 BackColor = Color.FromArgb(55, 59, 65),
                 ForeColor = Color.White,
                 Location = new Point(30, 20),
-                Size = new Size(panelContent.Width - 60, 35),
-                Font = new Font("Segoe UI", 11),
-                BorderStyle = BorderStyle.None,
+                Size = new Size(panelContent.Width - 60, 45),
+                Font = new Font("Segoe UI", 12),
+                BorderStyle = BorderStyle.FixedSingle,
                 Text = "Buscar usuarios..."
             };
-            searchBox.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, searchBox.Width, searchBox.Height, 15, 15));
             searchBox.ForeColor = Color.FromArgb(156, 163, 175);
             searchBox.GotFocus += (s, e) => {
                 if (searchBox.Text == "Buscar usuarios...")
@@ -391,10 +375,12 @@ namespace Bettr_Desktop_App
                     Location = new Point((profileCard.Width - 100) / 2, 170)
                 };
 
-                int statsY = 210;
-                int statWidth = profileCard.Width - 60;
+                int statsY = 230;
+                int statWidth = (profileCard.Width - 60) / 3;
 
                 AddStatItem(profileCard, stats["habits"].ToString(), "Hábitos", 30, statsY, statWidth);
+                AddStatItem(profileCard, stats["followers"].ToString(), "Seguidores", 30 + statWidth, statsY, statWidth);
+                AddStatItem(profileCard, stats["following"].ToString(), "Siguiendo", 30 + statWidth * 2, statsY, statWidth);
 
                 profileCard.Controls.Add(avatar);
                 profileCard.Controls.Add(nameLabel);
@@ -442,9 +428,47 @@ namespace Bettr_Desktop_App
                 logoutBtn.FlatAppearance.BorderSize = 0;
                 logoutBtn.Click += btnLogout_Click;
 
+                Panel statsPanel = new Panel
+                {
+                    Location = new Point(30, 360),
+                    Size = new Size(panelContent.Width - 60, 60)
+                };
+
+                Button followersBtn = new Button
+                {
+                    Text = $"{stats["followers"]} Seguidores",
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(0, 0),
+                    Size = new Size((statsPanel.Width - 20) / 2, 50),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Tag = "followers"
+                };
+                followersBtn.FlatAppearance.BorderSize = 0;
+                followersBtn.Click += (s, e) => ShowFollowersFollowing("followers");
+
+                Button followingBtn = new Button
+                {
+                    Text = $"{stats["following"]} Siguiendo",
+                    BackColor = Color.Transparent,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(10 + followersBtn.Width, 0),
+                    Size = new Size((statsPanel.Width - 20) / 2, 50),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                    Tag = "following"
+                };
+                followingBtn.FlatAppearance.BorderSize = 0;
+                followingBtn.Click += (s, e) => ShowFollowersFollowing("following");
+
+                statsPanel.Controls.Add(followersBtn);
+                statsPanel.Controls.Add(followingBtn);
+
                 panelContent.Controls.Add(profileCard);
                 panelContent.Controls.Add(editProfileBtn);
                 panelContent.Controls.Add(logoutBtn);
+                panelContent.Controls.Add(statsPanel);
             }
             catch (Exception ex)
             {
@@ -838,12 +862,11 @@ namespace Bettr_Desktop_App
         {
             Form modalOverlay = new Form
             {
-                BackColor = Color.Black,
+                BackColor = Color.FromArgb(30, 30, 30),
                 Size = this.Size,
                 StartPosition = FormStartPosition.Manual,
                 Location = this.Location,
                 FormBorderStyle = FormBorderStyle.None,
-                Opacity = 0.9,
                 TopMost = true
             };
 
@@ -1039,12 +1062,11 @@ namespace Bettr_Desktop_App
         {
             Form modalOverlay = new Form
             {
-                BackColor = Color.Black,
+                BackColor = Color.FromArgb(30, 30, 30),
                 Size = this.Size,
                 StartPosition = FormStartPosition.Manual,
                 Location = this.Location,
                 FormBorderStyle = FormBorderStyle.None,
-                Opacity = 0.9,
                 TopMost = true
             };
 
@@ -1219,12 +1241,11 @@ namespace Bettr_Desktop_App
         {
             Form modalOverlay = new Form
             {
-                BackColor = Color.Black,
+                BackColor = Color.FromArgb(30, 30, 30),
                 Size = this.Size,
                 StartPosition = FormStartPosition.Manual,
                 Location = this.Location,
                 FormBorderStyle = FormBorderStyle.None,
-                Opacity = 0.9,
                 TopMost = true
             };
 
