@@ -230,16 +230,22 @@ namespace Bettr_Desktop_App
                 panelContent.Controls.Remove(c);
             }
 
+            if (ApiService.CurrentUser == null)
+                return;
+
             try
             {
                 List<User> users = await _apiService.SearchUsersAsync(query);
-                users = users.Where(u => u.Id != ApiService.CurrentUser.Id).ToList();
-
-                int yPos = searchBoxHeight + 20;
-                foreach (var user in users)
+                if (users != null)
                 {
-                    bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
-                    yPos = await AddUserCard(user, isFollowing, yPos);
+                    users = users.Where(u => u.Id != ApiService.CurrentUser.Id).ToList();
+
+                    int yPos = searchBoxHeight + 20;
+                    foreach (var user in users)
+                    {
+                        bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
+                        yPos = await AddUserCard(user, isFollowing, yPos);
+                    }
                 }
             }
             catch { }
@@ -261,6 +267,12 @@ namespace Bettr_Desktop_App
                 if (user != null)
                 {
                     ApiService.CurrentUser = user;
+                }
+
+                if (ApiService.CurrentUser == null)
+                {
+                    AddEmptyState("Error", "No se pudo cargar el perfil");
+                    return;
                 }
 
                 Dictionary<string, int> stats = await _apiService.GetUserStatsAsync(ApiService.CurrentUser.Id);
