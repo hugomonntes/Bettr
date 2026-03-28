@@ -224,8 +224,11 @@ namespace Bettr_Desktop_App
                 }
 
                 int currentUserId = ApiService.CurrentUser.Id;
-                Console.WriteLine($"Loading habits for user ID: {currentUserId}");
+                Console.WriteLine($"[LoadMyHabits] CurrentUser.Id = {currentUserId}, Username = {ApiService.CurrentUser.Username}");
+                string url = $"https://bettr-g5yv.onrender.com/rest/habits/user/{currentUserId}";
+                Console.WriteLine($"[LoadMyHabits] Request URL: {url}");
                 List<Habit> habits = await _apiService.GetUserHabitsAsync(currentUserId);
+                Console.WriteLine($"[LoadMyHabits] Got {habits.Count} habits");
                 panelContent.Controls.Clear();
 
                 if (habits.Count == 0)
