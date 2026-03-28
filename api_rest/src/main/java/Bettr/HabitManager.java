@@ -85,7 +85,6 @@ public class HabitManager {
         }
     }
 
-    // Like a habit
     @POST
     @Path("/{habitId}/like/{userId}")
     public Response likeHabit(@PathParam("habitId") int habitId, @PathParam("userId") int userId) {
@@ -105,7 +104,6 @@ public class HabitManager {
         }
     }
 
-    // Unlike a habit
     @DELETE
     @Path("/{habitId}/like/{userId}")
     public Response unlikeHabit(@PathParam("habitId") int habitId, @PathParam("userId") int userId) {
@@ -125,7 +123,6 @@ public class HabitManager {
         }
     }
 
-    // Check if user liked a habit
     @GET
     @Path("/{habitId}/isliked/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -150,7 +147,6 @@ public class HabitManager {
         }
     }
 
-    // Get user's habits
     @GET
     @Path("/user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
