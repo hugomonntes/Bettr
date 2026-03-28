@@ -193,10 +193,28 @@ namespace Bettr_Desktop_App
                 Size = new Size(panelContent.Width - 60, 35),
                 Font = new Font("Segoe UI", 11),
                 BorderStyle = BorderStyle.None,
-                PlaceholderText = "Buscar usuarios..."
+                Text = "Buscar usuarios..."
             };
             searchBox.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, searchBox.Width, searchBox.Height, 15, 15));
-            searchBox.TextChanged += async (s, e) => await SearchUsers(searchBox.Text);
+            searchBox.ForeColor = Color.FromArgb(156, 163, 175);
+            searchBox.GotFocus += (s, e) => {
+                if (searchBox.Text == "Buscar usuarios...")
+                {
+                    searchBox.Text = "";
+                    searchBox.ForeColor = Color.White;
+                }
+            };
+            searchBox.LostFocus += (s, e) => {
+                if (string.IsNullOrEmpty(searchBox.Text))
+                {
+                    searchBox.Text = "Buscar usuarios...";
+                    searchBox.ForeColor = Color.FromArgb(156, 163, 175);
+                }
+            };
+            searchBox.TextChanged += async (s, e) => {
+                if (searchBox.Text != "Buscar usuarios...")
+                    await SearchUsers(searchBox.Text);
+            };
             panelContent.Controls.Add(searchBox);
 
             await SearchUsers("");
