@@ -119,7 +119,7 @@ namespace Bettr_Desktop_App
                     int yPos = 20;
                     foreach (var habit in habits)
                     {
-                        AddHabitCard(habit, ref yPos);
+                        yPos = await AddHabitCard(habit, yPos);
                     }
                 }
             }
@@ -164,7 +164,7 @@ namespace Bettr_Desktop_App
                     int yPos = 20;
                     foreach (var habit in habits)
                     {
-                        AddHabitCard(habit, ref yPos);
+                        yPos = await AddHabitCard(habit, yPos);
                     }
                 }
             }
@@ -221,7 +221,7 @@ namespace Bettr_Desktop_App
                 foreach (var user in users)
                 {
                     bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
-                    AddUserCard(user, isFollowing, ref yPos);
+                    yPos = await AddUserCard(user, isFollowing, yPos);
                 }
             }
             catch { }
@@ -466,7 +466,7 @@ namespace Bettr_Desktop_App
             panelContent.Controls.Add(emptyPanel);
         }
 
-        private async void AddHabitCard(Habit habit, ref int yPos)
+        private async Task<int> AddHabitCard(Habit habit, int yPos)
         {
             bool isLiked = await _apiService.IsLikedAsync(habit.Id, ApiService.CurrentUser.Id);
 
@@ -621,10 +621,10 @@ namespace Bettr_Desktop_App
             card.Controls.Add(likeBtn);
 
             panelContent.Controls.Add(card);
-            yPos += card.Height + 20;
+            return yPos + card.Height + 20;
         }
 
-        private async void AddUserCard(User user, bool isFollowing, ref int yPos)
+        private async Task<int> AddUserCard(User user, bool isFollowing, int yPos)
         {
             Panel userCard = new Panel
             {
@@ -702,7 +702,7 @@ namespace Bettr_Desktop_App
             userCard.Controls.Add(followBtn);
 
             panelContent.Controls.Add(userCard);
-            yPos += userCard.Height + 10;
+            return yPos + userCard.Height + 10;
         }
 
         private async Task ToggleFollow(Button button, int userId)
@@ -1075,12 +1075,12 @@ namespace Bettr_Desktop_App
                 foreach (var user in users)
                 {
                     bool isFollowing = await _apiService.IsFollowingAsync(ApiService.CurrentUser.Id, user.Id);
-                    AddUserCard(user, isFollowing, ref yPos, listPanel);
+                    yPos = AddUserCard(user, isFollowing, yPos, listPanel);
                 }
             }
         }
 
-        private void AddUserCard(User user, bool isFollowing, ref int yPos, Panel parentPanel)
+        private int AddUserCard(User user, bool isFollowing, int yPos, Panel parentPanel)
         {
             Panel userCard = new Panel
             {
@@ -1158,7 +1158,7 @@ namespace Bettr_Desktop_App
             userCard.Controls.Add(followBtn);
 
             parentPanel.Controls.Add(userCard);
-            yPos += userCard.Height + 10;
+            return yPos + userCard.Height + 10;
         }
 
         private async Task ToggleFollow(Button button, int userId)
@@ -1538,7 +1538,7 @@ namespace Bettr_Desktop_App
                     int yPos = 440;
                     foreach (var habit in userHabits)
                     {
-                        AddHabitCard(habit, ref yPos);
+                        yPos = await AddHabitCard(habit, yPos);
                     }
                 }
             }
