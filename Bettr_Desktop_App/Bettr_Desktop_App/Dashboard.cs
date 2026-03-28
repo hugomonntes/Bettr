@@ -32,7 +32,63 @@ namespace Bettr_Desktop_App
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
+            CreateWindowControls();
             LoadIcon();
+        }
+
+        private void CreateWindowControls()
+        {
+            Button btnMinimize = new Button
+            {
+                Text = "─",
+                Size = new Size(40, 30),
+                Location = new Point(this.Width - 140, 0),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.FromArgb(42, 46, 51),
+                ForeColor = Color.White,
+                FlatAppearance = { BorderSize = 0 },
+                Cursor = Cursors.Hand
+            };
+            btnMinimize.Click += (s, e) => this.WindowState = FormWindowState.Minimized;
+
+            Button btnMaximize = new Button
+            {
+                Text = this.WindowState == FormWindowState.Maximized ? "❐" : "□",
+                Size = new Size(40, 30),
+                Location = new Point(this.Width - 100, 0),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.FromArgb(42, 46, 51),
+                ForeColor = Color.White,
+                FlatAppearance = { BorderSize = 0 },
+                Cursor = Cursors.Hand
+            };
+            btnMaximize.Click += (s, e) => {
+                this.WindowState = this.WindowState == FormWindowState.Maximized ? FormWindowState.Normal : FormWindowState.Maximized;
+                btnMaximize.Text = this.WindowState == FormWindowState.Maximized ? "❐" : "□";
+            };
+
+            Button btnClose = new Button
+            {
+                Text = "✕",
+                Size = new Size(40, 30),
+                Location = new Point(this.Width - 60, 0),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.FromArgb(239, 68, 68),
+                ForeColor = Color.White,
+                FlatAppearance = { BorderSize = 0 },
+                Cursor = Cursors.Hand
+            };
+            btnClose.Click += (s, e) => Application.Exit();
+
+            this.Controls.Add(btnMinimize);
+            this.Controls.Add(btnMaximize);
+            this.Controls.Add(btnClose);
+
+            this.Resize += (s, e) => {
+                btnMinimize.Location = new Point(this.Width - 140, 0);
+                btnMaximize.Location = new Point(this.Width - 100, 0);
+                btnClose.Location = new Point(this.Width - 60, 0);
+            };
         }
 
         private void LoadIcon()
@@ -51,7 +107,11 @@ namespace Bettr_Desktop_App
 
         private async void Dashboard_Load(object sender, EventArgs e)
         {
-            panelContent.AutoScroll = true;
+            panelContent.AutoScroll = false;
+            panelContent.HorizontalScroll.Enabled = false;
+            panelContent.HorizontalScroll.Visible = false;
+            panelContent.VerticalScroll.Enabled = false;
+            panelContent.VerticalScroll.Visible = false;
 
             if (ApiService.CurrentUser != null)
             {
@@ -1065,7 +1125,9 @@ namespace Bettr_Desktop_App
             {
                 Location = new Point(20, 70),
                 Size = new Size(modal.Width - 40, 380),
-                AutoScroll = true
+                AutoScroll = false,
+                HorizontalScroll = { Enabled = false, Visible = false },
+                VerticalScroll = { Enabled = false, Visible = false }
             };
 
             modal.Controls.Add(titleLabel);
