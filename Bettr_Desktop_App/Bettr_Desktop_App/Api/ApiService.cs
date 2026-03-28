@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Bettr_Desktop_App.Models;
@@ -22,16 +21,12 @@ namespace Bettr_Desktop_App.Api
 
         private string HashPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-                return builder.ToString();
-            }
+            return BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt(10));
+        }
+
+        private bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
         private string SerializeObject(object obj)
@@ -223,6 +218,7 @@ namespace Bettr_Desktop_App.Api
             if (dict.ContainsKey("email")) user.Email = dict["email"]?.ToString();
             if (dict.ContainsKey("description")) user.Description = dict["description"]?.ToString();
             if (dict.ContainsKey("avatar")) user.Avatar = dict["avatar"]?.ToString();
+            if (dict.ContainsKey("password_hash")) user.Password_hash = dict["password_hash"]?.ToString();
             if (dict.ContainsKey("created_at") && dict["created_at"] != null)
                 user.Created_at = DateTime.TryParse(dict["created_at"].ToString(), out var dt) ? dt : DateTime.Now;
             return user;
@@ -248,11 +244,8 @@ namespace Bettr_Desktop_App.Api
         {
             try
             {
-                string passwordHash = HashPassword(password);
                 string safeUser = Uri.EscapeDataString(username);
-                string safePass = Uri.EscapeDataString(passwordHash);
-
-                string url = $"{BaseUrl}/users/{safeUser}/{safePass}";
+                string url = $"{BaseUrl}/users/username/{safeUser}";
 
                 HttpResponseMessage response = await client.GetAsync(url);
 
@@ -264,13 +257,13 @@ namespace Bettr_Desktop_App.Api
                     var dict = ParseJsonToDictionary(responseText);
                     if (dict != null)
                     {
-                        if (dict.ContainsKey("id"))
-                        {
-                            var user = ConvertToUser(dict);
-                            CurrentUser = user;
-                            return user;
-                        }
-                        else if (dict.ContainsKey("Id"))
+                        string storedHash = null;
+                        if (dict.ContainsKey("password_hash"))
+                            storedHash = dict["password_hash"]?.ToString();
+                        else if (dict.ContainsKey("passwordHash"))
+                            storedHash = dict["passwordHash"]?.ToString();
+
+                        if (storedHash != null && VerifyPassword(password, storedHash))
                         {
                             var user = ConvertToUser(dict);
                             CurrentUser = user;
@@ -279,6 +272,10 @@ namespace Bettr_Desktop_App.Api
                     }
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return null;
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
                     return null;
                 }
