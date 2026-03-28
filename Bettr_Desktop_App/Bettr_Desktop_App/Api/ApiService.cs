@@ -122,6 +122,7 @@ namespace Bettr_Desktop_App.Api
             {
                 json = json.Substring(1, json.Length - 2);
                 int braceCount = 0;
+                int bracketCount = 0;
                 int start = 0;
                 bool inString = false;
 
@@ -133,7 +134,9 @@ namespace Bettr_Desktop_App.Api
                     {
                         if (json[i] == '{') braceCount++;
                         else if (json[i] == '}') braceCount--;
-                        else if (json[i] == ',' && braceCount == 0)
+                        else if (json[i] == '[') bracketCount++;
+                        else if (json[i] == ']') bracketCount--;
+                        else if (json[i] == ',' && braceCount == 0 && bracketCount == 0)
                         {
                             ParseKeyValue(json.Substring(start, i - start), dict);
                             start = i + 1;
@@ -183,8 +186,67 @@ namespace Bettr_Desktop_App.Api
                 dict[key] = intVal;
             else if (double.TryParse(value, out double dblVal))
                 dict[key] = dblVal;
+            else if (value.StartsWith("[") && value.EndsWith("]"))
+                dict[key] = ParseJsonArray(value);
             else
                 dict[key] = value;
+        }
+
+        private List<object> ParseJsonArray(string json)
+        {
+            var list = new List<object>();
+            json = json.Trim();
+            if (json.StartsWith("[") && json.EndsWith("]"))
+            {
+                json = json.Substring(1, json.Length - 2);
+                int braceCount = 0;
+                int bracketCount = 0;
+                int start = 0;
+                bool inString = false;
+
+                for (int i = 0; i < json.Length; i++)
+                {
+                    if (json[i] == '"' && (i == 0 || json[i - 1] != '\\'))
+                        inString = !inString;
+                    if (!inString)
+                    {
+                        if (json[i] == '{') braceCount++;
+                        else if (json[i] == '}') braceCount--;
+                        else if (json[i] == '[') bracketCount++;
+                        else if (json[i] == ']') bracketCount--;
+                        else if (json[i] == ',' && braceCount == 0 && bracketCount == 0)
+                        {
+                            list.Add(ParseJsonValue(json.Substring(start, i - start).Trim()));
+                            start = i + 1;
+                        }
+                    }
+                }
+                if (start < json.Length)
+                    list.Add(ParseJsonValue(json.Substring(start).Trim()));
+            }
+            return list;
+        }
+
+        private object ParseJsonValue(string value)
+        {
+            value = value.Trim();
+            if (value == "null")
+                return null;
+            if (value.StartsWith("{") && value.EndsWith("}"))
+                return ParseJsonToDictionary(value);
+            if (value.StartsWith("[") && value.EndsWith("]"))
+                return ParseJsonArray(value);
+            if (value.StartsWith("\"") && value.EndsWith("\""))
+                return value.Substring(1, value.Length - 2).Replace("\\\"", "\"").Replace("\\\\", "\\");
+            if (value == "true")
+                return true;
+            if (value == "false")
+                return false;
+            if (int.TryParse(value, out int intVal))
+                return intVal;
+            if (double.TryParse(value, out double dblVal))
+                return dblVal;
+            return value;
         }
 
         private List<User> ConvertToUserList(List<object> items)
