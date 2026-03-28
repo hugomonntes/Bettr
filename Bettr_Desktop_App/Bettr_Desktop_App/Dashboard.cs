@@ -459,36 +459,36 @@ namespace Bettr_Desktop_App
                     Size = new Size(panelContent.Width - 60, 60)
                 };
 
-                Button followersBtn = new Button
-                {
-                    Text = $"{stats["followers"]} Seguidores",
-                    BackColor = Color.Transparent,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
-                    Location = new Point(0, 0),
-                    Size = new Size((statsPanel.Width - 20) / 2, 50),
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                    Tag = "followers"
-                };
-                followersBtn.FlatAppearance.BorderSize = 0;
-                followersBtn.Click += (s, e) => ShowFollowersFollowing("followers");
+                //Button followersBtn = new Button
+                //{
+                //    Text = $"{stats["followers"]} Seguidores",
+                //    BackColor = Color.Transparent,
+                //    ForeColor = Color.White,
+                //    FlatStyle = FlatStyle.Flat,
+                //    Location = new Point(0, 0),
+                //    Size = new Size((statsPanel.Width - 20) / 2, 50),
+                //    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                //    Tag = "followers"
+                //};
+                //followersBtn.FlatAppearance.BorderSize = 0;
+                //followersBtn.Click += (s, e) => ShowFollowersFollowing("followers");
 
-                Button followingBtn = new Button
-                {
-                    Text = $"{stats["following"]} Siguiendo",
-                    BackColor = Color.Transparent,
-                    ForeColor = Color.White,
-                    FlatStyle = FlatStyle.Flat,
-                    Location = new Point(10 + followersBtn.Width, 0),
-                    Size = new Size((statsPanel.Width - 20) / 2, 50),
-                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                    Tag = "following"
-                };
-                followingBtn.FlatAppearance.BorderSize = 0;
-                followingBtn.Click += (s, e) => ShowFollowersFollowing("following");
+                //Button followingBtn = new Button
+                //{
+                //    Text = $"{stats["following"]} Siguiendo",
+                //    BackColor = Color.Transparent,
+                //    ForeColor = Color.White,
+                //    FlatStyle = FlatStyle.Flat,
+                //    Location = new Point(10 + followersBtn.Width, 0),
+                //    Size = new Size((statsPanel.Width - 20) / 2, 50),
+                //    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                //    Tag = "following"
+                //};
+                //followingBtn.FlatAppearance.BorderSize = 0;
+                //followingBtn.Click += (s, e) => ShowFollowersFollowing("following");
 
-                statsPanel.Controls.Add(followersBtn);
-                statsPanel.Controls.Add(followingBtn);
+                //statsPanel.Controls.Add(followersBtn);
+                //statsPanel.Controls.Add(followingBtn);
 
                 panelContent.Controls.Add(profileCard);
                 panelContent.Controls.Add(editProfileBtn);
