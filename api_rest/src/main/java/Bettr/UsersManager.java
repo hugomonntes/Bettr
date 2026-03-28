@@ -80,6 +80,39 @@ public class UsersManager {
         }
     }
 
+    // 1.1. LOGIN - OBTENER USUARIO POR USERNAME (CON PASSWORD_HASH)
+    @GET
+    @Path("/username/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserByUsername(@PathParam("username") String username) {
+        try {
+            Class.forName("org.postgresql.Driver");
+            try (Connection conn = DriverManager.getConnection(url, this.user, password)) {
+                String query = "SELECT id, name, username, email, description, avatar, password_hash FROM users WHERE username = ?";
+                try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                    pstmt.setString(1, username);
+                    try (ResultSet rs = pstmt.executeQuery()) {
+                        if (rs.next()) {
+                            Users u = new Users();
+                            u.setId(rs.getInt("id"));
+                            u.setName(rs.getString("name"));
+                            u.setUsername(rs.getString("username"));
+                            u.setEmail(rs.getString("email"));
+                            u.setDescription(rs.getString("description"));
+                            u.setAvatar(rs.getString("avatar"));
+                            u.setPassword_hash(rs.getString("password_hash"));
+                            return Response.ok(u).build();
+                        } else {
+                            return Response.status(Response.Status.NOT_FOUND).build();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
     // 2.1. OBTENER USUARIO POR ID
     @GET
     @Path("/{id}")
