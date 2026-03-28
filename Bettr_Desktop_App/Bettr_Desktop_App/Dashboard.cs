@@ -388,14 +388,18 @@ namespace Bettr_Desktop_App
                     avatar.Controls.Add(avatarLetter);
                 }
 
+                int centerX = profileCard.Width / 2;
+
                 Label nameLabel = new Label
                 {
                     Text = ApiService.CurrentUser.Name ?? "Usuario",
                     Font = new Font("Segoe UI", 16, FontStyle.Bold),
                     ForeColor = Color.White,
                     AutoSize = true,
-                    Location = new Point((profileCard.Width - 200) / 2, 145)
+                    Location = new Point(centerX - 100, 145),
+                    Size = new Size(200, 24)
                 };
+                nameLabel.TextAlign = ContentAlignment.MiddleCenter;
 
                 Label usernameLabel = new Label
                 {
@@ -403,8 +407,10 @@ namespace Bettr_Desktop_App
                     Font = new Font("Segoe UI", 11),
                     ForeColor = Color.FromArgb(156, 163, 175),
                     AutoSize = true,
-                    Location = new Point((profileCard.Width - 100) / 2, 170)
+                    Location = new Point(centerX - 80, 170),
+                    Size = new Size(160, 20)
                 };
+                usernameLabel.TextAlign = ContentAlignment.MiddleCenter;
 
                 int statsY = 230;
                 int statWidth = (profileCard.Width - 60) / 3;
@@ -419,14 +425,16 @@ namespace Bettr_Desktop_App
 
                 if (!string.IsNullOrEmpty(ApiService.CurrentUser.Description))
                 {
+                    int descWidth = profileCard.Width - 100;
                     Label descLabel = new Label
                     {
                         Text = ApiService.CurrentUser.Description,
                         Font = new Font("Segoe UI", 10),
                         ForeColor = Color.FromArgb(156, 163, 175),
-                        Location = new Point(30, 195),
-                        Size = new Size(profileCard.Width - 60, 60),
-                        AutoSize = false
+                        Location = new Point(50, 195),
+                        Size = new Size(descWidth, 60),
+                        AutoSize = false,
+                        TextAlign = ContentAlignment.TopCenter
                     };
                     profileCard.Controls.Add(descLabel);
                 }
@@ -1003,7 +1011,7 @@ namespace Bettr_Desktop_App
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error al cargar imagen: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Console.WriteLine("Error loading image: " + ex.Message);
                         }
                     }
                 }
@@ -1057,19 +1065,18 @@ namespace Bettr_Desktop_App
 
                     if (success)
                     {
-                        MessageBox.Show("¡Hábito compartido!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         modalOverlay.Close();
                         modalOverlay.Dispose();
                         _ = LoadFeed();
                     }
                     else
                     {
-                        MessageBox.Show("Error al compartir hábito.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        shareBtn.Text = "Error al compartir";
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    shareBtn.Text = "Error: " + ex.Message;
                 }
                 finally
                 {
@@ -1377,14 +1384,14 @@ namespace Bettr_Desktop_App
                         {
                             byte[] imageBytes = File.ReadAllBytes(openFile.FileName);
                             newAvatarBase64 = "data:image/jpeg;base64," + Convert.ToBase64String(imageBytes);
-                            MessageBox.Show("Avatar seleccionado", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Console.WriteLine("Error loading avatar: " + ex.Message);
                         }
                     }
                 }
+            };
             };
 
             Label descLabel = new Label
@@ -1439,19 +1446,18 @@ namespace Bettr_Desktop_App
 
                     if (success)
                     {
-                        MessageBox.Show("Perfil actualizado!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         modalOverlay.Close();
                         modalOverlay.Dispose();
                         _ = LoadProfile();
                     }
                     else
                     {
-                        MessageBox.Show("Error al actualizar perfil.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        saveBtn.Text = "Error al actualizar";
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    saveBtn.Text = "Error: " + ex.Message;
                 }
                 finally
                 {
