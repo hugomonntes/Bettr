@@ -222,7 +222,10 @@ namespace Bettr_Desktop_App
                     AddEmptyState("Error", "Usuario no encontrado");
                     return;
                 }
-                List<Habit> habits = await _apiService.GetUserHabitsAsync(ApiService.CurrentUser.Id);
+
+                int currentUserId = ApiService.CurrentUser.Id;
+                Console.WriteLine($"Loading habits for user ID: {currentUserId}");
+                List<Habit> habits = await _apiService.GetUserHabitsAsync(currentUserId);
                 panelContent.Controls.Clear();
 
                 if (habits.Count == 0)
